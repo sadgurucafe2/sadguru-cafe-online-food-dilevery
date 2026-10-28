@@ -1011,10 +1011,14 @@
 
   <!-- JavaScript -->
   <script>
-  let customerLocationLink = "";
+  
+    let cart = [];
+let customerLocationLink = "";
 
     function getLocation() {
       const status = document.getElementById('location-status');
+      const addressInput = document.getElementById('customer-address');
+      
       if (!navigator.geolocation) {
         status.innerText = "Browser does not support GPS";
         return;
@@ -1026,15 +1030,19 @@
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           customerLocationLink = `https://www.google.com/maps?q=${lat},${lon}`;
+          
           status.innerText = "Location Attached! ✅";
+          
+          // Yithe manual address box disable hoto ani tyat automatic text yeto
+          addressInput.value = "GPS Location Shared (Table/Seat)";
+          addressInput.disabled = true;
+          addressInput.style.backgroundColor = "#f0f0f0";
         }, 
         (error) => {
           status.innerText = "Permission Denied / GPS Error";
         }
       );
     }
-    let cart = [];
-
     function addToCart(name, price, btnElement) {
       let card = btnElement.closest('.menu-card');
       card.classList.add('pulse');
