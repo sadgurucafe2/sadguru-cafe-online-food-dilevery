@@ -158,14 +158,16 @@
       border-bottom: 2px solid #eee;
       padding: 10px 12px;
       display: flex;
-      gap: 12px;
+      gap: 16px;
       overflow-x: auto;
       white-space: nowrap;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      scrollbar-width: none; /* Firefox sathi */
+      -ms-overflow-style: none;
     }
 
-    .category-nav::-webkit-scrollbar {
-      height: 4px;
+      .category-nav::-webkit-scrollbar {
+      display: none;
     }
     .category-nav::-webkit-scrollbar-thumb {
       background: var(--gold);
