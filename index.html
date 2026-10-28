@@ -320,7 +320,6 @@
       font-style: italic;
     }
 
-    /* Action Boxes (Google Review & Google Map Location) */
 /* Action Boxes (Google Review & Google Map Location) - Creative Design */
     .action-boxes {
       display: flex;
@@ -1012,6 +1011,28 @@
 
   <!-- JavaScript -->
   <script>
+  let customerLocationLink = "";
+
+    function getLocation() {
+      const status = document.getElementById('location-status');
+      if (!navigator.geolocation) {
+        status.innerText = "Browser does not support GPS";
+        return;
+      }
+      status.innerText = "Locating... 📍";
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          customerLocationLink = `https://www.google.com/maps?q=${lat},${lon}`;
+          status.innerText = "Location Attached! ✅";
+        }, 
+        (error) => {
+          status.innerText = "Permission Denied / GPS Error";
+        }
+      );
+    }
     let cart = [];
 
     function addToCart(name, price, btnElement) {
@@ -1100,10 +1121,15 @@ function sendWhatsAppOrder() {
       message += `\n*Total Amount: ₹${grandTotal}*`;
       message += `\n\n🏠 *Address / Table:* ${address}`;
       
+      if (customerLocationLink) {
+        message += `\n📍 *GPS Location:* ${customerLocationLink}`;
+      }
+      
       let phoneNumber = "918421848131"; 
       let url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
       window.open(url, '_blank');
     }
+
   </script>
 
 </body>
