@@ -979,6 +979,13 @@
         <button class="close-modal" onclick="toggleCartModal(false)">&times;</button>
       </div>
       <div id="modal-cart-items"></div>
+  <div style="margin-top: 15px;">
+        <label style="font-size: 0.9rem; font-weight: 600; color: var(--maroon);">Delivery Address / Table No. (पत्ता किंवा टेबल नंबर):</label>
+        <input type="text" id="customer-address" placeholder="उदा. बस स्थानкаजवळ, किंवा टेबल नं. 04" style="width: 100%; padding: 8px 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;" />
+        
+        <button type="button" onclick="getLocation()" style="margin-top: 8px; background: #e0e0e0; border: none; padding: 6px 12px; border-radius: 5px; font-size: 0.82rem; cursor: pointer; font-weight: 600;">📍 Get Current Location / GPS</button>
+        <span id="location-status" style="font-size: 0.78rem; color: #2e7d32; margin-left: 8px;"></span>
+      </div>
       <div class="modal-footer">
         <div class="modal-total" id="modal-total-price">Total: ₹0</div>
         <button class="cart-btn" onclick="sendWhatsAppOrder()">Order on WhatsApp</button>
@@ -1071,11 +1078,18 @@
       container.innerHTML = html;
     }
 
-    function sendWhatsAppOrder() {
+function sendWhatsAppOrder() {
       if (cart.length === 0) {
         alert('Krupaya kuthlehi items select kara!');
         return;
       }
+      
+      let address = document.getElementById('customer-address').value.trim();
+      if (!address) {
+        alert('Krupaya apla Delivery Address kinva Table Number taka!');
+        return;
+      }
+
       let message = "Hello Sadguru Cafe, mala khaliil order daychi aahe:\n\n";
       let grandTotal = 0;
       cart.forEach((item, index) => {
@@ -1084,6 +1098,7 @@
         message += `${index + 1}. ${item.name} x ${item.qty} = ₹${itemTotal}\n`;
       });
       message += `\n*Total Amount: ₹${grandTotal}*`;
+      message += `\n\n🏠 *Address / Table:* ${address}`;
       
       let phoneNumber = "918421848131"; 
       let url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
