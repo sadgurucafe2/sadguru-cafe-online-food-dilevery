@@ -125,7 +125,7 @@
       display: inline-block;
     }
 
-    /* Sticky Navigation */
+/* Enhanced Category Navigation with Icons/Photos */
     .category-nav {
       position: sticky;
       top: 0;
@@ -134,7 +134,7 @@
       border-bottom: 2px solid #eee;
       padding: 10px 12px;
       display: flex;
-      gap: 8px;
+      gap: 12px;
       overflow-x: auto;
       white-space: nowrap;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -153,16 +153,27 @@
       background-color: var(--bg-cream);
       color: var(--maroon);
       border: 1px solid var(--gold);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.88rem;
+      padding: 6px 12px;
+      border-radius: 25px;
+      font-size: 0.85rem;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.2s ease;
     }
 
     .category-nav a:hover {
       background-color: var(--maroon);
       color: #fff;
+    }
+
+    .cat-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--gold);
     }
 
     .container {
@@ -600,26 +611,26 @@
     </div>
   </div>
 
-  <!-- Category Navigation -->
+<!-- Category Navigation -->
   <nav class="category-nav">
-    <a href="#starter">Starter</a>
-    <a href="#snacks">Snacks</a>
-    <a href="#soup">Soup</a>
-    <a href="#fasting">Fasting</a>
-    <a href="#manchurian">Manchurian</a> 
-    <a href="#pavbhaji">Pavbhaji</a>
-    <a href="#misal-pav">Misal Pav</a>
-    <a href="#fries">Fries</a>
-    <a href="#burger">Burger</a>
-    <a href="#sandwich">Sandwich</a>
-    <a href="#toast">Toast</a>
-    <a href="#rice">Rice</a>
-    <a href="#noodles">Noodles</a>
-    <a href="#momos">Momos</a>
-    <a href="#pizza">Pizza</a>
-    <a href="#cold-beverage">Cold Beverage</a>
-    <a href="#mastani">Mastani</a>
-    <a href="#milkshake">Milkshake</a>
+    <a href="#starter"><img src="starter.jpg" class="cat-icon" onerror="this.style.display='none'"> Starter</a>
+    <a href="#snacks"><img src="vadapav.jpg" class="cat-icon" onerror="this.style.display='none'"> Snacks</a>
+    <a href="#soup"><img src="soup1.jpg" class="cat-icon" onerror="this.style.display='none'"> Soup</a>
+    <a href="#fasting"><img src="fries.jpg" class="cat-icon" onerror="this.style.display='none'"> Fasting</a>
+    <a href="#manchurian"><img src="manchuriandry.jpg" class="cat-icon" onerror="this.style.display='none'"> Manchurian</a> 
+    <a href="#pavbhaji"><img src="pavbhaji.jpg" class="cat-icon" onerror="this.style.display='none'"> Pavbhaji</a>
+    <a href="#misal-pav"><img src="misalpav.jpg" class="cat-icon" onerror="this.style.display='none'"> Misal Pav</a>
+    <a href="#fries"><img src="fries1.jpg" class="cat-icon" onerror="this.style.display='none'"> Fries</a>
+    <a href="#burger"><img src="burger1.jpg" class="cat-icon" onerror="this.style.display='none'"> Burger</a>
+    <a href="#sandwich"><img src="sandwich1.jpg" class="cat-icon" onerror="this.style.display='none'"> Sandwich</a>
+    <a href="#toast"><img src="toast1.jpg" class="cat-icon" onerror="this.style.display='none'"> Toast</a>
+    <a href="#rice"><img src="rice1.jpg" class="cat-icon" onerror="this.style.display='none'"> Rice</a>
+    <a href="#noodles"><img src="noodle1.jpg" class="cat-icon" onerror="this.style.display='none'"> Noodles</a>
+    <a href="#momos"><img src="momo1.jpg" class="cat-icon" onerror="this.style.display='none'"> Momos</a>
+    <a href="#pizza"><img src="pizza1.jpg" class="cat-icon" onerror="this.style.display='none'"> Pizza</a>
+    <a href="#cold-beverage"><img src="cold1.jpg" class="cat-icon" onerror="this.style.display='none'"> Cold Beverage</a>
+    <a href="#mastani"><img src="mastani1.jpg" class="cat-icon" onerror="this.style.display='none'"> Mastani</a>
+    <a href="#milkshake"><img src="shake1.jpg" class="cat-icon" onerror="this.style.display='none'"> Milkshake</a>
   </nav>
 
   <main class="container">
