@@ -150,7 +150,19 @@
     }
 
     /* Enhanced Category Navigation with Circular Icons */
-    .category-nav {
+    /* Zomato Style Navigation with Arrow Buttons */
+    .category-wrapper {
+      position: relative;
+      background-color: #fff;
+      border-bottom: 2px solid #eee;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      sticky: top;
+      top: 57px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+    }
+   .category-nav {
       position: sticky;
       top: 57px;
       z-index: 100;
@@ -161,14 +173,34 @@
       gap: 16px;
       overflow-x: auto;
       white-space: nowrap;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      scrollbar-width: none; /* Firefox sathi */
+      padding: 10px 40px; /* Side la buttons sathi space */
+      scroll-behavior: smooth;
+      scrollbar-width: none;
       -ms-overflow-style: none;
+      width: 100%;
+    }
+    .category-nav::-webkit-scrollbar {
+      display: none; /* Chrome, Safari sathi scrollbar kadun takne */
+    }
+    .scroll-btn {
+      position: absolute;
+      background: #fff;
+      border: 1px solid var(--gold);
+      color: var(--maroon);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
-      .category-nav::-webkit-scrollbar {
-      display: none;
-    }
+    .scroll-btn.left { left: 8px; }
+    .scroll-btn.right { right: 8px; }
     .category-nav::-webkit-scrollbar-thumb {
       background: var(--gold);
       border-radius: 4px;
@@ -610,28 +642,33 @@
     <input type="text" id="search-input" class="search-input" placeholder="🔍 Search for restaurant, cuisine or a dish (उदा. Cold Coffee, Pizza)..." onkeyup="filterMenu()" />
   </div>
 
-  <!-- Category Navigation with Photos -->
-  <nav class="category-nav">
-    <a href="#starter"><img src="starter.jpg" class="cat-icon" onerror="this.src='logo.png'"> 
-      Starter</a>
-    <a href="#snacks"><img src="vadapav.jpg" class="cat-icon" onerror="this.src='logo.png'"> Snacks</a>
-    <a href="#soup"><img src="soup1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Soup</a>
-    <a href="#fasting"><img src="fries.jpg" class="cat-icon" onerror="this.src='logo.png'"> Fasting</a>
-    <a href="#manchurian"><img src="manchuriandry.jpg" class="cat-icon" onerror="this.src='logo.png'"> Manchurian</a> 
-    <a href="#pavbhaji"><img src="pavbhaji.jpg" class="cat-icon" onerror="this.src='logo.png'"> Pavbhaji</a>
-    <a href="#misal-pav"><img src="misalpav.jpg" class="cat-icon" onerror="this.src='logo.png'"> Misal Pav</a>
-    <a href="#fries"><img src="fries1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Fries</a>
-    <a href="#burger"><img src="burger1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Burger</a>
-    <a href="#sandwich"><img src="sandwich1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Sandwich</a>
-    <a href="#toast"><img src="toast1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Toast</a>
-    <a href="#rice"><img src="rice1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Rice</a>
-    <a href="#noodles"><img src="noodle1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Noodles</a>
-    <a href="#momos"><img src="momo1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Momos</a>
-    <a href="#pizza"><img src="pizza1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Pizza</a>
-    <a href="#cold-beverage"><img src="cold1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Cold Beverage</a>
-    <a href="#mastani"><img src="mastani1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Mastani</a>
-    <a href="#milkshake"><img src="shake1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Milkshake</a>
-  </nav>
+<!-- Zomato Style Scrollable Category Bar with Arrows -->
+  <div class="category-wrapper">
+    <button class="scroll-btn left" onclick="scrollCategory(-150)">❮</button>
+    
+    <nav class="category-nav" id="cat-nav">
+      <a href="#starter"><img src="starter.jpg" class="cat-icon" onerror="this.src='logo.png'"> Starter</a>
+      <a href="#snacks"><img src="vadapav.jpg" class="cat-icon" onerror="this.src='logo.png'"> Snacks</a>
+      <a href="#soup"><img src="soup1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Soup</a>
+      <a href="#fasting"><img src="fries.jpg" class="cat-icon" onerror="this.src='logo.png'"> Fasting</a>
+      <a href="#manchurian"><img src="manchuriandry.jpg" class="cat-icon" onerror="this.src='logo.png'"> Manchurian</a> 
+      <a href="#pavbhaji"><img src="pavbhaji.jpg" class="cat-icon" onerror="this.src='logo.png'"> Pavbhaji</a>
+      <a href="#misal-pav"><img src="misalpav.jpg" class="cat-icon" onerror="this.src='logo.png'"> Misal Pav</a>
+      <a href="#fries"><img src="fries1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Fries</a>
+      <a href="#burger"><img src="burger1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Burger</a>
+      <a href="#sandwich"><img src="sandwich1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Sandwich</a>
+      <a href="#toast"><img src="toast1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Toast</a>
+      <a href="#rice"><img src="rice1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Rice</a>
+      <a href="#noodles"><img src="noodle1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Noodles</a>
+      <a href="#momos"><img src="momo1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Momos</a>
+      <a href="#pizza"><img src="pizza1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Pizza</a>
+      <a href="#cold-beverage"><img src="cold1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Cold Beverage</a>
+      <a href="#mastani"><img src="mastani1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Mastani</a>
+      <a href="#milkshake"><img src="shake1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Milkshake</a>
+    </nav>
+    
+    <button class="scroll-btn right" onclick="scrollCategory(150)">❯</button>
+  </div>
 
   <main class="container">
 
@@ -1071,7 +1108,10 @@
         }
       });
     }
-
+    function scrollCategory(amount) {
+      let nav = document.getElementById('cat-nav');
+      nav.scrollBy({ left: amount, behavior: 'smooth' });
+    }
     function addToCart(name, price, btnElement) {
       let card = btnElement.closest('.menu-card') || btnElement.closest('.bs-card');
       if(card) {
