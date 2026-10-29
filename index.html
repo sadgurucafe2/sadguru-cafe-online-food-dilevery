@@ -155,33 +155,37 @@
       background-color: #fff;
       border-bottom: 2px solid #eee;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      sticky: top;
+      position: sticky;
       top: 57px;
       z-index: 100;
       display: flex;
       align-items: center;
     }
-   .category-nav {
+
+    .category-nav {
       display: flex;
-      gap: 16px;
+      gap: 10px; /* Icons madhla gap kami kela ahe */
       overflow-x: auto;
       white-space: nowrap;
-      padding: 10px 40px; /* Side la buttons sathi space */
+      padding: 8px 36px;
       scroll-behavior: smooth;
       scrollbar-width: none;
       -ms-overflow-style: none;
       width: 100%;
+      align-items: center;
     }
+
     .category-nav::-webkit-scrollbar {
-      display: none; /* Chrome, Safari sathi scrollbar kadun takne */
+      display: none;
     }
+
     .scroll-btn {
       position: absolute;
       background: #fff;
       border: 1px solid var(--gold);
       color: var(--maroon);
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -192,47 +196,40 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
-    .scroll-btn.left { left: 8px; }
-    .scroll-btn.right { right: 8px; 
-    }
-    
-    .category-nav::-webkit-scrollbar-thumb {
-      background: var(--gold);
-      border-radius: 4px;
-    }
+    .scroll-btn.left { left: 6px; }
+    .scroll-btn.right { right: 6px; }
 
-.category-nav a {
+    .category-nav a {
       text-decoration: none;
       background-color: transparent !important;
       color: var(--maroon);
       border: none !important;
-      padding: 6px 2px;
+      padding: 4px 2px;
       font-size: 0.75rem;
       font-weight: 600;
       display: inline-flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
       transition: all 0.2s ease;
       text-align: center;
-      
-      /* He mhatvacha ahe: Screen var fkt exact 5-6 icons disnyasaathi */
       flex: 0 0 calc(100% / 5.5);
       max-width: calc(100% / 5.5);
     }
 
     .category-nav a:hover {
       color: var(--gold);
-      background-color: transparent !important;
     }
+
     .cat-icon {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
       border-radius: 50% !important;
       object-fit: cover !important;
       border: none !important;
       flex-shrink: 0;
     }
+
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -638,10 +635,9 @@
     <input type="text" id="search-input" class="search-input" placeholder="🔍 Search for restaurant, cuisine or a dish (उदा. Cold Coffee, Pizza)..." onkeyup="filterMenu()" />
   </div>
 
-<!-- Zomato Style Scrollable Category Bar with Arrows -->
+  <!-- Zomato Style Scrollable Category Bar with Arrows -->
   <div class="category-wrapper">
     <button class="scroll-btn left" onclick="scrollCategory(-150)">❮</button>
-    
     <nav class="category-nav" id="cat-nav">
       <a href="#starter"><img src="starter.jpg" class="cat-icon" onerror="this.src='logo.png'"> Starter</a>
       <a href="#snacks"><img src="vadapav.jpg" class="cat-icon" onerror="this.src='logo.png'"> Snacks</a>
@@ -662,7 +658,6 @@
       <a href="#mastani"><img src="mastani1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Mastani</a>
       <a href="#milkshake"><img src="shake1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Milkshake</a>
     </nav>
-    
     <button class="scroll-btn right" onclick="scrollCategory(150)">❯</button>
   </div>
 
@@ -1104,10 +1099,12 @@
         }
       });
     }
+
     function scrollCategory(amount) {
       let nav = document.getElementById('cat-nav');
       nav.scrollBy({ left: amount, behavior: 'smooth' });
     }
+
     function addToCart(name, price, btnElement) {
       let card = btnElement.closest('.menu-card') || btnElement.closest('.bs-card');
       if(card) {
