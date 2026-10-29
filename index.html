@@ -126,27 +126,155 @@
     }
 
     /* Search Bar Sticky Section */
+/* Zomato Style Location + Search Bar */
     .search-container {
       background: #fff;
       padding: 12px 16px;
       border-bottom: 1px solid #eee;
-      text-align: center;
       position: sticky;
       top: 0;
-      z-index: 101;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      z-index: 105;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .zomato-search-bar {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      max-width: 780px;
+      height: 52px;
+      margin: 0 auto;
+      border-radius: 10px;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 2px 8px rgba(28, 28, 28, 0.08);
+      padding: 0 14px;
+      position: relative;
+    }
+
+    /* Left Location Section */
+    .location-box {
+      display: flex;
+      align-items: center;
+      width: 38%;
+      min-width: 145px;
+      position: relative;
+    }
+
+    .loc-pin-icon {
+      width: 20px;
+      height: 20px;
+      fill: #FF7E8B;
+      flex-shrink: 0;
+      margin-right: 8px;
+    }
+
+    .location-input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 0.92rem;
+      color: #363636;
+      font-weight: 500;
+      background: transparent;
+      text-overflow: ellipsis;
+    }
+
+    .loc-Caret {
+      font-size: 0.75rem;
+      color: #4f4f4f;
+      cursor: pointer;
+      padding: 6px;
+      user-select: none;
+      transition: transform 0.2s ease;
+    }
+
+    /* Location Dropdown Menu */
+    .location-dropdown {
+      position: absolute;
+      top: 56px;
+      left: 0;
+      width: 290px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      border: 1px solid #eee;
+      display: none;
+      flex-direction: column;
+      z-index: 200;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .loc-option {
+      padding: 12px 14px;
+      font-size: 0.88rem;
+      color: #333;
+      cursor: pointer;
+      border-bottom: 1px solid #f5f5f5;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .loc-option:hover {
+      background: #fdf8f4;
+      color: var(--maroon);
+    }
+
+    .loc-gps {
+      color: #E23744;
+      font-weight: 600;
+    }
+
+    /* Middle Vertical Divider (|) */
+    .search-divider {
+      width: 1px;
+      height: 22px;
+      background-color: #cfcfcf;
+      margin: 0 12px;
+      flex-shrink: 0;
+    }
+
+    /* Right Dish Search Section */
+    .dish-search-box {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+    }
+
+    .search-glass-icon {
+      width: 18px;
+      height: 18px;
+      fill: #828282;
+      margin-right: 10px;
+      flex-shrink: 0;
     }
 
     .search-input {
       width: 100%;
-      max-width: 600px;
-      padding: 10px 16px;
-      border: 1.5px solid var(--gold);
-      border-radius: 25px;
-      font-size: 0.95rem;
+      border: none;
       outline: none;
-      background: var(--bg-cream);
+      font-size: 0.92rem;
       color: var(--text-dark);
+      background: transparent;
+    }
+
+    @media (max-width: 600px) {
+      .zomato-search-bar {
+        height: 46px;
+        padding: 0 10px;
+      }
+      .location-box {
+        width: 44%;
+        min-width: 120px;
+      }
+      .location-input, .search-input {
+        font-size: 0.82rem;
+      }
+      .search-divider {
+        margin: 0 8px;
+      }
     }
 
 /* Zomato Style Navigation - Exact 6 Icons & Pop-up Effect */
@@ -679,11 +807,54 @@
     </div>
   </div>
 
-  <!-- Zomato Style Search Bar -->
+<!-- Zomato Style Unified Location & Search Bar -->
   <div class="search-container">
-    <input type="text" id="search-input" class="search-input" placeholder="🔍 Search for restaurant, cuisine or a dish (उदा. Cold Coffee, Pizza)..." onkeyup="filterMenu()" />
-  </div>
+    <div class="zomato-search-bar">
+      
+      <!-- Left: Location Input & Dropdown -->
+      <div class="location-box">
+        <svg class="loc-pin-icon" viewBox="0 0 24 24">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        <input type="text" id="top-location-input" class="location-input" placeholder="Omerga - Area / Table No." value="Omerga" oninput="syncLocationFromTop()" onfocus="toggleLocationDropdown(true)" />
+        <span class="loc-Caret" onclick="toggleLocationDropdown()">▼</span>
 
+        <!-- Zomato Style Dropdown Options -->
+        <div class="location-dropdown" id="loc-dropdown">
+          <div class="loc-option loc-gps" onclick="detectUserGPS()">
+            🎯 Detect current location (GPS)
+          </div>
+          <div class="loc-option" onclick="selectLocation('Omerga - Shivpuri Road / Khau Galli')">
+            📍 Shivpuri Road / Khau Galli, Omerga
+          </div>
+          <div class="loc-option" onclick="selectLocation('Omerga - Bus Stand Area')">
+            📍 Bus Stand Area, Omerga
+          </div>
+          <div class="loc-option" onclick="selectLocation('Omerga - Main Road / Bazar Peth')">
+            📍 Main Road / Bazar Peth, Omerga
+          </div>
+          <div class="loc-option" onclick="selectLocation('Omerga - College Road')">
+            📍 College Road, Omerga
+          </div>
+          <div class="loc-option" onclick="selectLocation('Dine-In - Inside Sadguru Cafe')">
+            🍽️ Dine-In (Sadguru Cafe Table)
+          </div>
+        </div>
+      </div>
+
+      <!-- Center: Divider -->
+      <div class="search-divider"></div>
+
+      <!-- Right: Dish Search Input -->
+      <div class="dish-search-box">
+        <svg class="search-glass-icon" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" id="search-input" class="search-input" placeholder="Search for restaurant, cuisine or a dish..." onkeyup="filterMenu()" />
+      </div>
+
+    </div>
+  </div>
   <!-- Zomato Style Scrollable Category Bar with Arrows -->
   <div class="category-wrapper">
     <button class="scroll-btn left" onclick="scrollCategory(-150)">❮</button>
@@ -1148,7 +1319,62 @@
         }
       });
     }
+// Location Dropdown Toggle & Sync Functions
+    function toggleLocationDropdown(forceShow) {
+      let dropdown = document.getElementById('loc-dropdown');
+      if (forceShow === true) {
+        dropdown.style.display = 'flex';
+      } else {
+        dropdown.style.display = (dropdown.style.display === 'flex') ? 'none' : 'flex';
+      }
+    }
 
+    function selectLocation(locText) {
+      document.getElementById('top-location-input').value = locText;
+      let addrField = document.getElementById('customer-address');
+      if (addrField) addrField.value = locText;
+      document.getElementById('loc-dropdown').style.display = 'none';
+    }
+
+    function syncLocationFromTop() {
+      let topVal = document.getElementById('top-location-input').value;
+      let addrField = document.getElementById('customer-address');
+      if (addrField) addrField.value = topVal;
+    }
+
+    function detectUserGPS() {
+      let locInput = document.getElementById('top-location-input');
+      locInput.value = "Detecting GPS...";
+      document.getElementById('loc-dropdown').style.display = 'none';
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(position) {
+            let lat = position.coords.latitude;
+            let lng = position.coords.longitude;
+            let mapLink = `https://www.google.com/maps?q=${lat},${lng}`;
+            locInput.value = "📍 GPS Location Added (Omerga)";
+            let addrField = document.getElementById('customer-address');
+            if (addrField) addrField.value = `Live GPS Location: ${mapLink}`;
+          },
+          function() {
+            alert("GPS चालू करता आले नाही. कृपया तुमचा पत्ता टाइप करा.");
+            locInput.value = "Omerga";
+          }
+        );
+      } else {
+        alert("तुमच्या ब्राउझरमध्ये GPS सपोर्ट नाही.");
+        locInput.value = "Omerga";
+      }
+    }
+
+    // बाहेर क्लिक केल्यावर लोकेशन ड्रॉपडाउन बंद होण्यासाठी
+    document.addEventListener('click', function(e) {
+      let locBox = document.querySelector('.location-box');
+      if (locBox && !locBox.contains(e.target)) {
+        document.getElementById('loc-dropdown').style.display = 'none';
+      }
+    });
 function scrollCategory(amount) {
       let nav = document.getElementById('cat-nav');
       let links = nav.querySelectorAll('a');
