@@ -1151,11 +1151,16 @@
 
 function scrollCategory(amount) {
       let nav = document.getElementById('cat-nav');
-      let scrollDistance = amount > 0 ? nav.clientWidth / 2 : -(nav.clientWidth / 2);
+      let links = nav.querySelectorAll('a');
+      if (links.length < 2) return;
+
+      // Eka veli barobar 1 icon + tyacha gap pudhe/maghe saraknyasathi:
+      let oneIconStep = links[1].offsetLeft - links[0].offsetLeft;
+      let scrollDistance = amount > 0 ? oneIconStep : -oneIconStep;
+      
       nav.scrollBy({ left: scrollDistance, behavior: 'smooth' });
 
       // Next kinva Back dabalyavar icons pop-up honyasathi
-      let links = nav.querySelectorAll('a');
       links.forEach(link => {
         link.classList.remove('pop-effect');
         void link.offsetWidth; // Animation restart karne
