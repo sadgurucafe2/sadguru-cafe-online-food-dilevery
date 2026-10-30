@@ -1494,6 +1494,11 @@ function scrollCategory(amount) {
         return;
       }
 
+    <!-- GPS Location Button -->
+          <button type="button" onclick="detectUserGPSInModal()" style="margin-top: 8px; background: #E23744; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+            🎯 Get Current Location (GPS)
+          </button>
+        
       let message = "Hello Sadguru Cafe, mala khaliil order daychi aahe:\n\n";
       let grandTotal = 0;
       cart.forEach((item, index) => {
