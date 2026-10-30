@@ -854,8 +854,10 @@
 
     </div>
   </div>
-  <!-- Zomato Style Scrollable Category Bar with Arrows -->
- <nav class="category-nav" id="cat-nav">
+<!-- Zomato Style Scrollable Category Bar with Arrows -->
+  <div class="category-wrapper">
+    <button class="scroll-btn left" onclick="scrollCategory(-150)">❮</button>
+    <nav class="category-nav" id="cat-nav">
       <a href="#starter"><img src="navigation bar/starter.jpg" class="cat-icon" onerror="this.src='logo.png'"> Starter</a>
       <a href="#snacks"><img src="navigation bar/vadapav.jpg" class="cat-icon" onerror="this.src='logo.png'"> Snacks</a>
       <a href="#soup"><img src="navigation bar/soup1.jpg" class="cat-icon" onerror="this.src='logo.png'"> Soup</a>
@@ -877,7 +879,6 @@
     </nav>
     <button class="scroll-btn right" onclick="scrollCategory(150)">❯</button>
   </div>
-
   <main class="container">
 
     <!-- Best Selling / Popular Items Banner -->
