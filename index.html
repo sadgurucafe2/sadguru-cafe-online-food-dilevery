@@ -830,7 +830,7 @@
             📍 Bus Stand Area, Omerga
           </div>
           <div class="loc-option" onclick="selectLocation('Omerga - Main Road / Bazar Peth')">
-            📍 Main Road / Bazar Peth, Omerga
+            📍 Mugale Hopita, Omerga
           </div>
           <div class="loc-option" onclick="selectLocation('Omerga - College Road')">
             📍 College Road, Omerga
@@ -1360,10 +1360,11 @@
     }
 
     function detectUserGPS() {
-      let locInput = document.getElementById('top-location-input');
-      locInput.value = "Detecting GPS...";
-      document.getElementById('loc-dropdown').style.display = 'none';
-
+   let locInput = document.getElementById('top-location-input');
+      if (locInput) locInput.value = "Detecting GPS...";
+      let dropdown = document.getElementById('loc-dropdown');
+      if (dropdown) dropdown.style.display = 'none';
+      
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function(position) {
