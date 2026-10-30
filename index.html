@@ -1297,8 +1297,25 @@
   <!-- Footer -->
   <footer>
     <p class="copyright">© 2026 Sadguru Cafe. All Rights Reserved.</p>
-  </footer>
+    
+  // Website & Images Fast Load Karnyasathi Speed Booster
+    document.addEventListener("DOMContentLoaded", function() {
+      // 1. Navigation bar madhle photos sarvat adhi (High Priority) load karne
+      document.querySelectorAll('.cat-icon').forEach((img, index) => {
+        if (index < 6) {
+          img.setAttribute('fetchpriority', 'high');
+        } else {
+          img.setAttribute('loading', 'lazy');
+        }
+        img.setAttribute('decoding', 'async');
+      });
 
+      // 2. Khalchya menu madhle photos scroll kelyavarach load karne (Lazy Load)
+      document.querySelectorAll('.item-img, .bs-card img').forEach(img => {
+        img.setAttribute('loading', 'lazy');
+        img.setAttribute('decoding', 'async');
+      });
+    });
   <!-- JavaScript -->
   <script>
     let cart = [];
