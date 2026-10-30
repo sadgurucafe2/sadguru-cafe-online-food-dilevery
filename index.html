@@ -771,6 +771,15 @@
       padding-top: 15px;
     }
 
+    <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
+          <label style="font-size: 0.9rem; font-weight: 600; color: var(--maroon);">Delivery Address / Table No. / Location Link:</label>
+          <input type="text" id="customer-address" placeholder="उदा. बस स्थानक, टेबल नं. 04 किंवा Map link" style="width: 100%; padding: 8px 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;" />
+          
+          <!-- GPS Location Button -->
+          <button type="button" onclick="detectUserGPSInModal()" style="margin-top: 8px; background: #E23744; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+            🎯 Get Current Location (GPS)
+          </button>
+        </div>
     .modal-total { font-weight: 700; font-size: 1.1rem; color: var(--maroon); }
 
     footer {
@@ -1359,30 +1368,26 @@
       if (addrField) addrField.value = topVal;
     }
 
-    function detectUserGPS() {
-   let locInput = document.getElementById('top-location-input');
-      if (locInput) locInput.value = "Detecting GPS...";
-      let dropdown = document.getElementById('loc-dropdown');
-      if (dropdown) dropdown.style.display = 'none';
-      
+function detectUserGPSInModal() {
+      let addrField = document.getElementById('customer-address');
+      if (addrField) addrField.value = "Detecting GPS...";
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           function(position) {
             let lat = position.coords.latitude;
             let lng = position.coords.longitude;
             let mapLink = `https://www.google.com/maps?q=${lat},${lng}`;
-            locInput.value = "📍 GPS Location Added (Omerga)";
-            let addrField = document.getElementById('customer-address');
             if (addrField) addrField.value = `Live GPS Location: ${mapLink}`;
           },
           function() {
             alert("GPS चालू करता आले नाही. कृपया तुमचा पत्ता टाइप करा.");
-            locInput.value = "Omerga";
+            if (addrField) addrField.value = "";
           }
         );
       } else {
         alert("तुमच्या ब्राउझरमध्ये GPS सपोर्ट नाही.");
-        locInput.value = "Omerga";
+        if (addrField) addrField.value = "";
       }
     }
 
@@ -1485,7 +1490,7 @@ function scrollCategory(amount) {
       
       let address = document.getElementById('customer-address').value.trim();
       if (!address) {
-        alert('Krupaya apla Delivery Address kinva Table Number taka!');
+        alert('Krupaya apla Delivery Address taka!');
         return;
       }
 
@@ -1497,7 +1502,7 @@ function scrollCategory(amount) {
         message += `${index + 1}. ${item.name} x ${item.qty} = ₹${itemTotal}\n`;
       });
       message += `\n*Total Amount: ₹${grandTotal}*`;
-      message += `\n\n🏠 *Address / Table / Location:* ${address}`;
+      message += `\n\n🏠 *Address / Location:* ${address}`;
       
       let phoneNumber = "918421848131"; 
       let url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
