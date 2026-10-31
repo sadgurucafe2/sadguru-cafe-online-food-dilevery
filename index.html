@@ -1370,7 +1370,7 @@
       if (topInput && addrField) addrField.value = topInput.value;
     }
 
-    function detectUserGPS() {
+function detectUserGPS() {
       let locInput = document.getElementById('top-location-input');
       if (locInput) locInput.value = "Detecting GPS...";
       let dropdown = document.getElementById('loc-dropdown');
@@ -1396,7 +1396,6 @@
         if (locInput) locInput.value = "Omerga";
       }
     }
-
     document.addEventListener('click', function(e) {
       let locBox = document.querySelector('.location-box');
       let dropdown = document.getElementById('loc-dropdown');
