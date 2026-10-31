@@ -608,56 +608,40 @@
       font-style: italic;
     }
 
-    /* Action Boxes (Creative Design) */
-    .action-boxes {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
-      margin: 35px auto 10px;
-      max-width: 500px;
-    }
+<!-- Action Boxes -->
+    <div class="action-boxes">
+      <!-- Live Delivery Tracking Box -->
+      <div class="creative-box" style="border-color: #25D366; background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
+        <h3 style="color: var(--maroon); margin-bottom: 4px;">🛵 Track Live Delivery (ऑर्डर ट्रॅक करा)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">ऑर्डर दिल्यानंतर डिलिव्हरी बॉयचे Live Location पाहण्यासाठी किंवा कॉल करण्यासाठी खाली क्लिक करा:</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+          <a href="https://wa.me/918421848131?text=Hello%20Sadguru%20Cafe,%20%E0%A4%AE%E0%A5%80%20%E0%A4%86%E0%A4%A4%E0%A4%BE%E0%A4%9A%20%E0%A4%91%E0%A4%B0%E0%A5%8D%E0%A4%A1%E0%A4%B0%20%E0%A4%A6%E0%A4%BF%E0%A4%B2%E0%A5%80%20%E0%A4%86%E0%A4%B9%E0%A5%87.%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20%E0%A4%AE%E0%A4%B2%E0%A4%BE%20Delivery%20Boy%20%E0%A4%9A%E0%A5%87%20Live%20Location%20%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A4%B5%E0%A4%BE%20%F0%9F%9B%B5%F0%9F%93%8D" target="_blank" class="creative-btn" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); margin-top: 0;">
+            📍 Get Live Location
+          </a>
+          <a href="tel:+918421848131" class="creative-btn" style="background: linear-gradient(135deg, #5a1212 0%, #3e0a0a 100%); margin-top: 0;">
+            📞 Call Delivery Boy
+          </a>
+        </div>
+      </div>
 
-    .creative-box {
-      position: relative;
-      background: linear-gradient(135deg, #ffffff 0%, #fdf8f4 100%);
-      border: 2px solid var(--gold);
-      padding: 18px;
-      border-radius: 16px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(90, 18, 18, 0.08);
-      overflow: hidden;
-      transition: transform 0.3s ease;
-    }
+      <div class="creative-box">
+        <h3 style="color: var(--maroon); margin-bottom: 4px;">Loved our food & service? ⭐</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Please share your valuable feedback on Google!</p>
+        <a href="https://www.google.com/maps/place/Sadguru+Cafe/@17.8374302,76.6185664,17z/data=!4m8!3m7!1s0x3bcf5b004637886f:0x63a3e01e06dc1149!8m2!3d17.8374302!4d76.6211413!9m1!1b1!16s%2Fg%2F11wqn_h9hw" target="_blank" class="creative-btn google-btn-style">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          Rate Us on Google
+        </a>
+      </div>
 
-    .creative-box::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 6px; height: 100%;
-      background: var(--gold);
-    }
-
-    .creative-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: #ffffff;
-      text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: all 0.2s ease;
-    }
-
-    .google-btn-style { background: linear-gradient(135deg, #4285F4 0%, #2b6cb0 100%); }
-    .map-btn-style { background: linear-gradient(135deg, #34A853 0%, #1e7e34 100%); }
-
-    .creative-btn svg { width: 18px; height: 18px; fill: #ffffff; }
+      <div class="creative-box">
+        <h3 style="color: var(--maroon); margin-bottom: 4px;">Visit Our Cafe 📍</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Find Sadguru Cafe easily on Google Maps</p>
+        <a href="https://maps.app.goo.gl/uXwW9k1p8G3V2Y6j6" target="_blank" class="creative-btn map-btn-style">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Open in Google Maps
+        </a>
+      </div>
+    </div>
 
     /* Floating Cart Bar */
     .cart-bar {
@@ -1486,7 +1470,7 @@ function detectUserGPSInModal() {
       container.innerHTML = html;
     }
 
-    function sendWhatsAppOrder() {
+function sendWhatsAppOrder() {
       if (cart.length === 0) {
         alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
         return;
@@ -1513,6 +1497,7 @@ function detectUserGPSInModal() {
       });
       message += `\n*Total Amount: ₹${grandTotal}*`;
       message += `\n\n📍 *Address / Table / Location:* ${address}`;
+      message += `\n🛵 *Live Tracking:* ऑर्डर निघाल्यावर कृपया इथे WhatsApp Live Location शेअर करा.`;
       
       let phoneNumber = "918421848131"; 
       let url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
