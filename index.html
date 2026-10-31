@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sadguru Cafe - Online Menu & Delivery</title>
-  <style>
+<style>
     :root {
       --maroon: #5a1212;
       --maroon-dark: #3e0a0a;
@@ -15,18 +15,13 @@
       --text-muted: #666666;
       --price-red: #8b1e1e;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    html { scroll-behavior: smooth; }
     body {
       background-color: var(--bg-cream);
       color: var(--text-dark);
@@ -34,7 +29,6 @@
       padding-bottom: 90px;
       position: relative;
     }
-
     /* Background Watermark Logo */
     body::before {
       content: "";
@@ -52,7 +46,6 @@
       z-index: -1;
       pointer-events: none;
     }
-
     /* Hero Section */
     .hero-section {
       background: linear-gradient(rgba(62, 10, 10, 0.85), rgba(90, 18, 18, 0.85)), url('cover-bg.jpg');
@@ -63,14 +56,7 @@
       padding: 40px 16px;
       border-bottom: 4px solid var(--gold);
     }
-
-    .hero-sub {
-      color: var(--gold);
-      font-size: 1.1rem;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
+    .hero-sub { color: var(--gold); font-size: 1.1rem; letter-spacing: 1px; margin-bottom: 12px; }
     .cafe-logo-container {
       width: 120px;
       height: 120px;
@@ -84,20 +70,8 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
       overflow: hidden;
     }
-
-    .cafe-logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-section h1 {
-      font-size: 2.2rem;
-      letter-spacing: 2px;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
+    .cafe-logo-container img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-section h1 { font-size: 2.2rem; letter-spacing: 2px; color: #fff; margin-bottom: 8px; }
     .timing-badge, .wait-notice {
       display: inline-block;
       background-color: rgba(255, 255, 255, 0.12);
@@ -108,7 +82,6 @@
       color: #f7e7b4;
       margin-top: 6px;
     }
-
     .veg-badge {
       display: inline-block;
       border: 2px solid #00aa00;
@@ -117,16 +90,9 @@
       margin-top: 10px;
       border-radius: 4px;
     }
-    .veg-dot {
-      width: 12px;
-      height: 12px;
-      background-color: #00aa00;
-      border-radius: 50%;
-      display: inline-block;
-    }
+    .veg-dot { width: 12px; height: 12px; background-color: #00aa00; border-radius: 50%; display: inline-block; }
 
     /* Search Bar Sticky Section */
-/* Zomato Style Location + Search Bar */
     .search-container {
       background: #fff;
       padding: 12px 16px;
@@ -136,7 +102,6 @@
       z-index: 105;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-
     .zomato-search-bar {
       display: flex;
       align-items: center;
@@ -150,24 +115,8 @@
       padding: 0 14px;
       position: relative;
     }
-
-    /* Left Location Section */
-    .location-box {
-      display: flex;
-      align-items: center;
-      width: 38%;
-      min-width: 145px;
-      position: relative;
-    }
-
-    .loc-pin-icon {
-      width: 20px;
-      height: 20px;
-      fill: #FF7E8B;
-      flex-shrink: 0;
-      margin-right: 8px;
-    }
-
+    .location-box { display: flex; align-items: center; width: 38%; min-width: 145px; position: relative; }
+    .loc-pin-icon { width: 20px; height: 20px; fill: #FF7E8B; flex-shrink: 0; margin-right: 8px; }
     .location-input {
       border: none;
       outline: none;
@@ -178,17 +127,7 @@
       background: transparent;
       text-overflow: ellipsis;
     }
-
-    .loc-Caret {
-      font-size: 0.75rem;
-      color: #4f4f4f;
-      cursor: pointer;
-      padding: 6px;
-      user-select: none;
-      transition: transform 0.2s ease;
-    }
-
-    /* Location Dropdown Menu */
+    .loc-Caret { font-size: 0.75rem; color: #4f4f4f; cursor: pointer; padding: 6px; user-select: none; }
     .location-dropdown {
       position: absolute;
       top: 56px;
@@ -204,7 +143,6 @@
       overflow: hidden;
       text-align: left;
     }
-
     .loc-option {
       padding: 12px 14px;
       font-size: 0.88rem;
@@ -216,71 +154,23 @@
       gap: 8px;
       transition: background 0.2s;
     }
-
-    .loc-option:hover {
-      background: #fdf8f4;
-      color: var(--maroon);
-    }
-
-    .loc-gps {
-      color: #E23744;
-      font-weight: 600;
-    }
-
-    /* Middle Vertical Divider (|) */
-    .search-divider {
-      width: 1px;
-      height: 22px;
-      background-color: #cfcfcf;
-      margin: 0 12px;
-      flex-shrink: 0;
-    }
-
-    /* Right Dish Search Section */
-    .dish-search-box {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-    }
-
-    .search-glass-icon {
-      width: 18px;
-      height: 18px;
-      fill: #828282;
-      margin-right: 10px;
-      flex-shrink: 0;
-    }
-
-    .search-input {
-      width: 100%;
-      border: none;
-      outline: none;
-      font-size: 0.92rem;
-      color: var(--text-dark);
-      background: transparent;
-    }
+    .loc-option:hover { background: #fdf8f4; color: var(--maroon); }
+    .loc-gps { color: #E23744; font-weight: 600; }
+    .search-divider { width: 1px; height: 22px; background-color: #cfcfcf; margin: 0 12px; flex-shrink: 0; }
+    .dish-search-box { display: flex; align-items: center; flex-grow: 1; }
+    .search-glass-icon { width: 18px; height: 18px; fill: #828282; margin-right: 10px; flex-shrink: 0; }
+    .search-input { width: 100%; border: none; outline: none; font-size: 0.92rem; color: var(--text-dark); background: transparent; }
 
     @media (max-width: 600px) {
-      .zomato-search-bar {
-        height: 46px;
-        padding: 0 10px;
-      }
-      .location-box {
-        width: 44%;
-        min-width: 120px;
-      }
-      .location-input, .search-input {
-        font-size: 0.82rem;
-      }
-      .search-divider {
-        margin: 0 8px;
-      }
+      .zomato-search-bar { height: 46px; padding: 0 10px; }
+      .location-box { width: 44%; min-width: 120px; }
+      .location-input, .search-input { font-size: 0.82rem; }
+      .search-divider { margin: 0 8px; }
     }
 
-/* Zomato Style Navigation - Exact 6 Icons & Pop-up Effect */
-/* Zomato Style Navigation - Normal Flow (Scroll kelyavr varti jaail) */
+    /* Zomato Style Navigation */
     .category-wrapper {
-      position: relative; /* Sticky aivaji relative kelyamule ti page sobat varti jaail */
+      position: relative;
       background-color: #fff;
       border-bottom: 2px solid #eee;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -291,7 +181,6 @@
       align-items: center;
       border-radius: 0 0 16px 16px;
     }
-
     .category-nav {
       display: flex;
       gap: 16px;
@@ -304,12 +193,7 @@
       align-items: center;
       padding: 6px 0;
     }
-
-    .category-nav::-webkit-scrollbar {
-      display: none;
-    }
-
-    /* Exact 6 Icons Eka Screen Var Disnyasathi */
+    .category-nav::-webkit-scrollbar { display: none; }
     .category-nav a {
       text-decoration: none;
       background-color: transparent !important;
@@ -326,8 +210,6 @@
       max-width: calc((100% - (5 * 16px)) / 6);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    /* Zomato Sarkhe Mothe Circular Icons */
     .cat-icon {
       width: 105px;
       height: 105px;
@@ -337,29 +219,14 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
     }
-
-    /* Hover Kelyavar Kinva Click Kelyavar Pop-up Effect */
-    .category-nav a:hover .cat-icon {
-      transform: scale(1.1);
-      box-shadow: 0 8px 18px rgba(90, 18, 18, 0.25);
-    }
-
-    .category-nav a:hover {
-      color: var(--maroon);
-    }
-
-    /* Next / Back Button Dabalyavar Pop-up Bounce Animation */
+    .category-nav a:hover .cat-icon { transform: scale(1.1); box-shadow: 0 8px 18px rgba(90, 18, 18, 0.25); }
+    .category-nav a:hover { color: var(--maroon); }
     @keyframes zomatoPopup {
       0% { transform: scale(0.85); opacity: 0.7; }
       60% { transform: scale(1.06); }
       100% { transform: scale(1); opacity: 1; }
     }
-
-    .pop-effect .cat-icon {
-      animation: zomatoPopup 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    /* Forward & Backward White Shadow Buttons (Zomato Style) */
+    .pop-effect .cat-icon { animation: zomatoPopup 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .scroll-btn {
       position: absolute;
       background: #ffffff;
@@ -378,54 +245,25 @@
       box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
       transition: transform 0.2s ease, background 0.2s ease;
     }
-
-    .scroll-btn:hover {
-      transform: scale(1.1);
-      background: var(--bg-cream);
-      color: var(--maroon);
-    }
-
+    .scroll-btn:hover { transform: scale(1.1); background: var(--bg-cream); color: var(--maroon); }
     .scroll-btn.left { left: 8px; }
     .scroll-btn.right { right: 8px; }
 
-    /* Mobile Screen Sathi Adjusting */
     @media (max-width: 768px) {
-      .category-wrapper {
-        padding: 10px 36px;
-      }
-      .category-nav {
-        gap: 12px;
-      }
+      .category-wrapper { padding: 10px 36px; }
+      .category-nav { gap: 12px; }
       .category-nav a {
         flex: 0 0 calc((100% - (3 * 12px)) / 4);
         max-width: calc((100% - (3 * 12px)) / 4);
         font-size: 0.78rem;
       }
-      .cat-icon {
-        width: 68px;
-        height: 68px;
-      }
-    }
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px 16px 40px;
+      .cat-icon { width: 68px; height: 68px; }
     }
 
-    /* Best Selling Horizontal Scroll Section */
-    .best-selling-section {
-      margin: 25px auto 10px;
-    }
-    .best-selling-scroll {
-      display: flex;
-      gap: 15px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-      scrollbar-width: none;
-    }
-    .best-selling-scroll::-webkit-scrollbar {
-      display: none;
-    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
+    .best-selling-section { margin: 25px auto 10px; }
+    .best-selling-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+    .best-selling-scroll::-webkit-scrollbar { display: none; }
     .bs-card {
       min-width: 130px;
       background: #fff;
@@ -436,19 +274,8 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       flex-shrink: 0;
     }
-    .bs-card img {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid var(--gold);
-    }
-
-    .menu-section {
-      margin-top: 32px;
-      scroll-margin-top: 120px;
-    }
-
+    .bs-card img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold); }
+    .menu-section { margin-top: 32px; scroll-margin-top: 120px; }
     .section-title {
       font-size: 1.55rem;
       color: var(--maroon);
@@ -460,20 +287,8 @@
       align-items: baseline;
       flex-wrap: wrap;
     }
-
-    .section-title span.sub-label {
-      font-size: 0.95rem;
-      color: var(--price-red);
-      font-weight: 600;
-    }
-
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 14px;
-    }
-
-    /* Menu Card */
+    .section-title span.sub-label { font-size: 0.95rem; color: var(--price-red); font-weight: 600; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
     .menu-card {
       background-color: var(--card-bg);
       border-radius: 10px;
@@ -485,7 +300,6 @@
       border: 1px solid #f0e6d8;
       transition: transform 0.2s;
     }
-
     .item-img {
       width: 55px;
       height: 55px;
@@ -495,51 +309,18 @@
       border: 1px solid var(--gold);
       flex-shrink: 0;
     }
-
-    .item-info {
-      flex-grow: 1;
-    }
-
+    .item-info { flex-grow: 1; }
     @keyframes pulse-anim {
       0% { transform: scale(1); }
       50% { transform: scale(1.04); background-color: #fcf1d4; }
       100% { transform: scale(1); }
     }
-    .pulse {
-      animation: pulse-anim 0.3s ease;
-    }
-
-    .item-info h3 {
-      font-size: 0.98rem;
-      color: var(--text-dark);
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .item-info p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .card-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
-    }
-
-    .item-price {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--price-red);
-      white-space: nowrap;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 4px;
-    }
-
+    .pulse { animation: pulse-anim 0.3s ease; }
+    .item-info h3 { font-size: 0.98rem; color: var(--text-dark); font-weight: 700; margin-bottom: 2px; }
+    .item-info p { font-size: 0.82rem; color: var(--text-muted); }
+    .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+    .item-price { font-size: 0.95rem; font-weight: 700; color: var(--price-red); white-space: nowrap; }
+    .btn-group { display: flex; gap: 4px; }
     .add-btn {
       background-color: var(--maroon);
       color: #fff;
@@ -551,16 +332,8 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
     }
-
-    .add-btn:hover {
-      background-color: var(--gold);
-      color: #1a1a1a;
-    }
-
-    .add-btn:active {
-      transform: scale(0.92);
-    }
-
+    .add-btn:hover { background-color: var(--gold); color: #1a1a1a; }
+    .add-btn:active { transform: scale(0.92); }
     .extra-note {
       text-align: center;
       background: #fdf2e9;
@@ -574,17 +347,8 @@
     }
 
     /* Customer Reviews Section */
-    .reviews-section {
-      margin-top: 45px;
-      padding: 20px 0;
-      border-top: 2px dashed var(--gold);
-    }
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 15px;
-      margin-top: 15px;
-    }
+    .reviews-section { margin-top: 45px; padding: 20px 0; border-top: 2px dashed var(--gold); }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
     .review-card {
       background: #fff;
       padding: 16px;
@@ -592,56 +356,49 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
       border-left: 4px solid var(--gold);
     }
-    .review-card h4 {
-      color: var(--maroon);
-      font-size: 0.95rem;
-      margin-bottom: 4px;
+    .review-card h4 { color: var(--maroon); font-size: 0.95rem; margin-bottom: 4px; }
+    .review-stars { color: #ffc107; font-size: 0.9rem; margin-bottom: 8px; }
+    .review-card p { font-size: 0.88rem; color: var(--text-muted); font-style: italic; }
+
+    /* Action Boxes Styling */
+    .action-boxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 30px;
     }
-    .review-stars {
-      color: #ffc107;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
+    .creative-box {
+      background: #fff;
+      border: 2px solid var(--gold);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
-    .review-card p {
+    .creative-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 18px;
+      border-radius: 25px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
       font-size: 0.88rem;
-      color: var(--text-muted);
-      font-style: italic;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease;
     }
-
-<!-- Action Boxes -->
-    <div class="action-boxes">
-      <!-- Live Delivery Tracking Box -->
-      <div class="creative-box" style="border-color: #25D366; background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
-        <h3 style="color: var(--maroon); margin-bottom: 4px;">🛵 Track Live Delivery (ऑर्डर ट्रॅक करा)</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">ऑर्डर दिल्यानंतर डिलिव्हरी बॉयचे Live Location पाहण्यासाठी किंवा कॉल करण्यासाठी खाली क्लिक करा:</p>
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
-          <a href="https://wa.me/918421848131?text=Hello%20Sadguru%20Cafe,%20%E0%A4%AE%E0%A5%80%20%E0%A4%86%E0%A4%A4%E0%A4%BE%E0%A4%9A%20%E0%A4%91%E0%A4%B0%E0%A5%8D%E0%A4%A1%E0%A4%B0%20%E0%A4%A6%E0%A4%BF%E0%A4%B2%E0%A5%80%20%E0%A4%86%E0%A4%B9%E0%A5%87.%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20%E0%A4%AE%E0%A4%B2%E0%A4%BE%20Delivery%20Boy%20%E0%A4%9A%E0%A5%87%20Live%20Location%20%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A4%B5%E0%A4%BE%20%F0%9F%9B%B5%F0%9F%93%8D" target="_blank" class="creative-btn" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); margin-top: 0;">
-            📍 Get Live Location
-          </a>
-          <a href="tel:+918421848131" class="creative-btn" style="background: linear-gradient(135deg, #5a1212 0%, #3e0a0a 100%); margin-top: 0;">
-            📞 Call Delivery Boy
-          </a>
-        </div>
-      </div>
-
-      <div class="creative-box">
-        <h3 style="color: var(--maroon); margin-bottom: 4px;">Loved our food & service? ⭐</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Please share your valuable feedback on Google!</p>
-        <a href="https://www.google.com/maps/place/Sadguru+Cafe/@17.8374302,76.6185664,17z/data=!4m8!3m7!1s0x3bcf5b004637886f:0x63a3e01e06dc1149!8m2!3d17.8374302!4d76.6211413!9m1!1b1!16s%2Fg%2F11wqn_h9hw" target="_blank" class="creative-btn google-btn-style">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-          Rate Us on Google
-        </a>
-      </div>
-
-      <div class="creative-box">
-        <h3 style="color: var(--maroon); margin-bottom: 4px;">Visit Our Cafe 📍</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Find Sadguru Cafe easily on Google Maps</p>
-        <a href="https://maps.app.goo.gl/uXwW9k1p8G3V2Y6j6" target="_blank" class="creative-btn map-btn-style">
-          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-          Open in Google Maps
-        </a>
-      </div>
-    </div>
+    .creative-btn:hover { transform: translateY(-2px); }
+    .creative-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    .google-btn-style { background: linear-gradient(135deg, #4285F4 0%, #34A853 100%); }
+    .map-btn-style { background: linear-gradient(135deg, #EA4335 0%, #FBBC05 100%); }
 
     /* Floating Cart Bar */
     .cart-bar {
@@ -659,10 +416,8 @@
       z-index: 1000;
       border-top: 2px solid var(--gold);
     }
-
     .cart-info { font-size: 0.95rem; font-weight: 600; cursor: pointer; }
     .cart-actions { display: flex; gap: 8px; align-items: center; }
-
     .view-cart-btn {
       background-color: transparent;
       color: var(--gold);
@@ -673,7 +428,6 @@
       font-size: 0.8rem;
       cursor: pointer;
     }
-
     .cart-btn {
       background-color: #25D366 !important;
       color: #ffffff !important;
@@ -692,7 +446,10 @@
     /* Modal Styling */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: rgba(0,0,0,0.6);
       display: none;
       justify-content: center;
@@ -700,7 +457,6 @@
       z-index: 2000;
       padding: 16px;
     }
-
     .modal-content {
       background: #fff;
       width: 100%;
@@ -711,7 +467,6 @@
       overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
-
     .modal-header {
       display: flex;
       justify-content: space-between;
@@ -720,10 +475,8 @@
       padding-bottom: 10px;
       margin-bottom: 15px;
     }
-
     .modal-header h3 { color: var(--maroon); font-size: 1.2rem; }
     .close-modal { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
-
     .cart-item-row {
       display: flex;
       justify-content: space-between;
@@ -732,10 +485,8 @@
       border-bottom: 1px solid #f2f2f2;
       font-size: 0.92rem;
     }
-
     .cart-item-details { flex-grow: 1; }
     .cart-item-price { font-weight: 700; color: var(--price-red); margin-right: 12px; }
-
     .remove-item-btn {
       background-color: #ff4d4d;
       color: white;
@@ -745,7 +496,6 @@
       font-size: 0.75rem;
       cursor: pointer;
     }
-
     .modal-footer {
       margin-top: 15px;
       display: flex;
@@ -754,18 +504,7 @@
       border-top: 2px solid #eee;
       padding-top: 15px;
     }
-
-    <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px;">
-          <label style="font-size: 0.9rem; font-weight: 600; color: var(--maroon);">Delivery Address / Table No. / Location Link:</label>
-          <input type="text" id="customer-address" placeholder="उदा. बस स्थानक, टेबल नं. 04 किंवा Map link" style="width: 100%; padding: 8px 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;" />
-          
-          <!-- GPS Location Button -->
-          <button type="button" onclick="detectUserGPSInModal()" style="margin-top: 8px; background: #E23744; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-            🎯 Get Current Location (GPS)
-          </button>
-        </div>
     .modal-total { font-weight: 700; font-size: 1.1rem; color: var(--maroon); }
-
     footer {
       background-color: var(--maroon);
       color: #fff;
@@ -1231,8 +970,22 @@
       </div>
     </section>
 
-    <!-- Action Boxes -->
+<!-- Action Boxes -->
     <div class="action-boxes">
+      <!-- Live Delivery Tracking Box -->
+      <div class="creative-box" style="border-color: #25D366; background: linear-gradient(135deg, #ffffff 0%, #f0fff4 100%);">
+        <h3 style="color: var(--maroon); margin-bottom: 4px;">🛵 Track Live Delivery (ऑर्डर ट्रॅक करा)</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">ऑर्डर दिल्यानंतर डिलिव्हरी बॉयचे Live Location पाहण्यासाठी किंवा कॉल करण्यासाठी खाली क्लिक करा:</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px;">
+          <a href="https://wa.me/918421848131?text=Hello%20Sadguru%20Cafe,%20%E0%A4%AE%E0%A5%80%20%E0%A4%86%E0%A4%A4%E0%A4%BE%E0%A4%9A%20%E0%A4%91%E0%A4%B0%E0%A5%8D%E0%A4%A1%E0%A4%B0%20%E0%A4%A6%E0%A4%BF%E0%A4%B2%E0%A5%80%20%E0%A4%86%E0%A4%B9%E0%A5%87.%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20%E0%A4%AE%E0%A4%B2%E0%A4%BE%20Delivery%20Boy%20%E0%A4%9A%E0%A5%87%20Live%20Location%20%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A4%B5%E0%A4%BE%20%F0%9F%9B%B5%F0%9F%93%8D" target="_blank" class="creative-btn" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); margin-top: 0;">
+            📍 Get Live Location
+          </a>
+          <a href="tel:+918421848131" class="creative-btn" style="background: linear-gradient(135deg, #5a1212 0%, #3e0a0a 100%); margin-top: 0;">
+            📞 Call Delivery Boy
+          </a>
+        </div>
+      </div>
+
       <div class="creative-box">
         <h3 style="color: var(--maroon); margin-bottom: 4px;">Loved our food & service? ⭐</h3>
         <p style="font-size: 0.85rem; color: var(--text-muted);">Please share your valuable feedback on Google!</p>
