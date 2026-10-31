@@ -1308,11 +1308,10 @@
     <p class="copyright">© 2026 Sadguru Cafe. All Rights Reserved.</p>
   </footer>
 
-  <!-- JavaScript -->
+<!-- JavaScript -->
   <script>
     // Website & Images Fast Load Karnyasathi Speed Booster
     document.addEventListener("DOMContentLoaded", function() {
-      // 1. Navigation bar madhle photos sarvat adhi (High Priority) load karne
       document.querySelectorAll('.cat-icon').forEach((img, index) => {
         if (index < 6) {
           img.setAttribute('fetchpriority', 'high');
@@ -1322,7 +1321,6 @@
         img.setAttribute('decoding', 'async');
       });
 
-      // 2. Khalchya menu madhle photos scroll kelyavarach load karne (Lazy Load)
       document.querySelectorAll('.item-img, .bs-card img').forEach(img => {
         img.setAttribute('loading', 'lazy');
         img.setAttribute('decoding', 'async');
@@ -1345,9 +1343,11 @@
         }
       });
     }
-// Location Dropdown Toggle & Sync Functions
+
+    // Location Dropdown Toggle & Sync Functions
     function toggleLocationDropdown(forceShow) {
       let dropdown = document.getElementById('loc-dropdown');
+      if (!dropdown) return;
       if (forceShow === true) {
         dropdown.style.display = 'flex';
       } else {
@@ -1356,21 +1356,25 @@
     }
 
     function selectLocation(locText) {
-      document.getElementById('top-location-input').value = locText;
+      let topInput = document.getElementById('top-location-input');
+      if (topInput) topInput.value = locText;
       let addrField = document.getElementById('customer-address');
       if (addrField) addrField.value = locText;
-      document.getElementById('loc-dropdown').style.display = 'none';
+      let dropdown = document.getElementById('loc-dropdown');
+      if (dropdown) dropdown.style.display = 'none';
     }
 
     function syncLocationFromTop() {
-      let topVal = document.getElementById('top-location-input').value;
+      let topInput = document.getElementById('top-location-input');
       let addrField = document.getElementById('customer-address');
-      if (addrField) addrField.value = topVal;
+      if (topInput && addrField) addrField.value = topInput.value;
     }
 
-function detectUserGPSInModal() {
-      let addrField = document.getElementById('customer-address');
-      if (addrField) addrField.value = "Detecting GPS...";
+    function detectUserGPS() {
+      let locInput = document.getElementById('top-location-input');
+      if (locInput) locInput.value = "Detecting GPS...";
+      let dropdown = document.getElementById('loc-dropdown');
+      if (dropdown) dropdown.style.display = 'none';
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -1378,47 +1382,48 @@ function detectUserGPSInModal() {
             let lat = position.coords.latitude;
             let lng = position.coords.longitude;
             let mapLink = `https://www.google.com/maps?q=${lat},${lng}`;
+            if (locInput) locInput.value = "📍 GPS Location Added (Omerga)";
+            let addrField = document.getElementById('customer-address');
             if (addrField) addrField.value = `Live GPS Location: ${mapLink}`;
           },
           function() {
             alert("GPS चालू करता आले नाही. कृपया तुमचा पत्ता टाइप करा.");
-            if (addrField) addrField.value = "";
+            if (locInput) locInput.value = "Omerga";
           }
         );
       } else {
         alert("तुमच्या ब्राउझरमध्ये GPS सपोर्ट नाही.");
-        if (addrField) addrField.value = "";
+        if (locInput) locInput.value = "Omerga";
       }
     }
 
-    // बाहेर क्लिक केल्यावर लोकेशन ड्रॉपडाउन बंद होण्यासाठी
     document.addEventListener('click', function(e) {
       let locBox = document.querySelector('.location-box');
-      if (locBox && !locBox.contains(e.target)) {
-        document.getElementById('loc-dropdown').style.display = 'none';
+      let dropdown = document.getElementById('loc-dropdown');
+      if (locBox && dropdown && !locBox.contains(e.target)) {
+        dropdown.style.display = 'none';
       }
     });
-function scrollCategory(amount) {
+
+    function scrollCategory(amount) {
       let nav = document.getElementById('cat-nav');
       let links = nav.querySelectorAll('a');
       if (links.length < 2) return;
 
-      // Eka veli barobar 1 icon + tyacha gap pudhe/maghe saraknyasathi:
       let oneIconStep = links[1].offsetLeft - links[0].offsetLeft;
       let scrollDistance = amount > 0 ? oneIconStep : -oneIconStep;
-      
       nav.scrollBy({ left: scrollDistance, behavior: 'smooth' });
 
-      // Next kinva Back dabalyavar icons pop-up honyasathi
       links.forEach(link => {
         link.classList.remove('pop-effect');
-        void link.offsetWidth; // Animation restart karne
+        void link.offsetWidth;
         link.classList.add('pop-effect');
       });
     }
+
     function addToCart(name, price, btnElement) {
       let card = btnElement.closest('.menu-card') || btnElement.closest('.bs-card');
-      if(card) {
+      if (card) {
         card.classList.add('pulse');
         setTimeout(() => card.classList.remove('pulse'), 300);
       }
@@ -1445,7 +1450,7 @@ function scrollCategory(amount) {
         totalItems += item.qty;
         totalPrice += (item.price * item.qty);
       });
-      document.getElementById('cart-info').innerText = `🛒 Cart: ${totalItems} items | ₹${totalPrice}`;
+      document.getElementById('cart-info').innerText = `🛒 Cart: ${totalItems} items | ₹${totalPrice} (Click to view)`;
       document.getElementById('modal-total-price').innerText = `Total: ₹${totalPrice}`;
     }
 
@@ -1462,7 +1467,7 @@ function scrollCategory(amount) {
     function renderModalItems() {
       let container = document.getElementById('modal-cart-items');
       if (cart.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">Tumchya cart madhe kontahi item nahiye.</p>';
+        container.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">तुमच्या कार्टमध्ये कोणताही पदार्थ नाहीये.</p>';
         return;
       }
       let html = '';
@@ -1484,22 +1489,23 @@ function scrollCategory(amount) {
 
     function sendWhatsAppOrder() {
       if (cart.length === 0) {
-        alert('Krupaya kuthlehi items select kara!');
+        alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
         return;
       }
       
       let address = document.getElementById('customer-address').value.trim();
       if (!address) {
-        alert('Krupaya apla Delivery Address taka!');
-        return;
+        let topLoc = document.getElementById('top-location-input');
+        if (topLoc && topLoc.value.trim() && topLoc.value.trim() !== 'Omerga') {
+          address = topLoc.value.trim();
+        } else {
+          toggleCartModal(true);
+          alert('कृपया तुमचा Delivery Address किंवा Table Number टाका!');
+          return;
+        }
       }
 
-    <!-- GPS Location Button -->
-          <button type="button" onclick="detectUserGPSInModal()" style="margin-top: 8px; background: #E23744; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-            🎯 Get Current Location (GPS)
-          </button>
-        
-      let message = "Hello Sadguru Cafe, mala khaliil order daychi aahe:\n\n";
+      let message = "Hello Sadguru Cafe, मला खालील ऑर्डर द्यायची आहे:\n\n";
       let grandTotal = 0;
       cart.forEach((item, index) => {
         let itemTotal = item.price * item.qty;
@@ -1507,13 +1513,12 @@ function scrollCategory(amount) {
         message += `${index + 1}. ${item.name} x ${item.qty} = ₹${itemTotal}\n`;
       });
       message += `\n*Total Amount: ₹${grandTotal}*`;
-      message += `\n\n🏠 *Address / Location:* ${address}`;
+      message += `\n\n📍 *Address / Table / Location:* ${address}`;
       
       let phoneNumber = "918421848131"; 
       let url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
       window.open(url, '_blank');
     }
   </script>
-
 </body>
 </html>
