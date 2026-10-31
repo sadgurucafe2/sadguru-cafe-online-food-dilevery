@@ -1042,13 +1042,325 @@
     </div>
   </div>
 
-  <!-- Footer -->
+<!-- Footer -->
   <footer>
     <h2 style="color: var(--gold); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 6px;">SADGURU CAFE</h2>
-    <p style="font-size: 0.9rem; color: #f7e7b4; margin-bottom: 6px;">📍 Khau Galli, Shivpuri Road, Omerga | 📞 +91 84218 48131</p>
+    <p style="font-size: 0.9rem; color: #f7e7b4; margin-bottom: 6px;">📍 Khau Galli, Shivpuri Road, Omerga | 📞 +91 84218 48131 / 8412056933</p>
     <p class="copyright">© 2026 Sadguru Cafe. All Rights Reserved.</p>
   </footer>
 
+  <!-- Leaflet Live Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- ZOMATO AUTOMATIC CUSTOMER LIVE TRACKER MODAL -->
+  <div class="modal-overlay" id="zomato-track-modal" style="z-index: 3000;">
+    <div class="modal-content" style="max-width: 480px; padding: 0; overflow: hidden; border-radius: 16px;">
+      <!-- Top Live Status Header -->
+      <div style="background: linear-gradient(135deg, #E23744 0%, #b81d2a 100%); color: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span id="zt-badge" style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(0,0,0,0.25); padding: 3px 9px; border-radius: 10px;">● LIVE ORDER STATUS</span>
+          <h3 id="zt-status-title" style="font-size: 1.1rem; margin-top: 5px; color: #fff;">🍳 ऑर्डर किचनमध्ये तयार होत आहे...</h3>
+          <div id="zt-eta-sub" style="font-size: 0.8rem; color: #ffd6d9; margin-top: 2px;">Estimated Prep Time: 20–25 mins</div>
+        </div>
+        <button onclick="closeZomatoTracker()" style="background: rgba(255,255,255,0.2); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;">×</button>
+      </div>
+
+      <!-- Live Map Container -->
+      <div id="zomato-map" style="width: 100%; height: 260px; background: #eee;"></div>
+
+      <!-- Auto Delivery Partner Info Card -->
+      <div style="padding: 15px; background: #fff;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fdf8f4; border: 1px solid #f0e6d8; padding: 12px; border-radius: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 46px; height: 46px; border-radius: 50%; background: #ffeef0; border: 2px solid #E23744; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+              🛵
+            </div>
+            <div>
+              <div style="font-size: 0.72rem; color: #E23744; font-weight: 700; text-transform: uppercase;">Delivery Partner</div>
+              <div id="zt-rider-name" style="font-size: 0.98rem; font-weight: 700; color: #222;">Sadguru Cafe Team</div>
+              <div id="zt-rider-phone" style="font-size: 0.82rem; color: #555;">📞 +91 84218 48131</div>
+            </div>
+          </div>
+          <a id="zt-call-btn" href="tel:+918421848131" style="background: #25D366; color: #fff; text-decoration: none; padding: 9px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; box-shadow: 0 3px 8px rgba(37,211,102,0.3);">
+            📞 Call
+          </a>
+        </div>
+        <div id="zt-last-update" style="text-align: center; font-size: 0.76rem; color: #777; margin-top: 8px;">
+          📍 डिलिव्हरी पार्टनर निघाल्यावर इथे नकाशावर गाडी लाईव्ह दिसेल.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1-TAP AUTOMATIC RIDER MODE BANNER (Opens automatically via WhatsApp link) -->
+  <div class="modal-overlay" id="auto-rider-modal" style="z-index: 3200;">
+    <div class="modal-content" style="max-width: 400px; text-align: center; border-top: 5px solid #25D366;">
+      <h3 style="color: var(--maroon); margin-bottom: 6px;">🛵 1-Tap Auto Delivery Mode</h3>
+      <p style="font-size: 0.82rem; color: #555; margin-bottom: 14px;">फक्त तुमचे नाव एकदा निवडा. तुमचा फोन ते कायमचे लक्षात ठेवेल आणि लगेच ऑटोमॅटिक GPS ट्रॅकिंग सुरू होईल!</p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+        <button onclick="selectRiderAndAutoStart('Mahesh', '8421848131')" style="background: #5a1212; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; cursor: pointer;">
+          🛵 मी जातोय: Mahesh (8421848131)
+        </button>
+        <button onclick="selectRiderAndAutoStart('Delivery Partner', '8412056933')" style="background: #E23744; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; cursor: pointer;">
+          🛵 मी जातोय: Partner (8412056933)
+        </button>
+        <button onclick="customRiderOneTime()" style="background: #f5f5f5; color: #333; border: 1px solid #ccc; padding: 9px; border-radius: 10px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
+          ➕ इतर मित्र / दुसरा नंबर सेव्ह करा
+        </button>
+      </div>
+
+      <div id="rider-live-indicator" style="display: none; background: #f0fff4; border: 1px solid #25D366; padding: 10px; border-radius: 8px; color: #0b6b3a; font-weight: 600; font-size: 0.85rem; margin-bottom: 10px;">
+        🟢 तुमचे Live GPS आता कस्टमरला ऑटोमॅटिक दिसत आहे!
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button onclick="finishDeliveryAuto()" style="flex: 1; background: #ff4d4d; color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+          ✅ Order Delivered (Stop GPS)
+        </button>
+        <button onclick="document.getElementById('auto-rider-modal').style.display='none'" style="background: #eee; color: #333; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CAFE_COORDS = [17.8374302, 76.6211413]; // Sadguru Cafe, Omerga
+    const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
+    let ztMap = null, riderMarker = null, customerMarker = null, routeLine = null, pollTimer = null, staffWatchId = null;
+    let customerCoords = null;
+
+    // Cart Modal GPS Button + Auto Save Customer Coords
+    function detectUserGPSInModal() {
+      let addrField = document.getElementById('customer-address');
+      if (addrField) addrField.value = "Detecting GPS...";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(pos) {
+            customerCoords = [pos.coords.latitude, pos.coords.longitude];
+            localStorage.setItem('sc_cust_coords', JSON.stringify(customerCoords));
+            let link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+            if (addrField) addrField.value = `Live GPS Location: ${link}`;
+          },
+          function() {
+            alert("GPS चालू करता आले नाही. कृपया पत्ता टाइप करा.");
+            if (addrField) addrField.value = "";
+          }
+        );
+      }
+    }
+
+    // Distance & Auto ETA Calculator (Haversine Formula)
+    function getDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+    }
+
+    window.addEventListener("load", function() {
+      let savedCust = localStorage.getItem('sc_cust_coords');
+      if (savedCust) { try { customerCoords = JSON.parse(savedCust); } catch(e){} }
+
+      // Connect "Live Location" button on website to Zomato Tracker Modal
+      document.querySelectorAll('.action-boxes a, .pro-action-grid a').forEach(btn => {
+        if (btn.innerText.includes('Live Location') || btn.innerText.includes('Live Track')) {
+          btn.href = "javascript:void(0)";
+          btn.removeAttribute('target');
+          btn.onclick = function(e) { e.preventDefault(); openZomatoTracker(); };
+        }
+      });
+
+      // Override sendWhatsAppOrder so it automatically includes the 1-Tap Rider Start Link & opens Customer Tracker
+      window.sendWhatsAppOrder = function() {
+        if (cart.length === 0) {
+          alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
+          return;
+        }
+        let address = document.getElementById('customer-address').value.trim();
+        if (!address) {
+          let topLoc = document.getElementById('top-location-input');
+          if (topLoc && topLoc.value.trim() && topLoc.value.trim() !== 'Omerga') {
+            address = topLoc.value.trim();
+          } else {
+            toggleCartModal(true);
+            alert('कृपया तुमचा Delivery Address किंवा Table Number टाका!');
+            return;
+          }
+        }
+
+        let message = "Hello Sadguru Cafe, मला खालील ऑर्डर द्यायची आहे:\n\n";
+        let grandTotal = 0;
+        cart.forEach((item, index) => {
+          let itemTotal = item.price * item.qty;
+          grandTotal += itemTotal;
+          message += `${index + 1}. ${item.name} x ${item.qty} = ₹${itemTotal}\n`;
+        });
+        message += `\n*Total Amount: ₹${grandTotal}*`;
+        message += `\n📍 *Address:* ${address}`;
+
+        let startUrl = window.location.origin + window.location.pathname + "?rider=auto";
+        if (customerCoords) {
+          startUrl += `&clat=${customerCoords[0]}&clng=${customerCoords[1]}`;
+        }
+        message += `\n\n🛵 *Staff 1-Click Start Delivery:* \n${startUrl}`;
+
+        toggleCartModal(false);
+        setTimeout(() => { openZomatoTracker(); }, 600);
+
+        let url = `https://wa.me/918421848131?text=` + encodeURIComponent(message);
+        window.open(url, '_blank');
+      };
+
+      // Check URL Parameters for Automatic Rider Start or Customer Tracking
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('clat') && params.get('clng')) {
+        customerCoords = [parseFloat(params.get('clat')), parseFloat(params.get('clng'))];
+        localStorage.setItem('sc_cust_coords', JSON.stringify(customerCoords));
+      }
+
+      if (params.get('rider') === 'auto') {
+        document.getElementById('auto-rider-modal').style.display = 'flex';
+        let savedRider = localStorage.getItem('sc_saved_rider');
+        if (savedRider) {
+          let r = JSON.parse(savedRider);
+          selectRiderAndAutoStart(r.name, r.phone);
+        }
+      } else if (params.get('track') === 'live') {
+        openZomatoTracker();
+      }
+    });
+
+    function openZomatoTracker() {
+      document.getElementById('zomato-track-modal').style.display = 'flex';
+      setTimeout(() => {
+        if (!ztMap) {
+          ztMap = L.map('zomato-map').setView(CAFE_COORDS, 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(ztMap);
+
+          let cafeIcon = L.divIcon({
+            html: '<div style="font-size:24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">🏪</div>',
+            className: '', iconSize: [30, 30], iconAnchor: [15, 15]
+          });
+          L.marker(CAFE_COORDS, { icon: cafeIcon }).addTo(ztMap).bindPopup("<b>Sadguru Cafe</b><br>Shivpuri Road, Omerga");
+
+          let scooterIcon = L.divIcon({
+            html: '<div style="font-size:26px; background:#fff; border:2px solid #E23744; border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.3);">🛵</div>',
+            className: '', iconSize: [38, 38], iconAnchor: [19, 19]
+          });
+          riderMarker = L.marker(CAFE_COORDS, { icon: scooterIcon }).addTo(ztMap).bindPopup("Delivery Partner 🛵");
+          routeLine = L.polyline([CAFE_COORDS, CAFE_COORDS], { color: '#E23744', weight: 4, dashArray: '8, 8' }).addTo(ztMap);
+        } else {
+          ztMap.invalidateSize();
+        }
+        fetchLatestRiderLocation();
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = setInterval(fetchLatestRiderLocation, 4000);
+      }, 200);
+    }
+
+    function closeZomatoTracker() {
+      document.getElementById('zomato-track-modal').style.display = 'none';
+      if (pollTimer) clearInterval(pollTimer);
+    }
+
+    function fetchLatestRiderLocation() {
+      fetch(`https://ntfy.sh/${LIVE_CHANNEL}/json?poll=1&since=45m`)
+        .then(res => res.text())
+        .then(text => {
+          let lines = text.trim().split('\n').filter(Boolean);
+          if (lines.length === 0) return;
+          let lastEvent = JSON.parse(lines[lines.length - 1]);
+          let data = JSON.parse(lastEvent.message);
+
+          if (data && data.stopped) {
+            document.getElementById('zt-status-title').innerText = "✅ ऑर्डर डिलिव्हर झाली आहे! (Delivered)";
+            document.getElementById('zt-eta-sub').innerText = "Thank you for ordering from Sadguru Cafe!";
+            return;
+          }
+
+          if (data && data.lat && data.lng) {
+            document.getElementById('zt-rider-name').innerText = `${data.name} (On the way)`;
+            document.getElementById('zt-rider-phone').innerText = `📞 +91 ${data.phone}`;
+            document.getElementById('zt-call-btn').href = `tel:+91${data.phone}`;
+
+            let pos = [data.lat, data.lng];
+            let targetCoords = customerCoords || data.custCoords || CAFE_COORDS;
+            let distKm = getDistanceKm(data.lat, data.lng, targetCoords[0], targetCoords[1]);
+            let etaMins = Math.max(2, Math.round((distKm / 25) * 60) + 2);
+
+            document.getElementById('zt-status-title').innerText = `🛵 ${data.name} तुमची ऑर्डर घेऊन येत आहेत!`;
+            if (customerCoords || data.custCoords) {
+              document.getElementById('zt-eta-sub').innerText = `⚡ फक्त ${etaMins} मिनिटांत पोहोचतील (${distKm.toFixed(1)} km बाकी)`;
+            } else {
+              document.getElementById('zt-eta-sub').innerText = `🟢 Live GPS Active • Updated ${data.time}`;
+            }
+
+            document.getElementById('zt-last-update').innerText = `🟢 Live GPS ट्रॅकिंग चालू आहे (Updated: ${data.time})`;
+            riderMarker.setLatLng(pos).bindPopup(`<b>🛵 ${data.name}</b><br>📞 ${data.phone}`);
+            routeLine.setLatLngs([CAFE_COORDS, pos]);
+            ztMap.panTo(pos);
+          }
+        })
+        .catch(() => {});
+    }
+
+    // Automatic Rider Selection & Instant GPS Broadcast
+    function selectRiderAndAutoStart(name, phone) {
+      localStorage.setItem('sc_saved_rider', JSON.stringify({ name: name, phone: phone }));
+      document.getElementById('rider-live-indicator').style.display = 'block';
+      document.getElementById('rider-live-indicator').innerText = `🟢 ${name} (${phone}) - Live GPS सुरू झाले आहे!`;
+
+      if (!navigator.geolocation) {
+        alert("तुमच्या फोनमध्ये GPS सपोर्ट नाही!");
+        return;
+      }
+      if (staffWatchId) navigator.geolocation.clearWatch(staffWatchId);
+      staffWatchId = navigator.geolocation.watchPosition(function(pos) {
+        let payload = {
+          name: name,
+          phone: phone,
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          custCoords: customerCoords,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        };
+        fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+      }, function() {
+        alert("कृपया फोनचे Location (GPS) ऑन करा!");
+      }, { enableHighAccuracy: true, maximumAge: 0 });
+    }
+
+    function customRiderOneTime() {
+      let name = prompt("पार्सल नेणाऱ्याचे नाव टाका:");
+      if (!name) return;
+      let phone = prompt("त्याचा १० अंकी मोबाईल नंबर टाका:");
+      if (!phone) return;
+      selectRiderAndAutoStart(name.trim(), phone.trim());
+    }
+
+    function finishDeliveryAuto() {
+      if (staffWatchId) {
+        navigator.geolocation.clearWatch(staffWatchId);
+        staffWatchId = null;
+      }
+      fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
+        method: 'POST',
+        body: JSON.stringify({ stopped: true })
+      });
+      document.getElementById('rider-live-indicator').style.display = 'none';
+      document.getElementById('auto-rider-modal').style.display = 'none';
+      alert("✅ डिलिव्हरी पूर्ण झाली! Live GPS बंद केले आहे.");
+    }
+  </script>
 <!-- JavaScript -->
   <script>
     // Website & Images Fast Load Karnyasathi Speed Booster
