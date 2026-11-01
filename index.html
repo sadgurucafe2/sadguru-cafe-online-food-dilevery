@@ -1018,7 +1018,7 @@
     </div>
   </div>
 
-  <!-- Cart Modal (Direct Website Order - No WhatsApp) -->
+  <!-- Cart Modal (Direct Website Order) -->
   <div class="modal-overlay" id="cart-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1054,85 +1054,95 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Clean Customer Footer (Triple-Click on Copyright Opens Owner Dashboard in New Tab) -->
   <footer>
     <h2 style="color: var(--gold); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 6px;">SADGURU CAFE</h2>
     <p style="font-size: 0.9rem; color: #f7e7b4; margin-bottom: 6px;">📍 Khau Galli, Shivpuri Road, Omerga | 📞 +91 84218 48131 / 8412056933</p>
-    <p class="copyright">© 2026 Sadguru Cafe. All Rights Reserved.</p>
-    <div style="margin-top: 14px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-      <button onclick="openAdminDashboard()" style="background: rgba(0,0,0,0.35); color: var(--gold); border: 1px solid var(--gold); padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer;">
-        💻 Cafe Order Dashboard (Admin)
-      </button>
-      <button onclick="unlockStaffPhone()" style="background: rgba(255,255,255,0.1); color: #f7e7b4; border: 1px solid rgba(212,175,55,0.5); padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; cursor: pointer;">
-        🛵 Delivery Boy Setup
-      </button>
-    </div>
+    <p class="copyright" onclick="secretOwnerTrigger()" style="user-select: none; cursor: default;">© 2026 Sadguru Cafe. All Rights Reserved.</p>
   </footer>
 
-  <!-- STAFF-ONLY FLOATING TOP BAR (Visible ONLY on Saved Delivery Phones) -->
-  <div id="staff-top-bar" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: #111; color: #fff; padding: 8px 12px; z-index: 4000; justify-content: space-between; align-items: center; border-bottom: 2px solid #25D366; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
-    <div style="font-size: 0.82rem; font-weight: 700;">
-      🛵 <span id="staff-bar-name" style="color: var(--gold);">Staff</span>
-      <span id="staff-bar-status" style="font-size: 0.75rem; color: #aaa; margin-left: 4px;">(Idle)</span>
-    </div>
-    <div style="display: flex; gap: 6px;">
-      <button onclick="startOneTapStaffGPS()" style="background: #25D366; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
-        🟢 Start Delivery
-      </button>
-      <button onclick="finishDeliveryAuto()" style="background: #ff4d4d; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
-        ✅ Stop
-      </button>
-      <button onclick="document.getElementById('auto-rider-modal').style.display='flex'" style="background: #333; color: #fff; border: 1px solid #555; padding: 6px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">
-        ⚙️
-      </button>
-    </div>
-  </div>
-
-  <!-- 💻 CAFE DESKTOP LIVE ORDER DASHBOARD (FULL SCREEN POS) -->
-  <div id="cafe-admin-dashboard" style="display: none; position: fixed; inset: 0; background: #121418; color: #fff; z-index: 5000; overflow-y: auto; padding: 20px;">
-    <div style="max-width: 1150px; margin: 0 auto;">
+  <!-- 💻 OWNER & KITCHEN LIVE POS DASHBOARD (Opens in Separate Tab ?pos=1) -->
+  <div id="cafe-admin-dashboard" style="display: none; position: fixed; inset: 0; background: #101216; color: #fff; z-index: 5000; overflow-y: auto; padding: 18px;">
+    <div style="max-width: 1280px; margin: 0 auto;">
+      
       <!-- Top POS Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: #1e2229; padding: 16px 20px; border-radius: 12px; border-left: 5px solid var(--gold); margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: #1a1d24; padding: 15px 20px; border-radius: 12px; border-left: 5px solid var(--gold); margin-bottom: 16px;">
         <div>
-          <h2 style="color: var(--gold); font-size: 1.4rem; margin-bottom: 4px;">☕ SADGURU CAFE — LIVE ORDER DASHBOARD</h2>
-          <div style="font-size: 0.85rem; color: #25D366; font-weight: 600;">● Live Server Connected — नवीन ऑर्डर आल्यावर आपोआप बेल वाजेल!</div>
+          <h2 style="color: var(--gold); font-size: 1.35rem; margin-bottom: 3px;">☕ SADGURU CAFE — KITCHEN & OWNER POS DASHBOARD</h2>
+          <div style="font-size: 0.82rem; color: #25D366; font-weight: 600;">● Live Auto-Sync Active | नवीन ऑर्डर आल्यावर ऑटोमॅटिक अलार्म वाजेल</div>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <button onclick="stopOrderAlarm()" id="stop-alarm-btn" style="display: none; background: #ff3b30; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; animation: pulse-anim 0.6s infinite;">
-            🔕 Stop Ringing Alarm
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button onclick="stopOrderAlarm()" id="stop-alarm-btn" style="display: none; background: #ff3b30; color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; animation: pulse-anim 0.6s infinite;">
+            🔕 Stop Alarm
           </button>
-          <button onclick="testOrderAlarm()" style="background: #2b303b; color: #fff; border: 1px solid #444; padding: 9px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
-            🔔 Test Sound
+          <button onclick="toggleDashPanel('staff-manager-box')" style="background: #2b303c; color: var(--gold); border: 1px solid var(--gold); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+            👥 Manage Staff
           </button>
-          <button onclick="clearAllCompletedOrders()" style="background: #2b303b; color: #ff8a8a; border: 1px solid #522; padding: 9px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
-            🗑️ Clear History
+          <button onclick="toggleDashPanel('software-sync-box')" style="background: #2b303c; color: #5ac8fa; border: 1px solid #5ac8fa; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
+            🔗 Software / API Connect
           </button>
-          <button onclick="closeAdminDashboard()" style="background: #444; color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
-            ✖ Exit Dashboard
+          <button onclick="exportOrdersCSV()" style="background: #2b303c; color: #fff; border: 1px solid #444; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
+            📊 Excel / CSV
+          </button>
+          <button onclick="testOrderAlarm()" style="background: #2b303c; color: #fff; border: 1px solid #444; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
+            🔔 Sound
+          </button>
+          <button onclick="clearAllCompletedOrders()" style="background: #2b303c; color: #ff8a8a; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
+            🗑️ Clear Done
+          </button>
+        </div>
+      </div>
+
+      <!-- 👥 OWNER STAFF MANAGER PANEL (Add / Delete Delivery Staff) -->
+      <div id="staff-manager-box" style="display: none; background: #1a1d24; border: 1px solid var(--gold); border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+        <h3 style="color: var(--gold); font-size: 1.05rem; margin-bottom: 10px;">👥 Add / Manage Delivery Staff (तुमचा स्टाफ इथे ॲड करा)</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+          <input type="text" id="new-staff-name" placeholder="स्टाफचे नाव (उदा. राहुल)" style="padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff; flex: 1; min-width: 180px;" />
+          <input type="tel" id="new-staff-phone" maxlength="10" placeholder="10 अंकी मोबाईल नंबर" style="padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff; flex: 1; min-width: 180px;" />
+          <button onclick="addStaffMemberFromDash()" style="background: #25D366; color: #111; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+            ➕ Add Staff Member
+          </button>
+        </div>
+        <div id="staff-list-chips" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+      </div>
+
+      <!-- 🔗 BILLING SOFTWARE / POS INTEGRATION PANEL -->
+      <div id="software-sync-box" style="display: none; background: #1a1d24; border: 1px solid #5ac8fa; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+        <h3 style="color: #5ac8fa; font-size: 1.05rem; margin-bottom: 6px;">🔗 Connect Online Orders to Your Billing Software</h3>
+        <p style="font-size: 0.82rem; color: #aaa; margin-bottom: 12px;">तुमच्या डेस्कटॉप सॉफ्टवेअरची Local API / Webhook URL खाली टाका. नवीन ऑर्डर आल्यावर तिचा पूर्ण डेटा (JSON) आपोआप तुमच्या सॉफ्टवेअरमध्ये पाठवला जाईल.</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px;">
+          <input type="text" id="pos-webhook-url" placeholder="उदा. http://localhost:8080/api/orders किंवा Webhook URL" style="padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff; flex: 1; min-width: 260px;" />
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
+            <input type="checkbox" id="auto-print-kot" onchange="saveSoftwareConfig()" /> 🖨️ ऑर्डर Accept केल्यावर आपोआप KOT प्रिंट काढा
+          </label>
+          <button onclick="saveSoftwareConfig(true)" style="background: #5ac8fa; color: #111; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+            💾 Save Settings
           </button>
         </div>
       </div>
 
       <!-- Summary Counters -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px;">
-        <div style="background: #1e2229; padding: 16px; border-radius: 10px; border-top: 3px solid #ff9f0a;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid #ff9f0a;">
           <div style="font-size: 0.8rem; color: #aaa;">🔔 New / Pending Orders</div>
-          <div id="dash-pending-count" style="font-size: 1.8rem; font-weight: 700; color: #ff9f0a; margin-top: 4px;">0</div>
+          <div id="dash-pending-count" style="font-size: 1.7rem; font-weight: 700; color: #ff9f0a; margin-top: 2px;">0</div>
         </div>
-        <div style="background: #1e2229; padding: 16px; border-radius: 10px; border-top: 3px solid #25D366;">
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid #0a84ff;">
+          <div style="font-size: 0.8rem; color: #aaa;">🛵 Out for Delivery</div>
+          <div id="dash-delivery-count" style="font-size: 1.7rem; font-weight: 700; color: #0a84ff; margin-top: 2px;">0</div>
+        </div>
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid #25D366;">
           <div style="font-size: 0.8rem; color: #aaa;">📦 Total Orders Today</div>
-          <div id="dash-total-count" style="font-size: 1.8rem; font-weight: 700; color: #25D366; margin-top: 4px;">0</div>
+          <div id="dash-total-count" style="font-size: 1.7rem; font-weight: 700; color: #25D366; margin-top: 2px;">0</div>
         </div>
-        <div style="background: #1e2229; padding: 16px; border-radius: 10px; border-top: 3px solid var(--gold);">
-          <div style="font-size: 0.8rem; color: #aaa;">💰 Today's Total Sales</div>
-          <div id="dash-total-sales" style="font-size: 1.8rem; font-weight: 700; color: var(--gold); margin-top: 4px;">₹0</div>
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid var(--gold);">
+          <div style="font-size: 0.8rem; color: #aaa;">💰 Today's Online Sales</div>
+          <div id="dash-total-sales" style="font-size: 1.7rem; font-weight: 700; color: var(--gold); margin-top: 2px;">₹0</div>
         </div>
       </div>
 
-      <!-- Orders Grid -->
-      <div id="dashboard-orders-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px;">
-        <p style="color: #888; grid-column: 1/-1; text-align: center; padding: 40px;">सध्या कोणतीही नवीन ऑर्डर नाही. कस्टमरने ऑर्डर देताच इथे दिसेल...</p>
-      </div>
+      <!-- Live Orders Grid -->
+      <div id="dashboard-orders-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px;"></div>
     </div>
   </div>
 
@@ -1161,7 +1171,7 @@
               🛵
             </div>
             <div>
-              <div style="font-size: 0.72rem; color: #E23744; font-weight: 700; text-transform: uppercase;">Sadguru Cafe Support</div>
+              <div style="font-size: 0.72rem; color: #E23744; font-weight: 700; text-transform: uppercase;">Delivery Partner</div>
               <div id="zt-rider-name" style="font-size: 0.98rem; font-weight: 700; color: #222;">Sadguru Cafe Team</div>
               <div id="zt-rider-phone" style="font-size: 0.82rem; color: #555;">📞 +91 84218 48131</div>
             </div>
@@ -1171,37 +1181,8 @@
           </a>
         </div>
         <div id="zt-last-update" style="text-align: center; font-size: 0.76rem; color: #777; margin-top: 8px;">
-          📍 डिलिव्हरी पार्टनर निघाल्यावर इथे नकाशावर गाडी लाईव्ह दिसेल.
+          📍 डिलिव्हरी पार्टनर निघाल्यावर इथे त्याचे नाव आणि नंबर दिसेल.
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 1-TIME STAFF PHONE SETUP MODAL -->
-  <div class="modal-overlay" id="auto-rider-modal" style="z-index: 4200;">
-    <div class="modal-content" style="max-width: 400px; text-align: center; border-top: 5px solid #25D366;">
-      <h3 style="color: var(--maroon); margin-bottom: 6px;">🛵 Delivery Partner 1-Time Setup</h3>
-      <p style="font-size: 0.82rem; color: #555; margin-bottom: 14px;">हा फोन डिलिव्हरीसाठी एकदाच निवडा. यानंतर फक्त याच फोनवर वरती <b>🟢 Start Delivery</b> बटण दिसेल!</p>
-
-      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
-        <button onclick="saveStaffProfile('Mahesh', '8421848131')" style="background: #5a1212; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; cursor: pointer;">
-          🛵 हा फोन: Mahesh (8421848131)
-        </button>
-        <button onclick="saveStaffProfile('Delivery Partner', '8412056933')" style="background: #E23744; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; cursor: pointer;">
-          🛵 हा फोन: Partner (8412056933)
-        </button>
-        <button onclick="customRiderOneTime()" style="background: #f5f5f5; color: #333; border: 1px solid #ccc; padding: 9px; border-radius: 10px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
-          ➕ इतर मित्र / दुसरा नंबर सेव्ह करा
-        </button>
-      </div>
-
-      <div style="display: flex; gap: 8px;">
-        <button onclick="removeStaffModeFromPhone()" style="flex: 1; background: #ffeded; color: #d00; border: 1px solid #ffcccc; padding: 9px; border-radius: 8px; font-weight: 600; font-size: 0.78rem; cursor: pointer;">
-          🔒 Staff Mode बंद करा
-        </button>
-        <button onclick="document.getElementById('auto-rider-modal').style.display='none'" style="background: #eee; color: #333; border: none; padding: 9px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
-          Close
-        </button>
       </div>
     </div>
   </div>
@@ -1211,29 +1192,172 @@
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
     const ORDER_CHANNEL = "sadguru_cafe_omerga_orders_pos_918421848131";
 
-    let ztMap = null, riderMarker = null, routeLine = null, pollTimer = null, staffWatchId = null;
+    let ztMap = null, riderMarker = null, routeLine = null, pollTimer = null;
     let customerCoords = null;
     let cafeOrders = [];
-    let alarmInterval = null;
-    let audioCtx = null;
-    let orderEventSource = null;
+    let staffMembers = [
+      { name: "Mahesh", phone: "8421848131" },
+      { name: "Staff 2", phone: "8412056933" }
+    ];
+    let alarmInterval = null, audioCtx = null, orderEventSource = null;
+    let secretClickCount = 0, secretClickTimer = null;
 
-    // 🔊 Web Audio API Loud Notification Tone (Zomato / Swiggy Bell)
+    // 🔒 Secret Triple-Click on Footer Copyright for Cafe Owner ONLY
+    function secretOwnerTrigger() {
+      secretClickCount++;
+      if (secretClickTimer) clearTimeout(secretClickTimer);
+      secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 1200);
+
+      if (secretClickCount >= 3) {
+        secretClickCount = 0;
+        let pin = prompt("🔒 Owner PIN टाका (PIN: 1234):");
+        if (pin === "1234") {
+          localStorage.setItem('sc_admin_unlocked', 'true');
+          let dashUrl = window.location.origin + window.location.pathname + "?pos=1";
+          window.open(dashUrl, '_blank');
+        }
+      }
+    }
+
+    function toggleDashPanel(panelId) {
+      let el = document.getElementById(panelId);
+      if (el) el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+    }
+
+    // 👥 Owner Staff Management Functions
+    function loadStaffList() {
+      let saved = localStorage.getItem('sc_staff_list');
+      if (saved) {
+        try { staffMembers = JSON.parse(saved); } catch (e) {}
+      }
+      renderStaffChips();
+    }
+
+    function addStaffMemberFromDash() {
+      let name = document.getElementById('new-staff-name').value.trim();
+      let phone = document.getElementById('new-staff-phone').value.trim();
+      if (!name || !phone) {
+        alert("कृपया स्टाफचे नाव आणि १० अंकी नंबर टाका!");
+        return;
+      }
+      staffMembers.push({ name, phone });
+      localStorage.setItem('sc_staff_list', JSON.stringify(staffMembers));
+      document.getElementById('new-staff-name').value = '';
+      document.getElementById('new-staff-phone').value = '';
+      renderStaffChips();
+      renderDashboardOrders();
+    }
+
+    function removeStaffMember(index) {
+      staffMembers.splice(index, 1);
+      localStorage.setItem('sc_staff_list', JSON.stringify(staffMembers));
+      renderStaffChips();
+      renderDashboardOrders();
+    }
+
+    function renderStaffChips() {
+      let box = document.getElementById('staff-list-chips');
+      if (!box) return;
+      box.innerHTML = staffMembers.map((s, idx) => `
+        <div style="background: #2b303c; border: 1px solid #444; padding: 6px 12px; border-radius: 20px; font-size: 0.82rem; display: flex; align-items: center; gap: 8px;">
+          <span>🛵 <b>${s.name}</b> (${s.phone})</span>
+          <button onclick="removeStaffMember(${idx})" style="background: none; border: none; color: #ff6b6b; font-weight: 700; cursor: pointer;">✖</button>
+        </div>
+      `).join('');
+    }
+
+    // 🔗 Billing Software Webhook / KOT Print Integration
+    function loadSoftwareConfig() {
+      let url = localStorage.getItem('sc_pos_webhook') || '';
+      let autoKot = localStorage.getItem('sc_auto_kot') === 'true';
+      let urlInput = document.getElementById('pos-webhook-url');
+      let kotInput = document.getElementById('auto-print-kot');
+      if (urlInput) urlInput.value = url;
+      if (kotInput) kotInput.checked = autoKot;
+    }
+
+    function saveSoftwareConfig(showAlert) {
+      let url = document.getElementById('pos-webhook-url').value.trim();
+      let autoKot = document.getElementById('auto-print-kot').checked;
+      localStorage.setItem('sc_pos_webhook', url);
+      localStorage.setItem('sc_auto_kot', autoKot ? 'true' : 'false');
+      if (showAlert) alert("✅ Software Integration Settings सेव्ह झाल्या आहेत!");
+    }
+
+    function pushOrderToBillingSoftware(orderData) {
+      let webhookUrl = localStorage.getItem('sc_pos_webhook');
+      if (webhookUrl) {
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        }).catch(() => {});
+      }
+    }
+
+    // 🖨️ Thermal KOT / Receipt Printer (58mm / 80mm POS Standard)
+    function printThermalKOT(orderId) {
+      let ord = cafeOrders.find(o => o.orderId === orderId);
+      if (!ord) return;
+      let itemsRows = (ord.items || []).map(i =>
+        `<tr><td style="padding:3px 0;">${i.name}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">₹${i.total}</td></tr>`
+      ).join('');
+
+      let printWin = window.open('', '_blank', 'width=360,height=600');
+      printWin.document.write(`
+        <html><head><title>KOT #${ord.orderId}</title>
+        <style>body{font-family:monospace;width:280px;margin:0 auto;padding:10px;color:#000;} table{width:100%;border-collapse:collapse;font-size:13px;} th{border-bottom:1px dashed #000;text-align:left;padding-bottom:4px;}</style>
+        </head><body onload="window.print(); setTimeout(()=>window.close(), 500);">
+          <h3 style="text-align:center;margin:0;">SADGURU CAFE</h3>
+          <p style="text-align:center;font-size:12px;margin:2px 0 8px;">Khau Galli, Shivpuri Rd, Omerga<br><b>KOT / ORDER BILL</b></p>
+          <div style="border-top:1px dashed #000;border-bottom:1px dashed #000;padding:5px 0;font-size:12px;margin-bottom:8px;">
+            <b>Order: #${ord.orderId}</b> (${ord.time})<br>
+            Customer: ${ord.customerName}<br>
+            Phone: ${ord.customerPhone}<br>
+            Address: ${ord.address}
+          </div>
+          <table>
+            <thead><tr><th>Item</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Amt</th></tr></thead>
+            <tbody>${itemsRows}</tbody>
+          </table>
+          <div style="border-top:1px dashed #000;margin-top:8px;padding-top:6px;text-align:right;font-size:15px;font-weight:bold;">
+            TOTAL: ₹${ord.grandTotal}
+          </div>
+          ${ord.riderName ? `<p style="font-size:12px;margin-top:6px;">Delivery By: <b>${ord.riderName} (${ord.riderPhone})</b></p>` : ''}
+        </body></html>
+      `);
+      printWin.document.close();
+    }
+
+    function exportOrdersCSV() {
+      if (cafeOrders.length === 0) {
+        alert("सध्या कोणतीही ऑर्डर नाही!");
+        return;
+      }
+      let csv = "OrderID,Time,CustomerName,Phone,Address,Items,TotalAmount,Status,DeliveryBoy\n";
+      cafeOrders.forEach(o => {
+        let itemStr = (o.items || []).map(i => `${i.name}(x${i.qty})`).join(" | ");
+        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${itemStr}",${o.grandTotal},"${o.status}","${o.riderName || ''}"\n`;
+      });
+      let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      let link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `Sadguru_Cafe_Orders_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    // 🔊 Notification Bell Sound
     function playSingleChime() {
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const notes = [880, 1174.66, 1318.51, 1760];
-        notes.forEach((freq, idx) => {
-          let osc = audioCtx.createOscillator();
-          let gain = audioCtx.createGain();
+        [880, 1174.66, 1318.51, 1760].forEach((freq, idx) => {
+          let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(freq, audioCtx.currentTime + idx * 0.14);
           gain.gain.setValueAtTime(0.35, audioCtx.currentTime + idx * 0.14);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.14 + 0.45);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
+          osc.connect(gain); gain.connect(audioCtx.destination);
           osc.start(audioCtx.currentTime + idx * 0.14);
           osc.stop(audioCtx.currentTime + idx * 0.14 + 0.45);
         });
@@ -1248,17 +1372,12 @@
     }
 
     function stopOrderAlarm() {
-      if (alarmInterval) {
-        clearInterval(alarmInterval);
-        alarmInterval = null;
-      }
+      if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
       let btn = document.getElementById('stop-alarm-btn');
       if (btn) btn.style.display = 'none';
     }
 
-    function testOrderAlarm() {
-      playSingleChime();
-    }
+    function testOrderAlarm() { playSingleChime(); }
 
     function detectUserGPSInModal() {
       let addrField = document.getElementById('customer-address');
@@ -1268,8 +1387,7 @@
           function(pos) {
             customerCoords = [pos.coords.latitude, pos.coords.longitude];
             localStorage.setItem('sc_cust_coords', JSON.stringify(customerCoords));
-            let link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-            if (addrField) addrField.value = `Live GPS Location: ${link}`;
+            if (addrField) addrField.value = `Live GPS Location: https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
           },
           function() {
             alert("GPS चालू करता आले नाही. कृपया पत्ता टाइप करा.");
@@ -1279,34 +1397,28 @@
       }
     }
 
-    // 🛒 Place Order Directly on Website (Sends straight to Cafe Dashboard)
+    // 🛒 Customer Places Direct Website Order
     function placeDirectWebsiteOrder() {
       if (cart.length === 0) {
         alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
         return;
       }
-
       let name = document.getElementById('customer-name').value.trim();
       let phone = document.getElementById('customer-phone').value.trim();
       let address = document.getElementById('customer-address').value.trim();
 
       if (!address) {
         let topLoc = document.getElementById('top-location-input');
-        if (topLoc && topLoc.value.trim() && topLoc.value.trim() !== 'Omerga') {
-          address = topLoc.value.trim();
-        }
+        if (topLoc && topLoc.value.trim() && topLoc.value.trim() !== 'Omerga') address = topLoc.value.trim();
       }
-
       if (!name || !phone || !address) {
         alert('कृपया तुमचे नाव, मोबाईल नंबर आणि पत्ता / टेबल नंबर पूर्ण भरा!');
         return;
       }
 
       localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
-
       let btn = document.getElementById('place-order-btn');
-      btn.disabled = true;
-      btn.innerText = "⏳ Sending Order...";
+      btn.disabled = true; btn.innerText = "⏳ Sending Order...";
 
       let grandTotal = 0;
       let itemsList = cart.map(item => {
@@ -1336,11 +1448,8 @@
       })
       .then(() => {
         localStorage.setItem('sc_last_order_id', orderId);
-        cart = [];
-        updateCartUI();
-        toggleCartModal(false);
-        btn.disabled = false;
-        btn.innerText = "✅ Confirm & Place Order";
+        cart = []; updateCartUI(); toggleCartModal(false);
+        btn.disabled = false; btn.innerText = "✅ Confirm & Place Order";
 
         document.getElementById('zt-order-badge').innerText = `● ORDER #${orderId}`;
         document.getElementById('zt-status-title').innerText = `✅ तुमची ऑर्डर (#${orderId}) कॅफेला मिळाली आहे!`;
@@ -1348,68 +1457,49 @@
         openZomatoTracker();
       })
       .catch(() => {
-        btn.disabled = false;
-        btn.innerText = "✅ Confirm & Place Order";
+        btn.disabled = false; btn.innerText = "✅ Confirm & Place Order";
         alert("नेटवर्क समस्या! कृपया पुन्हा प्रयत्न करा.");
       });
     }
 
-    // 💻 CAFE ADMIN DASHBOARD FUNCTIONS
+    // 💻 Open Dedicated POS Tab (?pos=1)
     function openAdminDashboard() {
       let isSavedAdmin = localStorage.getItem('sc_admin_unlocked');
       if (!isSavedAdmin) {
-        let pin = prompt("Cafe Dashboard PIN टाका (PIN: 1234):");
+        let pin = prompt("🔒 Owner / Kitchen Dashboard PIN टाका (PIN: 1234):");
         if (pin !== "1234") {
-          if (pin !== null) alert("चुकीचा PIN!");
+          alert("चुकीचा PIN!");
+          window.location.href = window.location.pathname;
           return;
         }
         localStorage.setItem('sc_admin_unlocked', 'true');
       }
+      document.title = "☕ Sadguru Cafe — Kitchen & POS Dashboard";
       document.getElementById('cafe-admin-dashboard').style.display = 'block';
-      playSingleChime(); // Unlocks browser audio automatically
-      if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
-      }
+      document.body.style.overflow = 'hidden';
+      loadStaffList();
+      loadSoftwareConfig();
       loadExistingOrdersAndSubscribe();
-    }
-
-    function closeAdminDashboard() {
-      document.getElementById('cafe-admin-dashboard').style.display = 'none';
-      stopOrderAlarm();
     }
 
     function loadExistingOrdersAndSubscribe() {
       let localSaved = localStorage.getItem('sc_cafe_orders_db');
-      if (localSaved) {
-        try { cafeOrders = JSON.parse(localSaved); } catch (e) {}
-      }
+      if (localSaved) { try { cafeOrders = JSON.parse(localSaved); } catch (e) {} }
       renderDashboardOrders();
 
-      // Fetch recent orders from last 12 hours
       fetch(`https://ntfy.sh/${ORDER_CHANNEL}/json?poll=1&since=12h`)
         .then(res => res.text())
         .then(text => {
-          let lines = text.trim().split('\n').filter(Boolean);
-          lines.forEach(line => {
-            try {
-              let ev = JSON.parse(line);
-              let data = JSON.parse(ev.message);
-              processIncomingOrderEvent(data, false);
-            } catch (e) {}
+          text.trim().split('\n').filter(Boolean).forEach(line => {
+            try { processIncomingOrderEvent(JSON.parse(JSON.parse(line).message), false); } catch (e) {}
           });
           renderDashboardOrders();
-        })
-        .catch(() => {});
+        }).catch(() => {});
 
-      // Real-time Instant Stream (SSE) for New Orders
       if (orderEventSource) orderEventSource.close();
       orderEventSource = new EventSource(`https://ntfy.sh/${ORDER_CHANNEL}/sse`);
       orderEventSource.onmessage = function(event) {
-        try {
-          let ev = JSON.parse(event.data);
-          let data = JSON.parse(ev.message);
-          processIncomingOrderEvent(data, true);
-        } catch (e) {}
+        try { processIncomingOrderEvent(JSON.parse(JSON.parse(event.data).message), true); } catch (e) {}
       };
     }
 
@@ -1423,21 +1513,49 @@
           renderDashboardOrders();
           if (isRealtime) {
             startOrderAlarm();
-            if ("Notification" in window && Notification.permission === "granted") {
-              new Notification(`🔔 New Order #${data.orderId} (₹${data.grandTotal})`, {
-                body: `${data.customerName} - ${data.address}`
-              });
-            }
+            pushOrderToBillingSoftware(data);
           }
         }
       } else if (data.type === "STATUS_UPDATE") {
         let ord = cafeOrders.find(o => o.orderId === data.orderId);
         if (ord) {
           ord.status = data.status;
+          if (data.riderName) ord.riderName = data.riderName;
+          if (data.riderPhone) ord.riderPhone = data.riderPhone;
           localStorage.setItem('sc_cafe_orders_db', JSON.stringify(cafeOrders));
           renderDashboardOrders();
         }
       }
+    }
+
+    // 🛵 1-Click Assign Staff to Order from Dashboard
+    function assignRiderOneClick(orderId, riderName, riderPhone) {
+      stopOrderAlarm();
+      let ord = cafeOrders.find(o => o.orderId === orderId);
+      if (ord) {
+        ord.status = "Out for Delivery";
+        ord.riderName = riderName;
+        ord.riderPhone = riderPhone;
+        localStorage.setItem('sc_cafe_orders_db', JSON.stringify(cafeOrders));
+        renderDashboardOrders();
+      }
+      fetch(`https://ntfy.sh/${ORDER_CHANNEL}`, {
+        method: 'POST',
+        body: JSON.stringify({ type: "STATUS_UPDATE", orderId, status: "Out for Delivery", riderName, riderPhone })
+      }).catch(() => {});
+
+      fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
+        method: 'POST',
+        body: JSON.stringify({
+          orderId: orderId,
+          orderStatusText: "Out for Delivery",
+          name: riderName,
+          phone: riderPhone,
+          lat: CAFE_COORDS[0],
+          lng: CAFE_COORDS[1],
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        })
+      }).catch(() => {});
     }
 
     function updateOrderStatusFromDash(orderId, newStatus) {
@@ -1447,13 +1565,15 @@
         ord.status = newStatus;
         localStorage.setItem('sc_cafe_orders_db', JSON.stringify(cafeOrders));
         renderDashboardOrders();
+        if (newStatus === 'Preparing' && localStorage.getItem('sc_auto_kot') === 'true') {
+          printThermalKOT(orderId);
+        }
       }
       fetch(`https://ntfy.sh/${ORDER_CHANNEL}`, {
         method: 'POST',
         body: JSON.stringify({ type: "STATUS_UPDATE", orderId: orderId, status: newStatus })
       }).catch(() => {});
 
-      // Also broadcast status to customer live tracker
       fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
         method: 'POST',
         body: JSON.stringify({ orderId: orderId, orderStatusText: newStatus })
@@ -1472,9 +1592,11 @@
       if (!container) return;
 
       let pendingCount = cafeOrders.filter(o => o.status === 'Pending').length;
+      let deliveryCount = cafeOrders.filter(o => o.status === 'Out for Delivery').length;
       let totalSales = cafeOrders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
 
       document.getElementById('dash-pending-count').innerText = pendingCount;
+      document.getElementById('dash-delivery-count').innerText = deliveryCount;
       document.getElementById('dash-total-count').innerText = cafeOrders.length;
       document.getElementById('dash-total-sales').innerText = `₹${totalSales}`;
 
@@ -1492,50 +1614,59 @@
           </div>`
         ).join('');
 
+        // 1-Click Staff Dispatch Buttons inside each Order Card
+        let staffButtonsHtml = staffMembers.map(s => {
+          let isSelected = (ord.riderName === s.name && ord.status === 'Out for Delivery');
+          return `
+            <button onclick="assignRiderOneClick('${ord.orderId}', '${s.name}', '${s.phone}')" style="background: ${isSelected ? '#25D366' : '#2b303c'}; color: ${isSelected ? '#111' : '#fff'}; border: 1px solid ${isSelected ? '#25D366' : '#444'}; padding: 6px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+              🛵 ${s.name}
+            </button>
+          `;
+        }).join('');
+
         return `
-          <div style="background: #1e2229; border-radius: 12px; padding: 16px; border: 2px solid ${ord.status === 'Pending' ? '#ff3b30' : '#2d323e'}; box-shadow: 0 6px 16px rgba(0,0,0,0.25);">
+          <div style="background: #1a1d24; border-radius: 12px; padding: 16px; border: 2px solid ${ord.status === 'Pending' ? '#ff3b30' : '#2d323e'}; box-shadow: 0 6px 16px rgba(0,0,0,0.3);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
               <span style="font-size: 1.05rem; font-weight: 700; color: var(--gold);">Order #${ord.orderId}</span>
-              <span style="background: ${badgeColor}; color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">${ord.status} • ${ord.time}</span>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <button onclick="printThermalKOT('${ord.orderId}')" style="background: #2b303c; color: #fff; border: 1px solid #555; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;">🖨️ KOT</button>
+                <span style="background: ${badgeColor}; color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">${ord.status} • ${ord.time}</span>
+              </div>
             </div>
 
-            <div style="background: #15181e; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem;">
-              <div style="margin-bottom: 4px;">👤 <b>${ord.customerName}</b></div>
-              <div style="margin-bottom: 4px;">📞 <a href="tel:+91${ord.customerPhone}" style="color: #25D366; text-decoration: none; font-weight: 700;">+91 ${ord.customerPhone} (Call)</a></div>
+            <div style="background: #121419; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.85rem;">
+              <div style="margin-bottom: 3px;">👤 <b>${ord.customerName}</b></div>
+              <div style="margin-bottom: 3px;">📞 <a href="tel:+91${ord.customerPhone}" style="color: #25D366; text-decoration: none; font-weight: 700;">+91 ${ord.customerPhone}</a></div>
               <div style="color: #ccc; word-break: break-word;">📍 ${ord.address}</div>
+              ${ord.riderName ? `<div style="margin-top: 5px; color: #5ac8fa; font-weight: 700;">🛵 Assigned: ${ord.riderName} (${ord.riderPhone})</div>` : ''}
             </div>
 
-            <div style="margin-bottom: 12px;">${itemsHtml}</div>
+            <div style="margin-bottom: 10px;">${itemsHtml}</div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.05rem; font-weight: 700; color: #25D366; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.05rem; font-weight: 700; color: #25D366; margin-bottom: 12px;">
               <span>Total Bill:</span>
               <span>₹${ord.grandTotal}</span>
             </div>
 
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <!-- 1-Click Staff Selection Row -->
+            <div style="background: #121419; padding: 9px; border-radius: 8px; margin-bottom: 10px;">
+              <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 6px;">🛵 <b>1-Click Assign Delivery Partner:</b> (ज्याच्याकडे पार्सल दिले त्यावर क्लिक करा)</div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                ${staffButtonsHtml}
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
               <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Preparing')" style="flex: 1; background: #ff9f0a; color: #111; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                ✅ Accept & Prepare
+                🍳 Accept & Prepare
               </button>
-              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Out for Delivery')" style="flex: 1; background: #0a84ff; color: #fff; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                🛵 Out for Delivery
-              </button>
-              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Delivered')" style="background: #25D366; color: #fff; border: none; padding: 9px 12px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                🎉 Done
+              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Delivered')" style="flex: 1; background: #25D366; color: #111; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
+                ✅ Order Delivered
               </button>
             </div>
           </div>
         `;
       }).join('');
-    }
-
-    function getDistanceKm(lat1, lon1, lat2, lon2) {
-      const R = 6371;
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
     }
 
     window.addEventListener("load", function() {
@@ -1552,8 +1683,6 @@
         } catch(e){}
       }
 
-      checkAndRenderStaffBar();
-
       document.querySelectorAll('.action-boxes a, .pro-action-grid a').forEach(btn => {
         if (btn.innerText.includes('Live Location') || btn.innerText.includes('Live Track')) {
           btn.href = "javascript:void(0)";
@@ -1562,104 +1691,13 @@
         }
       });
 
-      // Override old sendWhatsAppOrder so any button calls direct website order
-      window.sendWhatsAppOrder = function() {
-        toggleCartModal(true);
-      };
+      window.sendWhatsAppOrder = function() { toggleCartModal(true); };
 
-      // Auto-open dashboard if URL has ?admin=1
-      if (window.location.search.includes('admin=1')) {
+      // Open Dedicated Kitchen/Owner Dashboard Tab when URL has ?pos=1
+      if (window.location.search.includes('pos=1') || window.location.search.includes('admin=1')) {
         openAdminDashboard();
       }
     });
-
-    function unlockStaffPhone() {
-      let saved = localStorage.getItem('sc_saved_rider');
-      if (saved) {
-        document.getElementById('auto-rider-modal').style.display = 'flex';
-        return;
-      }
-      let pin = prompt("Staff Setup PIN टाका (PIN: 1234):");
-      if (pin === "1234") {
-        document.getElementById('auto-rider-modal').style.display = 'flex';
-      }
-    }
-
-    function saveStaffProfile(name, phone) {
-      localStorage.setItem('sc_saved_rider', JSON.stringify({ name: name, phone: phone }));
-      document.getElementById('auto-rider-modal').style.display = 'none';
-      checkAndRenderStaffBar();
-      alert(`✅ हा फोन '${name} (${phone})' साठी सेव्ह झाला आहे!`);
-    }
-
-    function removeStaffModeFromPhone() {
-      localStorage.removeItem('sc_saved_rider');
-      document.getElementById('staff-top-bar').style.display = 'none';
-      document.body.style.paddingTop = '0px';
-      document.getElementById('auto-rider-modal').style.display = 'none';
-    }
-
-    function checkAndRenderStaffBar() {
-      let saved = localStorage.getItem('sc_saved_rider');
-      let bar = document.getElementById('staff-top-bar');
-      if (saved && bar) {
-        let r = JSON.parse(saved);
-        document.getElementById('staff-bar-name').innerText = `${r.name} (${r.phone})`;
-        bar.style.display = 'flex';
-        document.body.style.paddingTop = '42px';
-      }
-    }
-
-    function startOneTapStaffGPS() {
-      let saved = localStorage.getItem('sc_saved_rider');
-      if (!saved) return;
-      let r = JSON.parse(saved);
-      if (!navigator.geolocation) {
-        alert("तुमच्या फोनमध्ये GPS सपोर्ट नाही!");
-        return;
-      }
-      document.getElementById('staff-bar-status').innerText = "🟢 LIVE ON";
-      document.getElementById('staff-bar-status').style.color = "#25D366";
-
-      if (staffWatchId) navigator.geolocation.clearWatch(staffWatchId);
-      staffWatchId = navigator.geolocation.watchPosition(function(pos) {
-        let payload = {
-          name: r.name,
-          phone: r.phone,
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-        };
-        fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        }).catch(() => {});
-      }, function() {
-        alert("कृपया फोनचे Location (GPS) ऑन करा!");
-      }, { enableHighAccuracy: true, maximumAge: 0 });
-    }
-
-    function customRiderOneTime() {
-      let name = prompt("पार्सल नेणाऱ्याचे नाव टाका:");
-      if (!name) return;
-      let phone = prompt("त्याचा १० अंकी मोबाईल नंबर टाका:");
-      if (!phone) return;
-      saveStaffProfile(name.trim(), phone.trim());
-    }
-
-    function finishDeliveryAuto() {
-      if (staffWatchId) {
-        navigator.geolocation.clearWatch(staffWatchId);
-        staffWatchId = null;
-      }
-      fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
-        method: 'POST',
-        body: JSON.stringify({ stopped: true })
-      }).catch(() => {});
-      document.getElementById('staff-bar-status').innerText = "(Stopped)";
-      document.getElementById('staff-bar-status').style.color = "#aaa";
-      alert("✅ डिलिव्हरी पूर्ण झाली! Live GPS बंद केले आहे.");
-    }
 
     function openZomatoTracker() {
       document.getElementById('zomato-track-modal').style.display = 'flex';
@@ -1667,11 +1705,7 @@
         if (!ztMap) {
           ztMap = L.map('zomato-map').setView(CAFE_COORDS, 15);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(ztMap);
-
-          let cafeIcon = L.divIcon({
-            html: '<div style="font-size:24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));">🏪</div>',
-            className: '', iconSize: [30, 30], iconAnchor: [15, 15]
-          });
+          let cafeIcon = L.divIcon({ html: '<div style="font-size:24px;">🏪</div>', className: '', iconSize: [30, 30], iconAnchor: [15, 15] });
           L.marker(CAFE_COORDS, { icon: cafeIcon }).addTo(ztMap).bindPopup("<b>Sadguru Cafe</b><br>Shivpuri Road, Omerga");
 
           let scooterIcon = L.divIcon({
@@ -1701,62 +1735,36 @@
           let lines = text.trim().split('\n').filter(Boolean);
           if (lines.length === 0) return;
 
-          let latestRider = null;
-          let latestStatus = null;
+          let latestEvent = null;
           for (let i = lines.length - 1; i >= 0; i--) {
             try {
-              let msg = JSON.parse( JSON.parse(lines[i]).message );
-              if (!latestStatus && msg.orderStatusText) latestStatus = msg;
-              if (!latestRider && (msg.lat || msg.stopped)) latestRider = msg;
+              let msg = JSON.parse(JSON.parse(lines[i]).message);
+              if (!latestEvent) latestEvent = msg;
             } catch(e) {}
           }
+          if (!latestEvent) return;
 
-          if (latestStatus) {
-            if (latestStatus.orderStatusText === 'Preparing') {
-              document.getElementById('zt-status-title').innerText = "🍳 तुमची ऑर्डर किचनमध्ये तयार होत आहे!";
-              document.getElementById('zt-eta-sub').innerText = "Estimated Prep Time: 15–20 mins";
-            } else if (latestStatus.orderStatusText === 'Out for Delivery') {
-              document.getElementById('zt-status-title').innerText = "🛵 तुमची ऑर्डर डिलिव्हरीसाठी निघाली आहे!";
-            } else if (latestStatus.orderStatusText === 'Delivered') {
-              document.getElementById('zt-status-title').innerText = "✅ ऑर्डर डिलिव्हर झाली आहे! (Delivered)";
-              document.getElementById('zt-eta-sub').innerText = "Thank you for ordering from Sadguru Cafe!";
-              return;
-            }
-          }
-
-          if (!latestRider) return;
-          if (latestRider.stopped) {
+          if (latestEvent.orderStatusText === 'Preparing') {
+            document.getElementById('zt-status-title').innerText = "🍳 तुमची ऑर्डर किचनमध्ये तयार होत आहे!";
+            document.getElementById('zt-eta-sub').innerText = "Estimated Prep Time: 15–20 mins";
+          } else if (latestEvent.orderStatusText === 'Delivered') {
             document.getElementById('zt-status-title').innerText = "✅ ऑर्डर डिलिव्हर झाली आहे! (Delivered)";
             document.getElementById('zt-eta-sub').innerText = "Thank you for ordering from Sadguru Cafe!";
             return;
           }
 
-          if (latestRider.lat && latestRider.lng) {
-            document.getElementById('zt-rider-name').innerText = `${latestRider.name} (On the way)`;
-            document.getElementById('zt-rider-phone').innerText = `📞 +91 ${latestRider.phone}`;
-            document.getElementById('zt-call-btn').href = `tel:+91${latestRider.phone}`;
-
-            let pos = [latestRider.lat, latestRider.lng];
-            let targetCoords = customerCoords || CAFE_COORDS;
-            let distKm = getDistanceKm(latestRider.lat, latestRider.lng, targetCoords[0], targetCoords[1]);
-            let etaMins = Math.max(2, Math.round((distKm / 25) * 60) + 2);
-
-            document.getElementById('zt-status-title').innerText = `🛵 ${latestRider.name} तुमची ऑर्डर घेऊन येत आहेत!`;
-            if (customerCoords) {
-              document.getElementById('zt-eta-sub').innerText = `⚡ फक्त ${etaMins} मिनिटांत पोहोचतील (${distKm.toFixed(1)} km बाकी)`;
-            } else {
-              document.getElementById('zt-eta-sub').innerText = `🟢 Live GPS Active • Updated ${latestRider.time}`;
-            }
-
-            document.getElementById('zt-last-update').innerText = `🟢 Live GPS ट्रॅकिंग चालू आहे (Updated: ${latestRider.time})`;
-            riderMarker.setLatLng(pos).bindPopup(`<b>🛵 ${latestRider.name}</b><br>📞 ${latestRider.phone}`);
-            routeLine.setLatLngs([CAFE_COORDS, pos]);
-            ztMap.panTo(pos);
+          if (latestEvent.name && latestEvent.phone) {
+            document.getElementById('zt-status-title').innerText = `🛵 ${latestEvent.name} तुमची ऑर्डर घेऊन येत आहेत!`;
+            document.getElementById('zt-eta-sub').innerText = `🟢 Out for Delivery • संपर्क: +91 ${latestEvent.phone}`;
+            document.getElementById('zt-rider-name').innerText = `${latestEvent.name} (Delivery Partner)`;
+            document.getElementById('zt-rider-phone').innerText = `📞 +91 ${latestEvent.phone}`;
+            document.getElementById('zt-call-btn').href = `tel:+91${latestEvent.phone}`;
+            document.getElementById('zt-last-update').innerText = `🟢 डिलिव्हरी पार्टनर निघाले आहेत (${latestEvent.time || 'आत्ताच'})`;
           }
         })
         .catch(() => {});
     }
-  </script>>
+  </script>
 <!-- JavaScript -->
   <script>
     // Website & Images Fast Load Karnyasathi Speed Booster
