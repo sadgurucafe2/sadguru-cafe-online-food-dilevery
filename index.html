@@ -1018,7 +1018,7 @@
     </div>
   </div>
 
-  <!-- Cart Modal (Direct Website Order) -->
+  <!-- Cart Modal (Direct Website Order with Pay on Delivery & Pay Now) -->
   <div class="modal-overlay" id="cart-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1044,6 +1044,34 @@
           <button type="button" onclick="detectUserGPSInModal()" style="margin-top: 8px; background: #E23744; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
             🎯 Get Current Location (GPS)
           </button>
+        </div>
+
+        <!-- 💳 Payment Method Selection (Pay on Delivery vs Pay Now) -->
+        <div style="margin-top: 4px; border-top: 1px dashed #ddd; padding-top: 10px;">
+          <label style="font-size: 0.88rem; font-weight: 700; color: var(--maroon); display: block; margin-bottom: 8px;">💳 पेमेंट कसे करणार? (Select Payment Option): *</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <label id="lbl-pay-cod" onclick="selectPaymentMode('COD')" style="border: 2px solid var(--maroon); background: #fdf6e9; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.84rem; font-weight: 700; color: var(--maroon);">
+              <input type="radio" name="payment-mode" value="COD" checked style="accent-color: var(--maroon);" />
+              <span>💵 Pay on Delivery</span>
+            </label>
+            <label id="lbl-pay-now" onclick="selectPaymentMode('ONLINE')" style="border: 1.5px solid #ccc; background: #fff; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.84rem; font-weight: 700; color: #333;">
+              <input type="radio" name="payment-mode" value="ONLINE" style="accent-color: #25D366;" />
+              <span>📱 Pay Now (UPI)</span>
+            </label>
+          </div>
+
+          <!-- Instant UPI QR & Deep-Link Box (Shown when Pay Now is selected) -->
+          <div id="pay-now-upi-box" style="display: none; margin-top: 10px; background: #f0fff4; border: 1.5px solid #25D366; border-radius: 10px; padding: 12px; text-align: center;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #0b6b3a; margin-bottom: 6px;">
+              📱 Scan QR किंवा खालील बटणावरून पेमेंट करा
+            </div>
+            <img id="upi-qr-img" src="" alt="UPI QR Code" style="width: 155px; height: 155px; border: 2px solid #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 4px auto; display: block; background: #fff;" />
+            <div id="upi-amount-text" style="font-size: 0.95rem; font-weight: 700; color: var(--maroon); margin: 4px 0;">Payable: ₹0</div>
+            <a id="upi-deeplink-btn" href="#" style="display: inline-block; width: 100%; background: #25D366; color: #fff; text-decoration: none; padding: 9px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-top: 4px; box-shadow: 0 2px 6px rgba(37,211,102,0.3);">
+              🚀 Open UPI App (PhonePe / GPay / Paytm)
+            </a>
+            <input type="text" id="customer-utr" placeholder="पेमेंट झाल्यावर UTR चे शेवटचे 4 अंक टाका (Optional)" style="width: 100%; padding: 7px 10px; margin-top: 8px; border: 1px solid #b2f5ea; border-radius: 6px; font-size: 0.8rem; text-align: center; background: #fff;" />
+          </div>
         </div>
       </div>
 
@@ -1079,7 +1107,7 @@
             👥 Manage Staff
           </button>
           <button onclick="toggleDashPanel('software-sync-box')" style="background: #2b303c; color: #5ac8fa; border: 1px solid #5ac8fa; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">
-            🔗 Software / API Connect
+            🔗 Software & UPI Setup
           </button>
           <button onclick="exportOrdersCSV()" style="background: #2b303c; color: #fff; border: 1px solid #444; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">
             📊 Excel / CSV
@@ -1093,7 +1121,7 @@
         </div>
       </div>
 
-      <!-- 👥 OWNER STAFF MANAGER PANEL (Add / Delete Delivery Staff) -->
+      <!-- 👥 OWNER STAFF MANAGER PANEL -->
       <div id="staff-manager-box" style="display: none; background: #1a1d24; border: 1px solid var(--gold); border-radius: 12px; padding: 16px; margin-bottom: 18px;">
         <h3 style="color: var(--gold); font-size: 1.05rem; margin-bottom: 10px;">👥 Add / Manage Delivery Staff (तुमचा स्टाफ इथे ॲड करा)</h3>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
@@ -1106,17 +1134,25 @@
         <div id="staff-list-chips" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
       </div>
 
-      <!-- 🔗 BILLING SOFTWARE / POS INTEGRATION PANEL -->
+      <!-- 🔗 UPI ID & BILLING SOFTWARE SETUP PANEL -->
       <div id="software-sync-box" style="display: none; background: #1a1d24; border: 1px solid #5ac8fa; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
-        <h3 style="color: #5ac8fa; font-size: 1.05rem; margin-bottom: 6px;">🔗 Connect Online Orders to Your Billing Software</h3>
-        <p style="font-size: 0.82rem; color: #aaa; margin-bottom: 12px;">तुमच्या डेस्कटॉप सॉफ्टवेअरची Local API / Webhook URL खाली टाका. नवीन ऑर्डर आल्यावर तिचा पूर्ण डेटा (JSON) आपोआप तुमच्या सॉफ्टवेअरमध्ये पाठवला जाईल.</p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px;">
-          <input type="text" id="pos-webhook-url" placeholder="उदा. http://localhost:8080/api/orders किंवा Webhook URL" style="padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff; flex: 1; min-width: 260px;" />
+        <h3 style="color: #5ac8fa; font-size: 1.05rem; margin-bottom: 10px;">🏦 Cafe UPI ID (Pay Now साठी) & Printer Setup</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="font-size: 0.8rem; color: #ccc;">📱 तुमचा Cafe UPI ID (BharatPe / PhonePe / GPay):</label>
+            <input type="text" id="cafe-upi-input" placeholder="उदा. 8421848131@ybl" style="width: 100%; padding: 9px 12px; margin-top: 4px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff;" />
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; color: #ccc;">🔗 Local POS Webhook URL (Optional):</label>
+            <input type="text" id="pos-webhook-url" placeholder="उदा. http://localhost:8080/api/orders" style="width: 100%; padding: 9px 12px; margin-top: 4px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff;" />
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
           <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
-            <input type="checkbox" id="auto-print-kot" onchange="saveSoftwareConfig()" /> 🖨️ ऑर्डर Accept केल्यावर आपोआप KOT प्रिंट काढा
+            <input type="checkbox" id="auto-print-kot" onchange="saveSoftwareConfig()" /> 🖨️ ऑर्डर Accept केल्यावर आपोआप Thermal KOT प्रिंट काढा
           </label>
           <button onclick="saveSoftwareConfig(true)" style="background: #5ac8fa; color: #111; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
-            💾 Save Settings
+            💾 Save UPI & Settings
           </button>
         </div>
       </div>
@@ -1192,6 +1228,9 @@
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
     const ORDER_CHANNEL = "sadguru_cafe_omerga_orders_pos_918421848131";
 
+    let cafeUpiId = localStorage.getItem('sc_cafe_upi_id') || "8421848131@ybl";
+    let selectedPaymentMode = "COD";
+
     let ztMap = null, riderMarker = null, routeLine = null, pollTimer = null;
     let customerCoords = null;
     let cafeOrders = [];
@@ -1201,6 +1240,44 @@
     ];
     let alarmInterval = null, audioCtx = null, orderEventSource = null;
     let secretClickCount = 0, secretClickTimer = null;
+
+    // 💳 Switch Between "Pay on Delivery" and "Pay Now (UPI)"
+    function selectPaymentMode(mode) {
+      selectedPaymentMode = mode;
+      let codLbl = document.getElementById('lbl-pay-cod');
+      let nowLbl = document.getElementById('lbl-pay-now');
+      let upiBox = document.getElementById('pay-now-upi-box');
+
+      if (mode === 'ONLINE') {
+        nowLbl.style.border = '2px solid #25D366';
+        nowLbl.style.background = '#f0fff4';
+        codLbl.style.border = '1.5px solid #ccc';
+        codLbl.style.background = '#fff';
+        upiBox.style.display = 'block';
+        refreshUpiPaymentDetails();
+      } else {
+        codLbl.style.border = '2px solid var(--maroon)';
+        codLbl.style.background = '#fdf6e9';
+        nowLbl.style.border = '1.5px solid #ccc';
+        nowLbl.style.background = '#fff';
+        upiBox.style.display = 'none';
+      }
+    }
+
+    function refreshUpiPaymentDetails() {
+      let totalPrice = 0;
+      cart.forEach(item => { totalPrice += (item.price * item.qty); });
+      let upiUri = `upi://pay?pa=${encodeURIComponent(cafeUpiId)}&pn=${encodeURIComponent('Sadguru Cafe')}&am=${totalPrice}&cu=INR&tn=${encodeURIComponent('Sadguru Cafe Order')}`;
+      let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
+
+      let qrImg = document.getElementById('upi-qr-img');
+      let amtTxt = document.getElementById('upi-amount-text');
+      let deepBtn = document.getElementById('upi-deeplink-btn');
+
+      if (qrImg) qrImg.src = qrUrl;
+      if (amtTxt) amtTxt.innerText = `Amount to Pay: ₹${totalPrice}`;
+      if (deepBtn) deepBtn.href = upiUri;
+    }
 
     // 🔒 Secret Triple-Click on Footer Copyright for Cafe Owner ONLY
     function secretOwnerTrigger() {
@@ -1227,9 +1304,7 @@
     // 👥 Owner Staff Management Functions
     function loadStaffList() {
       let saved = localStorage.getItem('sc_staff_list');
-      if (saved) {
-        try { staffMembers = JSON.parse(saved); } catch (e) {}
-      }
+      if (saved) { try { staffMembers = JSON.parse(saved); } catch (e) {} }
       renderStaffChips();
     }
 
@@ -1266,22 +1341,38 @@
       `).join('');
     }
 
-    // 🔗 Billing Software Webhook / KOT Print Integration
+    // 🔗 UPI ID & Billing Software Setup
     function loadSoftwareConfig() {
       let url = localStorage.getItem('sc_pos_webhook') || '';
       let autoKot = localStorage.getItem('sc_auto_kot') === 'true';
+      let savedUpi = localStorage.getItem('sc_cafe_upi_id') || '8421848131@ybl';
+      cafeUpiId = savedUpi;
+
       let urlInput = document.getElementById('pos-webhook-url');
       let kotInput = document.getElementById('auto-print-kot');
+      let upiInput = document.getElementById('cafe-upi-input');
       if (urlInput) urlInput.value = url;
       if (kotInput) kotInput.checked = autoKot;
+      if (upiInput) upiInput.value = savedUpi;
     }
 
     function saveSoftwareConfig(showAlert) {
       let url = document.getElementById('pos-webhook-url').value.trim();
       let autoKot = document.getElementById('auto-print-kot').checked;
+      let upiVal = document.getElementById('cafe-upi-input').value.trim() || '8421848131@ybl';
+
+      cafeUpiId = upiVal;
       localStorage.setItem('sc_pos_webhook', url);
       localStorage.setItem('sc_auto_kot', autoKot ? 'true' : 'false');
-      if (showAlert) alert("✅ Software Integration Settings सेव्ह झाल्या आहेत!");
+      localStorage.setItem('sc_cafe_upi_id', upiVal);
+
+      // Broadcast updated UPI ID so customer phones receive it automatically
+      fetch(`https://ntfy.sh/${ORDER_CHANNEL}`, {
+        method: 'POST',
+        body: JSON.stringify({ type: "UPI_CONFIG", upiId: upiVal })
+      }).catch(() => {});
+
+      if (showAlert) alert("✅ तुमचा Cafe UPI ID आणि सेटिंग्ज सेव्ह झाल्या आहेत!");
     }
 
     function pushOrderToBillingSoftware(orderData) {
@@ -1295,13 +1386,17 @@
       }
     }
 
-    // 🖨️ Thermal KOT / Receipt Printer (58mm / 80mm POS Standard)
+    // 🖨️ Thermal KOT / Receipt Printer (with Payment Status)
     function printThermalKOT(orderId) {
       let ord = cafeOrders.find(o => o.orderId === orderId);
       if (!ord) return;
       let itemsRows = (ord.items || []).map(i =>
         `<tr><td style="padding:3px 0;">${i.name}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">₹${i.total}</td></tr>`
       ).join('');
+
+      let payLabel = (ord.paymentMode === 'ONLINE')
+        ? `PAID ONLINE (UPI ${ord.utr ? '- UTR:' + ord.utr : ''})`
+        : `PAY ON DELIVERY (Collect ₹${ord.grandTotal})`;
 
       let printWin = window.open('', '_blank', 'width=360,height=600');
       printWin.document.write(`
@@ -1314,7 +1409,8 @@
             <b>Order: #${ord.orderId}</b> (${ord.time})<br>
             Customer: ${ord.customerName}<br>
             Phone: ${ord.customerPhone}<br>
-            Address: ${ord.address}
+            Address: ${ord.address}<br>
+            <b>Payment: ${payLabel}</b>
           </div>
           <table>
             <thead><tr><th>Item</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Amt</th></tr></thead>
@@ -1334,10 +1430,10 @@
         alert("सध्या कोणतीही ऑर्डर नाही!");
         return;
       }
-      let csv = "OrderID,Time,CustomerName,Phone,Address,Items,TotalAmount,Status,DeliveryBoy\n";
+      let csv = "OrderID,Time,CustomerName,Phone,Address,PaymentMode,UTR,Items,TotalAmount,Status,DeliveryBoy\n";
       cafeOrders.forEach(o => {
         let itemStr = (o.items || []).map(i => `${i.name}(x${i.qty})`).join(" | ");
-        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${itemStr}",${o.grandTotal},"${o.status}","${o.riderName || ''}"\n`;
+        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${o.paymentMode || 'COD'}","${o.utr || ''}","${itemStr}",${o.grandTotal},"${o.status}","${o.riderName || ''}"\n`;
       });
       let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       let link = document.createElement("a");
@@ -1397,7 +1493,7 @@
       }
     }
 
-    // 🛒 Customer Places Direct Website Order
+    // 🛒 Customer Places Direct Website Order (with Payment Option)
     function placeDirectWebsiteOrder() {
       if (cart.length === 0) {
         alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
@@ -1406,6 +1502,7 @@
       let name = document.getElementById('customer-name').value.trim();
       let phone = document.getElementById('customer-phone').value.trim();
       let address = document.getElementById('customer-address').value.trim();
+      let utr = document.getElementById('customer-utr') ? document.getElementById('customer-utr').value.trim() : '';
 
       if (!address) {
         let topLoc = document.getElementById('top-location-input');
@@ -1434,6 +1531,8 @@
         customerName: name,
         customerPhone: phone,
         address: address,
+        paymentMode: selectedPaymentMode,
+        utr: utr,
         custCoords: customerCoords,
         items: itemsList,
         grandTotal: grandTotal,
@@ -1451,9 +1550,10 @@
         cart = []; updateCartUI(); toggleCartModal(false);
         btn.disabled = false; btn.innerText = "✅ Confirm & Place Order";
 
-        document.getElementById('zt-order-badge').innerText = `● ORDER #${orderId}`;
+        let payText = (selectedPaymentMode === 'ONLINE') ? 'Paid Online (UPI)' : 'Pay on Delivery';
+        document.getElementById('zt-order-badge').innerText = `● ORDER #${orderId} (${payText})`;
         document.getElementById('zt-status-title').innerText = `✅ तुमची ऑर्डर (#${orderId}) कॅफेला मिळाली आहे!`;
-        document.getElementById('zt-eta-sub').innerText = `एकूण बिल: ₹${grandTotal} • कॅफे ऑर्डर स्वीकारत आहे...`;
+        document.getElementById('zt-eta-sub').innerText = `एकूण बिल: ₹${grandTotal} (${payText}) • कॅफे ऑर्डर स्वीकारत आहे...`;
         openZomatoTracker();
       })
       .catch(() => {
@@ -1505,6 +1605,11 @@
 
     function processIncomingOrderEvent(data, isRealtime) {
       if (!data) return;
+      if (data.type === "UPI_CONFIG" && data.upiId) {
+        cafeUpiId = data.upiId;
+        localStorage.setItem('sc_cafe_upi_id', data.upiId);
+        return;
+      }
       if (data.type === "NEW_ORDER") {
         let exists = cafeOrders.find(o => o.orderId === data.orderId);
         if (!exists) {
@@ -1607,6 +1712,15 @@
 
       container.innerHTML = cafeOrders.map(ord => {
         let badgeColor = ord.status === 'Pending' ? '#ff3b30' : (ord.status === 'Preparing' ? '#ff9f0a' : (ord.status === 'Out for Delivery' ? '#0a84ff' : '#25D366'));
+        let isOnlinePay = (ord.paymentMode === 'ONLINE');
+        let paymentBadgeHtml = isOnlinePay
+          ? `<div style="background: rgba(37,211,102,0.15); border: 1px solid #25D366; color: #25D366; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;">
+               💳 PAID ONLINE (Pay Now - UPI) ${ord.utr ? `• UTR: ${ord.utr}` : ''}
+             </div>`
+          : `<div style="background: rgba(255,159,10,0.15); border: 1px solid #ff9f0a; color: #ff9f0a; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;">
+               💵 PAY ON DELIVERY (डिलिव्हरीवर ₹${ord.grandTotal} घ्यायचे आहेत)
+             </div>`;
+
         let itemsHtml = (ord.items || []).map(i =>
           `<div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed #333; font-size: 0.9rem;">
             <span><b>${i.qty} x</b> ${i.name}</span>
@@ -1614,7 +1728,6 @@
           </div>`
         ).join('');
 
-        // 1-Click Staff Dispatch Buttons inside each Order Card
         let staffButtonsHtml = staffMembers.map(s => {
           let isSelected = (ord.riderName === s.name && ord.status === 'Out for Delivery');
           return `
@@ -1633,6 +1746,8 @@
                 <span style="background: ${badgeColor}; color: #fff; padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;">${ord.status} • ${ord.time}</span>
               </div>
             </div>
+
+            ${paymentBadgeHtml}
 
             <div style="background: #121419; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 0.85rem;">
               <div style="margin-bottom: 3px;">👤 <b>${ord.customerName}</b></div>
@@ -1683,6 +1798,30 @@
         } catch(e){}
       }
 
+      // Sync latest Cafe UPI ID from server if owner updated it
+      fetch(`https://ntfy.sh/${ORDER_CHANNEL}/json?poll=1&since=24h`)
+        .then(res => res.text())
+        .then(text => {
+          text.trim().split('\n').filter(Boolean).forEach(line => {
+            try {
+              let msg = JSON.parse(JSON.parse(line).message);
+              if (msg.type === "UPI_CONFIG" && msg.upiId) {
+                cafeUpiId = msg.upiId;
+                localStorage.setItem('sc_cafe_upi_id', msg.upiId);
+              }
+            } catch(e){}
+          });
+        }).catch(() => {});
+
+      // Keep QR Code updated whenever Cart Modal opens
+      let origToggleModal = window.toggleCartModal;
+      window.toggleCartModal = function(show) {
+        if (origToggleModal) origToggleModal(show);
+        if (show && selectedPaymentMode === 'ONLINE') {
+          refreshUpiPaymentDetails();
+        }
+      };
+
       document.querySelectorAll('.action-boxes a, .pro-action-grid a').forEach(btn => {
         if (btn.innerText.includes('Live Location') || btn.innerText.includes('Live Track')) {
           btn.href = "javascript:void(0)";
@@ -1693,7 +1832,6 @@
 
       window.sendWhatsAppOrder = function() { toggleCartModal(true); };
 
-      // Open Dedicated Kitchen/Owner Dashboard Tab when URL has ?pos=1
       if (window.location.search.includes('pos=1') || window.location.search.includes('admin=1')) {
         openAdminDashboard();
       }
