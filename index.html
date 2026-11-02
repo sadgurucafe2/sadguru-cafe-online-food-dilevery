@@ -2068,9 +2068,8 @@
       let finalDelivery = 0;
       if (currentOrderMode === 'DELIVERY') {
         let isWithin5Km = (detectedDistanceKm === null || detectedDistanceKm <= 5.0);
-        // Free delivery on ₹599+ ONLY if within 5 km
         if (isWithin5Km && foodTotal >= 599) {
-          finalDelivery = 0;
+          finalDelivery = 0; // Free delivery on ₹599+ within 5 km
         } else {
           finalDelivery = deliveryChargeAmount; // 30 for <=5km, 100 for >5km
         }
@@ -2441,7 +2440,6 @@
 
     function testOrderAlarm() { playSingleChime(); }
 
-    // Place Direct Website Order (Checking Min ₹199 & Free Delivery on ₹599 for <=5km)
     function placeDirectWebsiteOrder() {
       if (cart.length === 0) { alert('कृपया आधी मेनूमधील पदार्थ निवडा!'); return; }
 
@@ -2789,9 +2787,9 @@
         }
       }, 200);
     }
-function closeZomatoTracker() {
+
+    function closeZomatoTracker() {
       document.getElementById('zomato-track-modal').style.display = 'none';
-      if (pollTimer) clearInterval(pollTimer);
     }
 
     function fetchLatestRiderLocation() {
