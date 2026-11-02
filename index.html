@@ -1018,70 +1018,366 @@
     </div>
   </div>
 
-  <!-- Cart Modal (Direct Website Order with Pay on Delivery & Pay Now) -->
+<!-- Professional Zomato-Style Cart & Checkout Modal -->
+  <style>
+    #cart-modal .pro-checkout-box {
+      background: #f4f5f7;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 18px;
+      padding: 0;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+      border: 1px solid rgba(212,175,55,0.4);
+    }
+    .chk-header {
+      background: #ffffff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .chk-header h3 {
+      font-size: 1.08rem;
+      color: var(--maroon);
+      font-weight: 800;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chk-close-btn {
+      background: #f2f2f2;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chk-body {
+      padding: 12px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .chk-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border: 1px solid #ececec;
+    }
+    .chk-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    /* Saved Customer Compact Card */
+    .saved-cust-card {
+      display: none;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .saved-cust-info {
+      font-size: 0.85rem;
+      color: #333;
+      line-height: 1.4;
+    }
+    .saved-cust-info strong {
+      font-size: 0.92rem;
+      color: #111;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .edit-cust-btn {
+      background: #fff5f5;
+      color: #E23744;
+      border: 1px solid #ffd6d9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    /* Clean Form Inputs */
+    .chk-input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .chk-input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #222;
+      background: #fafafa;
+      outline: none;
+      transition: border 0.2s, background 0.2s;
+    }
+    .chk-input:focus {
+      border-color: var(--maroon);
+      background: #fff;
+    }
+    .chk-addr-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .chk-gps-btn {
+      background: #fff0f1;
+      color: #E23744;
+      border: 1px solid #ffcdd2;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .chk-save-profile-btn {
+      margin-top: 8px;
+      width: 100%;
+      background: var(--maroon);
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    /* Payment Option Cards */
+    .chk-pay-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .chk-pay-option {
+      border: 1.5px solid #e0e0e0;
+      background: #fafafa;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #333;
+      transition: all 0.2s;
+    }
+    .chk-footer {
+      background: #ffffff;
+      padding: 12px 16px;
+      border-top: 1px solid #eaeaea;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .chk-total-box small {
+      display: block;
+      font-size: 0.7rem;
+      color: #777;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .chk-total-box .modal-total {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--maroon);
+    }
+    .chk-submit-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+      text-align: center;
+    }
+  </style>
+
   <div class="modal-overlay" id="cart-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>🛒 Confirm Your Order</h3>
-        <button class="close-modal" onclick="toggleCartModal(false)">×</button>
+    <div class="pro-checkout-box">
+      <!-- Top Header -->
+      <div class="chk-header">
+        <h3>🛍️ Checkout & Confirm</h3>
+        <button class="chk-close-btn" onclick="toggleCartModal(false)">×</button>
       </div>
-      <div id="modal-cart-items"></div>
-      
-      <div style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 12px; display: flex; flex-direction: column; gap: 10px;">
-        <div>
-          <label style="font-size: 0.85rem; font-weight: 600; color: var(--maroon);">👤 तुमचे नाव (Your Name): *</label>
-          <input type="text" id="customer-name" placeholder="उदा. राहुल पाटील" style="width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;" />
+
+      <!-- Scrollable Checkout Body -->
+      <div class="chk-body">
+        
+        <!-- 1. Ordered Items List -->
+        <div class="chk-card">
+          <div class="chk-section-label">🍲 Order Summary (तुमचे पदार्थ)</div>
+          <div id="modal-cart-items"></div>
         </div>
 
-        <div>
-          <label style="font-size: 0.85rem; font-weight: 600; color: var(--maroon);">📞 मोबाईल नंबर (Mobile Number): *</label>
-          <input type="tel" id="customer-phone" maxlength="10" placeholder="10 अंकी मोबाईल नंबर" style="width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;" />
+        <!-- 2. Smart Customer Info (Auto-Saved Card vs 1-Time Form) -->
+        <div class="chk-card">
+          <div class="chk-section-label">📍 Delivery / Table Details</div>
+
+          <!-- Compact View (Shown automatically once info is saved) -->
+          <div id="cust-saved-view" class="saved-cust-card">
+            <div class="saved-cust-info">
+              <strong id="saved-cust-name-phone">👤 Customer</strong>
+              <span id="saved-cust-addr" style="color: #666; font-size: 0.8rem;">📍 Address</span>
+            </div>
+            <button type="button" class="edit-cust-btn" onclick="showCustomerEditForm(true)">✏️ Change</button>
+          </div>
+
+          <!-- Input Form (Shown only first time or when clicking Change) -->
+          <div id="cust-form-box">
+            <div class="chk-input-grid">
+              <input type="text" id="customer-name" class="chk-input" placeholder="तुमचे नाव *" oninput="autoSaveCustDraft()" />
+              <input type="tel" id="customer-phone" class="chk-input" maxlength="10" placeholder="मोबाईल नंबर *" oninput="autoSaveCustDraft()" />
+            </div>
+            <div class="chk-addr-row">
+              <input type="text" id="customer-address" class="chk-input" placeholder="घरचा पत्ता किंवा Table No. *" oninput="autoSaveCustDraft()" />
+              <button type="button" class="chk-gps-btn" onclick="detectUserGPSInModal()">📍 GPS</button>
+            </div>
+            <button type="button" id="save-cust-btn" class="chk-save-profile-btn" onclick="saveAndCollapseCustomerForm()">
+              ✓ Save Delivery Details (पुढच्या वेळी टाईप करावे लागणार नाही)
+            </button>
+          </div>
         </div>
 
-        <div>
-          <label style="font-size: 0.85rem; font-weight: 600; color: var(--maroon);">📍 Delivery Address किंवा Table No.: *</label>
-          <input type="text" id="customer-address" placeholder="उदा. टेबल नं. 04 किंवा घरचा पत्ता" style="width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem;" />
-          <button type="button" onclick="detectUserGPSInModal()" style="margin-top: 8px; background: #E23744; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-            🎯 Get Current Location (GPS)
-          </button>
-        </div>
-
-        <!-- 💳 Payment Method Selection (Pay on Delivery vs Pay Now) -->
-        <div style="margin-top: 4px; border-top: 1px dashed #ddd; padding-top: 10px;">
-          <label style="font-size: 0.88rem; font-weight: 700; color: var(--maroon); display: block; margin-bottom: 8px;">💳 पेमेंट कसे करणार? (Select Payment Option): *</label>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <label id="lbl-pay-cod" onclick="selectPaymentMode('COD')" style="border: 2px solid var(--maroon); background: #fdf6e9; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.84rem; font-weight: 700; color: var(--maroon);">
+        <!-- 3. Payment Method Selection -->
+        <div class="chk-card">
+          <div class="chk-section-label">💳 Payment Method (पेमेंट पर्याय)</div>
+          <div class="chk-pay-grid">
+            <label id="lbl-pay-cod" class="chk-pay-option" onclick="selectPaymentMode('COD')" style="border: 2px solid var(--maroon); background: #fdf6e9;">
               <input type="radio" name="payment-mode" value="COD" checked style="accent-color: var(--maroon);" />
               <span>💵 Pay on Delivery</span>
             </label>
-            <label id="lbl-pay-now" onclick="selectPaymentMode('ONLINE')" style="border: 1.5px solid #ccc; background: #fff; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.84rem; font-weight: 700; color: #333;">
+            <label id="lbl-pay-now" class="chk-pay-option" onclick="selectPaymentMode('ONLINE')">
               <input type="radio" name="payment-mode" value="ONLINE" style="accent-color: #25D366;" />
               <span>📱 Pay Now (UPI)</span>
             </label>
           </div>
 
-          <!-- Instant UPI QR & Deep-Link Box (Shown when Pay Now is selected) -->
+          <!-- Instant UPI QR Box -->
           <div id="pay-now-upi-box" style="display: none; margin-top: 10px; background: #f0fff4; border: 1.5px solid #25D366; border-radius: 10px; padding: 12px; text-align: center;">
-            <div style="font-size: 0.85rem; font-weight: 700; color: #0b6b3a; margin-bottom: 6px;">
-              📱 Scan QR किंवा खालील बटणावरून पेमेंट करा
+            <div style="font-size: 0.8rem; font-weight: 700; color: #0b6b3a; margin-bottom: 6px;">
+              📱 QR स्कॅन करा किंवा खालील UPI बटणावरून पेमेंट करा
             </div>
-            <img id="upi-qr-img" src="" alt="UPI QR Code" style="width: 155px; height: 155px; border: 2px solid #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 4px auto; display: block; background: #fff;" />
-            <div id="upi-amount-text" style="font-size: 0.95rem; font-weight: 700; color: var(--maroon); margin: 4px 0;">Payable: ₹0</div>
-            <a id="upi-deeplink-btn" href="#" style="display: inline-block; width: 100%; background: #25D366; color: #fff; text-decoration: none; padding: 9px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; margin-top: 4px; box-shadow: 0 2px 6px rgba(37,211,102,0.3);">
+            <img id="upi-qr-img" src="" alt="UPI QR Code" style="width: 145px; height: 145px; border: 2px solid #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 4px auto; display: block; background: #fff;" />
+            <div id="upi-amount-text" style="font-size: 0.9rem; font-weight: 800; color: var(--maroon); margin: 4px 0;">Payable: ₹0</div>
+            <a id="upi-deeplink-btn" href="#" style="display: inline-block; width: 100%; background: #25D366; color: #fff; text-decoration: none; padding: 9px 12px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">
               🚀 Open UPI App (PhonePe / GPay / Paytm)
             </a>
-            <input type="text" id="customer-utr" placeholder="पेमेंट झाल्यावर UTR चे शेवटचे 4 अंक टाका (Optional)" style="width: 100%; padding: 7px 10px; margin-top: 8px; border: 1px solid #b2f5ea; border-radius: 6px; font-size: 0.8rem; text-align: center; background: #fff;" />
+            <input type="text" id="customer-utr" placeholder="पेमेंट झाल्यावर UTR चे शेवटचे 4 अंक (Optional)" style="width: 100%; padding: 7px 10px; margin-top: 8px; border: 1px solid #b2f5ea; border-radius: 6px; font-size: 0.78rem; text-align: center; background: #fff;" />
           </div>
         </div>
+
       </div>
 
-      <div class="modal-footer">
-        <div class="modal-total" id="modal-total-price">Total: ₹0</div>
-        <button class="cart-btn" id="place-order-btn" onclick="placeDirectWebsiteOrder()">✅ Confirm & Place Order</button>
+      <!-- Sticky Bottom Checkout Footer -->
+      <div class="chk-footer">
+        <div class="chk-total-box">
+          <small>Total Payable</small>
+          <div class="modal-total" id="modal-total-price">₹0</div>
+        </div>
+        <button class="chk-submit-btn" id="place-order-btn" onclick="placeDirectWebsiteOrder()">
+          ✅ Confirm & Place Order
+        </button>
       </div>
     </div>
   </div>
 
+  <script>
+    // Auto-Save & Smart Collapse for Customer Info
+    function autoSaveCustDraft() {
+      let name = document.getElementById('customer-name').value.trim();
+      let phone = document.getElementById('customer-phone').value.trim();
+      let address = document.getElementById('customer-address').value.trim();
+      if (name || phone || address) {
+        localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
+      }
+    }
+
+    function saveAndCollapseCustomerForm() {
+      let name = document.getElementById('customer-name').value.trim();
+      let phone = document.getElementById('customer-phone').value.trim();
+      let address = document.getElementById('customer-address').value.trim();
+      if (!name || phone.length < 10 || !address) {
+        alert("कृपया तुमचे नाव, १० अंकी मोबाईल नंबर आणि पत्ता पूर्ण भरा!");
+        return;
+      }
+      localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
+      refreshSavedCustomerCardUI();
+    }
+
+    function showCustomerEditForm(showForm) {
+      let savedView = document.getElementById('cust-saved-view');
+      let formBox = document.getElementById('cust-form-box');
+      if (showForm) {
+        savedView.style.display = 'none';
+        formBox.style.display = 'block';
+      } else {
+        savedView.style.display = 'flex';
+        formBox.style.display = 'none';
+      }
+    }
+
+    function refreshSavedCustomerCardUI() {
+      let savedProf = localStorage.getItem('sc_cust_profile');
+      if (!savedProf) {
+        showCustomerEditForm(true);
+        return;
+      }
+      try {
+        let p = JSON.parse(savedProf);
+        if (p.name) document.getElementById('customer-name').value = p.name;
+        if (p.phone) document.getElementById('customer-phone').value = p.phone;
+        if (p.address) document.getElementById('customer-address').value = p.address;
+
+        if (p.name && p.phone && p.address) {
+          document.getElementById('saved-cust-name-phone').innerText = `👤 ${p.name} • 📞 ${p.phone}`;
+          document.getElementById('saved-cust-addr').innerText = `📍 ${p.address}`;
+          showCustomerEditForm(false);
+        } else {
+          showCustomerEditForm(true);
+        }
+      } catch (e) {
+        showCustomerEditForm(true);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+      refreshSavedCustomerCardUI();
+      let prevToggle = window.toggleCartModal;
+      window.toggleCartModal = function(show) {
+        if (prevToggle) prevToggle(show);
+        if (show) refreshSavedCustomerCardUI();
+      };
+    });
+  </script>
   <!-- Clean Customer Footer (Triple-Click on Copyright Opens Owner Dashboard in New Tab) -->
   <footer>
     <h2 style="color: var(--gold); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 6px;">SADGURU CAFE</h2>
