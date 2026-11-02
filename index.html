@@ -1526,17 +1526,451 @@
     </div>
   </div>
 
+ <!-- Professional Zomato-Style Cart & Checkout Modal -->
+  <style>
+    #cart-modal .pro-checkout-box {
+      background: #f4f5f7;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 18px;
+      padding: 0;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+      border: 1px solid rgba(212,175,55,0.4);
+    }
+    .chk-header {
+      background: #ffffff;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eaeaea;
+    }
+    .chk-header h3 {
+      font-size: 1.08rem;
+      color: var(--maroon);
+      font-weight: 800;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chk-close-btn {
+      background: #f2f2f2;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      color: #555;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chk-body {
+      padding: 12px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .chk-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border: 1px solid #ececec;
+    }
+    .chk-section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+    .saved-cust-card {
+      display: none;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .saved-cust-info {
+      font-size: 0.85rem;
+      color: #333;
+      line-height: 1.4;
+    }
+    .saved-cust-info strong {
+      font-size: 0.92rem;
+      color: #111;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .edit-cust-btn {
+      background: #fff5f5;
+      color: #E23744;
+      border: 1px solid #ffd6d9;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chk-input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .chk-input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid #d9d9d9;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #222;
+      background: #fafafa;
+      outline: none;
+      transition: border 0.2s, background 0.2s;
+    }
+    .chk-input:focus {
+      border-color: var(--maroon);
+      background: #fff;
+    }
+    .chk-addr-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .chk-gps-btn {
+      background: #fff0f1;
+      color: #E23744;
+      border: 1px solid #ffcdd2;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .chk-save-profile-btn {
+      margin-top: 8px;
+      width: 100%;
+      background: var(--maroon);
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .chk-pay-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .chk-pay-option {
+      border: 1.5px solid #e0e0e0;
+      background: #fafafa;
+      padding: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #333;
+      transition: all 0.2s;
+    }
+    .chk-footer {
+      background: #ffffff;
+      padding: 12px 16px;
+      border-top: 1px solid #eaeaea;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .chk-total-box small {
+      display: block;
+      font-size: 0.7rem;
+      color: #777;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .chk-total-box .modal-total {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--maroon);
+    }
+    .chk-submit-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: #ffffff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+      text-align: center;
+    }
+    .chk-submit-btn:disabled {
+      background: #ccc !important;
+      color: #666 !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+    }
+  </style>
+
+  <div class="modal-overlay" id="cart-modal">
+    <div class="pro-checkout-box">
+      <!-- Top Header -->
+      <div class="chk-header">
+        <h3>🛍️ Checkout & Confirm</h3>
+        <button class="chk-close-btn" onclick="toggleCartModal(false)">×</button>
+      </div>
+
+      <!-- Scrollable Checkout Body -->
+      <div class="chk-body">
+        
+        <!-- 1. Ordered Items & Bill Summary -->
+        <div class="chk-card">
+          <div class="chk-section-label">🍲 Order Summary</div>
+          <div id="modal-cart-items"></div>
+          <div style="border-top: 1px dashed #ddd; margin-top: 8px; padding-top: 8px; font-size: 0.83rem; color: #444;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Food Items Total:</span>
+              <strong id="chk-food-subtotal">₹0</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--maroon);">
+              <span id="chk-delivery-label">🛵 Delivery Charges:</span>
+              <strong id="chk-delivery-cost">+ ₹50</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Delivery Type Switch (Home Delivery vs Dine-In) -->
+        <div class="chk-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div class="chk-section-label" style="margin: 0;">📍 Order Type (ऑर्डरचा प्रकार)</div>
+            <span style="font-size: 0.7rem; background: #fdf6e9; color: var(--maroon); padding: 2px 7px; border-radius: 10px; font-weight: 700;">Min ₹199 for Delivery</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+            <button type="button" id="type-delivery-btn" onclick="switchOrderMode('DELIVERY')" style="background: var(--maroon); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;">
+              🛵 Home Delivery
+            </button>
+            <button type="button" id="type-dine-btn" onclick="switchOrderMode('DINEIN')" style="background: #fafafa; color: #444; border: 1.5px solid #ddd; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;">
+              🍽️ Dine-In / Takeaway
+            </button>
+          </div>
+
+          <!-- GPS Distance & Distance Status Banner -->
+          <div id="gps-distance-banner" style="display: none; margin-top: 6px; padding: 8px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700;"></div>
+        </div>
+
+        <!-- 3. Smart Customer Info -->
+        <div class="chk-card">
+          <div class="chk-section-label">📍 Customer & Address Details</div>
+          <div id="cust-saved-view" class="saved-cust-card">
+            <div class="saved-cust-info">
+              <strong id="saved-cust-name-phone">👤 Customer</strong>
+              <span id="saved-cust-addr" style="color: #666; font-size: 0.8rem;">📍 Address</span>
+            </div>
+            <button type="button" class="edit-cust-btn" onclick="showCustomerEditForm(true)">✏️ Change</button>
+          </div>
+
+          <div id="cust-form-box">
+            <div class="chk-input-grid">
+              <input type="text" id="customer-name" class="chk-input" placeholder="तुमचे नाव *" oninput="autoSaveCustDraft()" />
+              <input type="tel" id="customer-phone" class="chk-input" maxlength="10" placeholder="मोबाईल नंबर *" oninput="autoSaveCustDraft()" />
+            </div>
+            <div class="chk-addr-row">
+              <input type="text" id="customer-address" class="chk-input" placeholder="घरचा पत्ता किंवा Table No. *" oninput="autoSaveCustDraft()" />
+              <button type="button" class="chk-gps-btn" onclick="detectUserGPSInModal()">📍 Check GPS</button>
+            </div>
+            <button type="button" id="save-cust-btn" class="chk-save-profile-btn" onclick="saveAndCollapseCustomerForm()">
+              ✓ Save Details (पुढच्या वेळी टाईप करावे लागणार नाही)
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Payment Method Selection -->
+        <div class="chk-card">
+          <div class="chk-section-label">💳 Payment Method (पेमेंट पर्याय)</div>
+          <div class="chk-pay-grid">
+            <label id="lbl-pay-cod" class="chk-pay-option" onclick="selectPaymentMode('COD')" style="border: 2px solid var(--maroon); background: #fdf6e9;">
+              <input type="radio" name="payment-mode" value="COD" checked style="accent-color: var(--maroon);" />
+              <span>💵 Pay on Delivery</span>
+            </label>
+            <label id="lbl-pay-now" class="chk-pay-option" onclick="selectPaymentMode('ONLINE')">
+              <input type="radio" name="payment-mode" value="ONLINE" style="accent-color: #25D366;" />
+              <span>📱 Pay Now (UPI)</span>
+            </label>
+          </div>
+
+          <!-- Instant UPI QR Box -->
+          <div id="pay-now-upi-box" style="display: none; margin-top: 10px; background: #f0fff4; border: 1.5px solid #25D366; border-radius: 10px; padding: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: #0b6b3a; margin-bottom: 6px;">
+              📱 QR स्कॅन करा किंवा खालील UPI बटणावरून पेमेंट करा
+            </div>
+            <img id="upi-qr-img" src="" alt="UPI QR Code" style="width: 145px; height: 145px; border: 2px solid #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 4px auto; display: block; background: #fff;" />
+            <div id="upi-amount-text" style="font-size: 0.9rem; font-weight: 800; color: var(--maroon); margin: 4px 0;">Payable: ₹0</div>
+            <a id="upi-deeplink-btn" href="#" style="display: inline-block; width: 100%; background: #25D366; color: #fff; text-decoration: none; padding: 9px 12px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; margin-top: 4px;">
+              🚀 Open UPI App (PhonePe / GPay / Paytm)
+            </a>
+            <input type="text" id="customer-utr" placeholder="पेमेंट झाल्यावर UTR चे शेवटचे 4 अंक (Optional)" style="width: 100%; padding: 7px 10px; margin-top: 8px; border: 1px solid #b2f5ea; border-radius: 6px; font-size: 0.78rem; text-align: center; background: #fff;" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sticky Bottom Checkout Footer -->
+      <div class="chk-footer">
+        <div class="chk-total-box">
+          <small>Total Payable</small>
+          <div class="modal-total" id="modal-total-price">₹0</div>
+        </div>
+        <button class="chk-submit-btn" id="place-order-btn" onclick="placeDirectWebsiteOrder()">
+          ✅ Confirm & Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clean Customer Footer -->
+  <footer>
+    <h2 style="color: var(--gold); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 6px;">SADGURU CAFE</h2>
+    <p style="font-size: 0.9rem; color: #f7e7b4; margin-bottom: 6px;">📍 Khau Galli, Shivpuri Road, Omerga | 📞 +91 84218 48131 / 8412056933</p>
+    <p class="copyright" onclick="secretOwnerTrigger()" style="user-select: none; cursor: default;">© 2026 Sadguru Cafe. All Rights Reserved.</p>
+  </footer>
+
+  <!-- POS Dashboard Modal -->
+  <div id="cafe-admin-dashboard" style="display: none; position: fixed; inset: 0; background: #101216; color: #fff; z-index: 5000; overflow-y: auto; padding: 18px;">
+    <div style="max-width: 1280px; margin: 0 auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; background: #1a1d24; padding: 15px 20px; border-radius: 12px; border-left: 5px solid var(--gold); margin-bottom: 16px;">
+        <div>
+          <h2 style="color: var(--gold); font-size: 1.35rem; margin-bottom: 3px;">☕ SADGURU CAFE — KITCHEN & OWNER POS DASHBOARD</h2>
+          <div style="font-size: 0.82rem; color: #25D366; font-weight: 600;">● Live Auto-Sync Active</div>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button onclick="stopOrderAlarm()" id="stop-alarm-btn" style="display: none; background: #ff3b30; color: #fff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; animation: pulse-anim 0.6s infinite;">🔕 Stop Alarm</button>
+          <button onclick="toggleDashPanel('staff-manager-box')" style="background: #2b303c; color: var(--gold); border: 1px solid var(--gold); padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">👥 Manage Staff</button>
+          <button onclick="toggleDashPanel('software-sync-box')" style="background: #2b303c; color: #5ac8fa; border: 1px solid #5ac8fa; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;">🔗 UPI Setup</button>
+          <button onclick="exportOrdersCSV()" style="background: #2b303c; color: #fff; border: 1px solid #444; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">📊 Excel</button>
+          <button onclick="testOrderAlarm()" style="background: #2b303c; color: #fff; border: 1px solid #444; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">🔔 Sound</button>
+          <button onclick="clearAllCompletedOrders()" style="background: #2b303c; color: #ff8a8a; border: 1px solid #522; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer;">🗑️ Clear Done</button>
+        </div>
+      </div>
+
+      <div id="staff-manager-box" style="display: none; background: #1a1d24; border: 1px solid var(--gold); border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+        <h3 style="color: var(--gold); font-size: 1.05rem; margin-bottom: 10px;">👥 Add / Manage Delivery Staff</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+          <input type="text" id="new-staff-name" placeholder="स्टाफचे नाव" style="padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff; flex: 1; min-width: 180px;" />
+          <input type="tel" id="new-staff-phone" maxlength="10" placeholder="मोबाईल नंबर" style="padding: 9px 12px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff; flex: 1; min-width: 180px;" />
+          <button onclick="addStaffMemberFromDash()" style="background: #25D366; color: #111; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">➕ Add Staff</button>
+        </div>
+        <div id="staff-list-chips" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+      </div>
+
+      <div id="software-sync-box" style="display: none; background: #1a1d24; border: 1px solid #5ac8fa; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+        <h3 style="color: #5ac8fa; font-size: 1.05rem; margin-bottom: 10px;">🏦 Cafe UPI ID & Printer Setup</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px;">
+          <div>
+            <label style="font-size: 0.8rem; color: #ccc;">📱 Cafe UPI ID:</label>
+            <input type="text" id="cafe-upi-input" placeholder="8421848131@ybl" style="width: 100%; padding: 9px 12px; margin-top: 4px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff;" />
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; color: #ccc;">🔗 Local POS Webhook URL:</label>
+            <input type="text" id="pos-webhook-url" placeholder="http://localhost:8080/api/orders" style="width: 100%; padding: 9px 12px; margin-top: 4px; border-radius: 6px; border: 1px solid #444; background: #101216; color: #fff;" />
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
+            <input type="checkbox" id="auto-print-kot" onchange="saveSoftwareConfig()" /> 🖨️ ऑटोमॅटिक Thermal KOT प्रिंट
+          </label>
+          <button onclick="saveSoftwareConfig(true)" style="background: #5ac8fa; color: #111; border: none; padding: 9px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">💾 Save Settings</button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid #ff9f0a;">
+          <div style="font-size: 0.8rem; color: #aaa;">🔔 Pending Orders</div>
+          <div id="dash-pending-count" style="font-size: 1.7rem; font-weight: 700; color: #ff9f0a; margin-top: 2px;">0</div>
+        </div>
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid #0a84ff;">
+          <div style="font-size: 0.8rem; color: #aaa;">🛵 Out for Delivery</div>
+          <div id="dash-delivery-count" style="font-size: 1.7rem; font-weight: 700; color: #0a84ff; margin-top: 2px;">0</div>
+        </div>
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid #25D366;">
+          <div style="font-size: 0.8rem; color: #aaa;">📦 Total Orders</div>
+          <div id="dash-total-count" style="font-size: 1.7rem; font-weight: 700; color: #25D366; margin-top: 2px;">0</div>
+        </div>
+        <div style="background: #1a1d24; padding: 14px 16px; border-radius: 10px; border-top: 3px solid var(--gold);">
+          <div style="font-size: 0.8rem; color: #aaa;">💰 Total Sales</div>
+          <div id="dash-total-sales" style="font-size: 1.7rem; font-weight: 700; color: var(--gold); margin-top: 2px;">₹0</div>
+        </div>
+      </div>
+
+      <div id="dashboard-orders-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px;"></div>
+    </div>
+  </div>
+
+  <!-- Leaflet Live Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Live Tracker Modal -->
+  <div class="modal-overlay" id="zomato-track-modal" style="z-index: 3000;">
+    <div class="modal-content" style="max-width: 480px; padding: 0; overflow: hidden; border-radius: 16px;">
+      <div style="background: linear-gradient(135deg, #E23744 0%, #b81d2a 100%); color: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span id="zt-order-badge" style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(0,0,0,0.25); padding: 3px 9px; border-radius: 10px;">● LIVE STATUS</span>
+          <h3 id="zt-status-title" style="font-size: 1.1rem; margin-top: 5px; color: #fff;">✅ तुमची ऑर्डर कॅफेला मिळाली आहे!</h3>
+          <div id="zt-eta-sub" style="font-size: 0.8rem; color: #ffd6d9; margin-top: 2px;">कॅफे तुमची ऑर्डर कन्फर्म करत आहे...</div>
+        </div>
+        <button onclick="closeZomatoTracker()" style="background: rgba(255,255,255,0.2); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;">×</button>
+      </div>
+
+      <div id="zomato-map" style="width: 100%; height: 250px; background: #eee;"></div>
+
+      <div style="padding: 15px; background: #fff;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #fdf8f4; border: 1px solid #f0e6d8; padding: 12px; border-radius: 12px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 46px; height: 46px; border-radius: 50%; background: #ffeef0; border: 2px solid #E23744; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">🛵</div>
+            <div>
+              <div style="font-size: 0.72rem; color: #E23744; font-weight: 700; text-transform: uppercase;">Delivery Partner</div>
+              <div id="zt-rider-name" style="font-size: 0.98rem; font-weight: 700; color: #222;">Sadguru Cafe Team</div>
+              <div id="zt-rider-phone" style="font-size: 0.82rem; color: #555;">📞 +91 84218 48131</div>
+            </div>
+          </div>
+          <a id="zt-call-btn" href="tel:+918421848131" style="background: #25D366; color: #fff; text-decoration: none; padding: 9px 14px; border-radius: 10px; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; box-shadow: 0 3px 8px rgba(37,211,102,0.3);">📞 Call</a>
+        </div>
+        <div id="zt-last-update" style="text-align: center; font-size: 0.76rem; color: #777; margin-top: 8px;">📍 डिलिव्हरी पार्टनर निघाल्यावर इथे स्टेटस दिसेल.</div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const CAFE_COORDS = [17.8374302, 76.6211413]; // Sadguru Cafe, Omerga
     const MAX_DELIVERY_KM = 10.0; // Strictly 10 KM Limit
-    const LOCAL_CITY_KM = 3.5; // Up to 3.5 km = ₹50, 3.5 to 10 km = ₹100
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
     const ORDER_CHANNEL = "sadguru_cafe_omerga_orders_pos_918421848131";
 
     let cafeUpiId = localStorage.getItem('sc_cafe_upi_id') || "8421848131@ybl";
     let selectedPaymentMode = "COD";
-    let currentDeliveryZone = "LOCAL";
-    let currentDeliveryCharge = 50;
+    let currentOrderMode = "DELIVERY"; // DELIVERY or DINEIN
+    let deliveryChargeAmount = 50;
     let detectedDistanceKm = null;
     let isOutOf10KmRange = false;
 
@@ -1550,7 +1984,7 @@
     let alarmInterval = null, audioCtx = null, orderEventSource = null;
     let secretClickCount = 0, secretClickTimer = null;
 
-    // 📏 Haversine Formula to Calculate Distance in KM from Sadguru Cafe
+    // Haversine Formula for Distance Calculation in KM
     function getDistanceKm(lat1, lon1, lat2, lon2) {
       const R = 6371;
       const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -1561,64 +1995,29 @@
       return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
     }
 
-    // 🛵 Set Delivery Zone & Recalculate Grand Total
-    function setDeliveryZone(zone, charge) {
-      currentDeliveryZone = zone;
-      currentDeliveryCharge = charge;
+    // Switch between Home Delivery & Dine-In
+    function switchOrderMode(mode) {
+      currentOrderMode = mode;
+      let delBtn = document.getElementById('type-delivery-btn');
+      let dineBtn = document.getElementById('type-dine-btn');
 
-      document.querySelectorAll('.zone-option').forEach(el => el.classList.remove('active'));
-      if (zone === 'LOCAL') {
-        document.getElementById('zone-local').classList.add('active');
-        document.querySelector('#zone-local input').checked = true;
-      } else if (zone === 'OUTSKIRTS') {
-        document.getElementById('zone-outskirts').classList.add('active');
-        document.querySelector('#zone-outskirts input').checked = true;
+      if (mode === 'DELIVERY') {
+        delBtn.style.background = 'var(--maroon)';
+        delBtn.style.color = '#fff';
+        dineBtn.style.background = '#fafafa';
+        dineBtn.style.color = '#444';
+        dineBtn.style.border = '1.5px solid #ddd';
       } else {
-        document.getElementById('zone-dinein').classList.add('active');
-        document.querySelector('#zone-dinein input').checked = true;
+        dineBtn.style.background = 'var(--maroon)';
+        dineBtn.style.color = '#fff';
+        delBtn.style.background = '#fafafa';
+        delBtn.style.color = '#444';
+        delBtn.style.border = '1.5px solid #ddd';
+        deliveryChargeAmount = 0;
       }
-
-      // If Dine-In is chosen, ignore 10km block; otherwise enforce if GPS was > 10km
-      let placeBtn = document.getElementById('place-order-btn');
-      if (zone !== 'DINEIN' && isOutOf10KmRange) {
-        placeBtn.disabled = true;
-        placeBtn.innerText = "❌ 10 KM च्या बाहेर डिलिव्हरी नाही";
-      } else {
-        placeBtn.disabled = false;
-        placeBtn.innerText = "✅ Confirm & Place Order";
-      }
-
       recalculateCheckoutTotals();
     }
 
-    function recalculateCheckoutTotals() {
-      let foodTotal = 0;
-      if (typeof cart !== 'undefined') {
-        cart.forEach(item => { foodTotal += (item.price * item.qty); });
-      }
-      let delCharge = (foodTotal > 0) ? currentDeliveryCharge : 0;
-      let grandTotal = foodTotal + delCharge;
-
-      let subEl = document.getElementById('chk-food-subtotal');
-      let delLbl = document.getElementById('chk-delivery-label');
-      let delCostEl = document.getElementById('chk-delivery-cost');
-      let modalTotalEl = document.getElementById('modal-total-price');
-
-      if (subEl) subEl.innerText = `₹${foodTotal}`;
-      if (delLbl) {
-        delLbl.innerText = currentDeliveryZone === 'LOCAL'
-          ? '🛵 Delivery (Omerga City):'
-          : (currentDeliveryZone === 'OUTSKIRTS' ? '🛣️ Delivery (बाहेर गावात - 10km):' : '🍽️ Dine-In / Self Pickup:');
-      }
-      if (delCostEl) delCostEl.innerText = delCharge === 0 ? 'FREE (₹0)' : `+ ₹${delCharge}`;
-      if (modalTotalEl) modalTotalEl.innerText = `₹${grandTotal}`;
-
-      if (selectedPaymentMode === 'ONLINE') {
-        refreshUpiPaymentDetails();
-      }
-    }
-
-    // 📍 Check Customer GPS Distance & Enforce 10KM Limit
     function evaluateCustomerCoordinates(lat, lng) {
       customerCoords = [lat, lng];
       localStorage.setItem('sc_cust_coords', JSON.stringify(customerCoords));
@@ -1636,30 +2035,83 @@
         banner.style.background = '#fff0f1';
         banner.style.border = '1.5px solid #ff3b30';
         banner.style.color = '#d00';
-        banner.innerText = `❌ सॉरी! तुमचे लोकेशन कॅफेपासून ${dist.toFixed(1)} km लांब आहे. आम्ही फक्त 10 km पर्यंतच डिलिव्हरी देतो.`;
-        if (currentDeliveryZone !== 'DINEIN' && placeBtn) {
+        banner.innerText = `❌ सॉरी! तुमचे अंतर ${dist.toFixed(1)} km आहे. आम्ही फक्त 10 km च्या आतच डिलिव्हरी देतो.`;
+        if (currentOrderMode !== 'DINEIN' && placeBtn) {
           placeBtn.disabled = true;
           placeBtn.innerText = "❌ 10 KM च्या बाहेर डिलिव्हरी नाही";
         }
       } else {
         isOutOf10KmRange = false;
+        if (dist <= 2.0) {
+          deliveryChargeAmount = 50;
+          banner.style.background = '#f0fff4';
+          banner.style.border = '1px solid #25D366';
+          banner.style.color = '#0b6b3a';
+          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (0-2 km — Delivery Charge: ₹50)`;
+        } else {
+          deliveryChargeAmount = 100;
+          banner.style.background = '#fff9e6';
+          banner.style.border = '1px solid #ff9f0a';
+          banner.style.color = '#8a5300';
+          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (2+ km — Delivery Charge: ₹100)`;
+        }
+        recalculateCheckoutTotals();
+      }
+    }
+
+    function recalculateCheckoutTotals() {
+      let foodTotal = 0;
+      if (typeof cart !== 'undefined') {
+        cart.forEach(item => { foodTotal += (item.price * item.qty); });
+      }
+
+      let finalDelivery = (currentOrderMode === 'DELIVERY') ? deliveryChargeAmount : 0;
+      let grandTotal = foodTotal + (foodTotal > 0 ? finalDelivery : 0);
+
+      let subEl = document.getElementById('chk-food-subtotal');
+      let delLbl = document.getElementById('chk-delivery-label');
+      let delCostEl = document.getElementById('chk-delivery-cost');
+      let modalTotalEl = document.getElementById('modal-total-price');
+      let placeBtn = document.getElementById('place-order-btn');
+
+      if (subEl) subEl.innerText = `₹${foodTotal}`;
+      if (delLbl) {
+        delLbl.innerText = currentOrderMode === 'DELIVERY'
+          ? `🛵 Delivery Charges (${detectedDistanceKm ? detectedDistanceKm.toFixed(1) + ' km' : 'Standard'}):`
+          : '🍽️ Dine-In / Takeaway:';
+      }
+      if (delCostEl) {
+        delCostEl.innerText = finalDelivery === 0 ? 'FREE (₹0)' : `+ ₹${finalDelivery}`;
+      }
+      if (modalTotalEl) modalTotalEl.innerText = `₹${grandTotal}`;
+
+      // Minimum Order Validation for Delivery (₹199 limit) & 10KM Check
+      if (currentOrderMode === 'DELIVERY') {
+        if (isOutOf10KmRange) {
+          if (placeBtn) {
+            placeBtn.disabled = true;
+            placeBtn.innerText = "❌ 10 KM च्या बाहेर डिलिव्हरी नाही";
+          }
+        } else if (foodTotal > 0 && foodTotal < 199) {
+          if (placeBtn) {
+            placeBtn.disabled = true;
+            placeBtn.innerText = `❌ किमान ऑर्डर ₹199 असावी (कमी आहे)`;
+          }
+        } else {
+          if (placeBtn) {
+            placeBtn.disabled = false;
+            placeBtn.innerText = "✅ Confirm & Place Order";
+          }
+        }
+      } else {
         if (placeBtn) {
           placeBtn.disabled = false;
           placeBtn.innerText = "✅ Confirm & Place Order";
         }
-        if (dist <= LOCAL_CITY_KM) {
-          setDeliveryZone('LOCAL', 50);
-          banner.style.background = '#f0fff4';
-          banner.style.border = '1px solid #25D366';
-          banner.style.color = '#0b6b3a';
-          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (Omerga Local City — ₹50 Delivery)`;
-        } else {
-          setDeliveryZone('OUTSKIRTS', 100);
-          banner.style.background = '#fff9e6';
-          banner.style.border = '1px solid #ff9f0a';
-          banner.style.color = '#8a5300';
-          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (बाहेर गावात 10km आत — ₹100 Delivery)`;
-        }
+      }
+
+      if (selectedPaymentMode === 'ONLINE') {
+        refreshUpiPaymentDetails();
       }
     }
 
@@ -1674,9 +2126,10 @@
             if (addrField) addrField.value = `Live GPS Location: https://www.google.com/maps?q=${lat},${lng}`;
             autoSaveCustDraft();
             evaluateCustomerCoordinates(lat, lng);
+            alert("📍 तुमचे GPS लोकेशन यशस्वीरीत्या तपाशले!");
           },
           function() {
-            alert("GPS चालू करता आले नाही. कृपया फोनचे Location ऑन करा किंवा पत्ता टाका.");
+            alert("GPS चालू करता आले नाही. कृपया पत्ता टाइप करा.");
             if (addrField) addrField.value = "";
           },
           { enableHighAccuracy: true }
@@ -1684,7 +2137,6 @@
       }
     }
 
-    // Auto-Save & Smart Collapse for Customer Info
     function autoSaveCustDraft() {
       let name = document.getElementById('customer-name').value.trim();
       let phone = document.getElementById('customer-phone').value.trim();
@@ -1742,7 +2194,6 @@
       }
     }
 
-    // 💳 Switch Between "Pay on Delivery" and "Pay Now (UPI)"
     function selectPaymentMode(mode) {
       selectedPaymentMode = mode;
       let codLbl = document.getElementById('lbl-pay-cod');
@@ -1770,7 +2221,8 @@
       if (typeof cart !== 'undefined') {
         cart.forEach(item => { foodTotal += (item.price * item.qty); });
       }
-      let grandTotal = foodTotal > 0 ? (foodTotal + currentDeliveryCharge) : 0;
+      let finalDel = (currentOrderMode === 'DELIVERY') ? deliveryChargeAmount : 0;
+      let grandTotal = foodTotal > 0 ? (foodTotal + finalDel) : 0;
 
       let upiUri = `upi://pay?pa=${encodeURIComponent(cafeUpiId)}&pn=${encodeURIComponent('Sadguru Cafe')}&am=${grandTotal}&cu=INR&tn=${encodeURIComponent('Sadguru Cafe Order')}`;
       let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
@@ -1780,11 +2232,10 @@
       let deepBtn = document.getElementById('upi-deeplink-btn');
 
       if (qrImg) qrImg.src = qrUrl;
-      if (amtTxt) amtTxt.innerText = `Amount to Pay (with Delivery): ₹${grandTotal}`;
+      if (amtTxt) amtTxt.innerText = `Amount to Pay: ₹${grandTotal}`;
       if (deepBtn) deepBtn.href = upiUri;
     }
 
-    // 🔒 Secret Triple-Click on Footer Copyright for Cafe Owner ONLY
     function secretOwnerTrigger() {
       secretClickCount++;
       if (secretClickTimer) clearTimeout(secretClickTimer);
@@ -1806,7 +2257,6 @@
       if (el) el.style.display = (el.style.display === 'none') ? 'block' : 'none';
     }
 
-    // 👥 Owner Staff Management Functions
     function loadStaffList() {
       let saved = localStorage.getItem('sc_staff_list');
       if (saved) { try { staffMembers = JSON.parse(saved); } catch (e) {} }
@@ -1816,10 +2266,7 @@
     function addStaffMemberFromDash() {
       let name = document.getElementById('new-staff-name').value.trim();
       let phone = document.getElementById('new-staff-phone').value.trim();
-      if (!name || !phone) {
-        alert("कृपया स्टाफचे नाव आणि १० अंकी नंबर टाका!");
-        return;
-      }
+      if (!name || !phone) { alert("नाव आणि नंबर टाका!"); return; }
       staffMembers.push({ name, phone });
       localStorage.setItem('sc_staff_list', JSON.stringify(staffMembers));
       document.getElementById('new-staff-name').value = '';
@@ -1846,7 +2293,6 @@
       `).join('');
     }
 
-    // 🔗 UPI ID & Billing Software Setup
     function loadSoftwareConfig() {
       let url = localStorage.getItem('sc_pos_webhook') || '';
       let autoKot = localStorage.getItem('sc_auto_kot') === 'true';
@@ -1876,7 +2322,7 @@
         body: JSON.stringify({ type: "UPI_CONFIG", upiId: upiVal })
       }).catch(() => {});
 
-      if (showAlert) alert("✅ तुमचा Cafe UPI ID आणि सेटिंग्ज सेव्ह झाल्या आहेत!");
+      if (showAlert) alert("✅ सेटिंग्ज सेव्ह झाल्या आहेत!");
     }
 
     function pushOrderToBillingSoftware(orderData) {
@@ -1890,7 +2336,6 @@
       }
     }
 
-    // 🖨️ Thermal KOT / Receipt Printer (with Delivery Charge & Payment Status)
     function printThermalKOT(orderId) {
       let ord = cafeOrders.find(o => o.orderId === orderId);
       if (!ord) return;
@@ -1898,13 +2343,7 @@
         `<tr><td style="padding:3px 0;">${i.name}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">₹${i.total}</td></tr>`
       ).join('');
 
-      let payLabel = (ord.paymentMode === 'ONLINE')
-        ? `PAID ONLINE (UPI ${ord.utr ? '- UTR:' + ord.utr : ''})`
-        : `PAY ON DELIVERY (Collect ₹${ord.grandTotal})`;
-
-      let delivRow = ord.deliveryCharge
-        ? `<div style="text-align:right;font-size:12px;margin-top:4px;">Delivery (${ord.deliveryZone || ''}): +₹${ord.deliveryCharge}</div>`
-        : '';
+      let payLabel = (ord.paymentMode === 'ONLINE') ? `PAID ONLINE (UPI)` : `PAY ON DELIVERY (₹${ord.grandTotal})`;
 
       let printWin = window.open('', '_blank', 'width=360,height=600');
       printWin.document.write(`
@@ -1912,7 +2351,7 @@
         <style>body{font-family:monospace;width:280px;margin:0 auto;padding:10px;color:#000;} table{width:100%;border-collapse:collapse;font-size:13px;} th{border-bottom:1px dashed #000;text-align:left;padding-bottom:4px;}</style>
         </head><body onload="window.print(); setTimeout(()=>window.close(), 500);">
           <h3 style="text-align:center;margin:0;">SADGURU CAFE</h3>
-          <p style="text-align:center;font-size:12px;margin:2px 0 8px;">Khau Galli, Shivpuri Rd, Omerga<br><b>KOT / ORDER BILL</b></p>
+          <p style="text-align:center;font-size:12px;margin:2px 0 8px;">Omerga<br><b>ORDER BILL (${ord.orderMode})</b></p>
           <div style="border-top:1px dashed #000;border-bottom:1px dashed #000;padding:5px 0;font-size:12px;margin-bottom:8px;">
             <b>Order: #${ord.orderId}</b> (${ord.time})<br>
             Customer: ${ord.customerName}<br>
@@ -1924,25 +2363,22 @@
             <thead><tr><th>Item</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Amt</th></tr></thead>
             <tbody>${itemsRows}</tbody>
           </table>
-          ${delivRow}
+          <div style="text-align:right;font-size:12px;margin-top:4px;">Delivery: +₹${ord.deliveryCharge}</div>
           <div style="border-top:1px dashed #000;margin-top:6px;padding-top:6px;text-align:right;font-size:15px;font-weight:bold;">
-            GRAND TOTAL: ₹${ord.grandTotal}
+            TOTAL: ₹${ord.grandTotal}
           </div>
-          ${ord.riderName ? `<p style="font-size:12px;margin-top:6px;">Delivery By: <b>${ord.riderName} (${ord.riderPhone})</b></p>` : ''}
+          ${ord.riderName ? `<p style="font-size:12px;margin-top:6px;">Delivery By: <b>${ord.riderName}</b></p>` : ''}
         </body></html>
       `);
       printWin.document.close();
     }
 
     function exportOrdersCSV() {
-      if (cafeOrders.length === 0) {
-        alert("सध्या कोणतीही ऑर्डर नाही!");
-        return;
-      }
-      let csv = "OrderID,Time,CustomerName,Phone,Address,Zone,DeliveryCharge,PaymentMode,UTR,Items,GrandTotal,Status,DeliveryBoy\n";
+      if (cafeOrders.length === 0) { alert("ऑर्डर नाही!"); return; }
+      let csv = "OrderID,Time,CustomerName,Phone,Address,OrderMode,DeliveryCharge,PaymentMode,Items,GrandTotal,Status\n";
       cafeOrders.forEach(o => {
         let itemStr = (o.items || []).map(i => `${i.name}(x${i.qty})`).join(" | ");
-        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${o.deliveryZone || 'LOCAL'}",${o.deliveryCharge || 0},"${o.paymentMode || 'COD'}","${o.utr || ''}","${itemStr}",${o.grandTotal},"${o.status}","${o.riderName || ''}"\n`;
+        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${o.orderMode}",${o.deliveryCharge},"${o.paymentMode}","${itemStr}",${o.grandTotal},"${o.status}"\n`;
       });
       let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       let link = document.createElement("a");
@@ -1951,7 +2387,6 @@
       link.click();
     }
 
-    // 🔊 Notification Bell Sound
     function playSingleChime() {
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1984,17 +2419,22 @@
 
     function testOrderAlarm() { playSingleChime(); }
 
-    // 🛒 Customer Places Direct Website Order (with 10KM Check & Delivery Charges)
+    // Place Direct Website Order (Checking Min ₹199 limit for Delivery)
     function placeDirectWebsiteOrder() {
-      if (cart.length === 0) {
-        alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
-        return;
-      }
+      if (cart.length === 0) { alert('कृपया आधी मेनूमधील पदार्थ निवडा!'); return; }
 
-      // Strictly block orders beyond 10 KM for delivery
-      if (currentDeliveryZone !== 'DINEIN' && isOutOf10KmRange) {
-        alert(`❌ सॉरी! तुमचे लोकेशन कॅफेपासून ${detectedDistanceKm ? detectedDistanceKm.toFixed(1) : '10+'} km लांब आहे. आम्ही फक्त 10 km च्या आतच डिलिव्हरी देतो!`);
-        return;
+      let foodTotal = 0;
+      cart.forEach(item => { foodTotal += (item.price * item.qty); });
+
+      if (currentOrderMode === 'DELIVERY') {
+        if (isOutOf10KmRange) {
+          alert('❌ सॉरी! तुमचे अंतर 10 km पेक्षा जास्त आहे, डिलिव्हरी शक्य नाही.');
+          return;
+        }
+        if (foodTotal < 199) {
+          alert('❌ घरपोच डिलिव्हरीसाठी किमान ऑर्डर ₹199 असणे आवश्यक आहे!');
+          return;
+        }
       }
 
       let name = document.getElementById('customer-name').value.trim();
@@ -2002,10 +2442,6 @@
       let address = document.getElementById('customer-address').value.trim();
       let utr = document.getElementById('customer-utr') ? document.getElementById('customer-utr').value.trim() : '';
 
-      if (!address) {
-        let topLoc = document.getElementById('top-location-input');
-        if (topLoc && topLoc.value.trim() && topLoc.value.trim() !== 'Omerga') address = topLoc.value.trim();
-      }
       if (!name || phone.length < 10 || !address) {
         showCustomerEditForm(true);
         alert('कृपया तुमचे नाव, १० अंकी मोबाईल नंबर आणि पत्ता पूर्ण भरा!');
@@ -2016,18 +2452,13 @@
       let btn = document.getElementById('place-order-btn');
       btn.disabled = true; btn.innerText = "⏳ Sending Order...";
 
-      let foodTotal = 0;
       let itemsList = cart.map(item => {
         let sub = item.price * item.qty;
-        foodTotal += sub;
         return { name: item.name, qty: item.qty, price: item.price, total: sub };
       });
 
-      let deliveryCharge = currentDeliveryCharge;
-      let grandTotal = foodTotal + deliveryCharge;
-      let zoneText = currentDeliveryZone === 'LOCAL'
-        ? 'Omerga City (₹50)'
-        : (currentDeliveryZone === 'OUTSKIRTS' ? 'Outskirts <10km (₹100)' : 'Dine-In (₹0)');
+      let finalDelivery = (currentOrderMode === 'DELIVERY') ? deliveryChargeAmount : 0;
+      let grandTotal = foodTotal + finalDelivery;
 
       let orderId = "SC-" + Math.floor(1000 + Math.random() * 9000);
       let orderPayload = {
@@ -2036,8 +2467,8 @@
         customerName: name,
         customerPhone: phone,
         address: address,
-        deliveryZone: zoneText,
-        deliveryCharge: deliveryCharge,
+        orderMode: currentOrderMode,
+        deliveryCharge: finalDelivery,
         distanceKm: detectedDistanceKm ? Number(detectedDistanceKm.toFixed(1)) : null,
         paymentMode: selectedPaymentMode,
         utr: utr,
@@ -2060,9 +2491,9 @@
         btn.disabled = false; btn.innerText = "✅ Confirm & Place Order";
 
         let payText = (selectedPaymentMode === 'ONLINE') ? 'Paid Online (UPI)' : 'Pay on Delivery';
-        document.getElementById('zt-order-badge').innerText = `● ORDER #${orderId} (${payText})`;
+        document.getElementById('zt-order-badge').innerText = `● ORDER #${orderId}`;
         document.getElementById('zt-status-title').innerText = `✅ तुमची ऑर्डर (#${orderId}) कॅफेला मिळाली आहे!`;
-        document.getElementById('zt-eta-sub').innerText = `एकूण बिल: ₹${grandTotal} (Delivery: ₹${deliveryCharge}) • ${payText}`;
+        document.getElementById('zt-eta-sub').innerText = `एकूण बिल: ₹${grandTotal} • ${payText}`;
         openZomatoTracker();
       })
       .catch(() => {
@@ -2071,19 +2502,14 @@
       });
     }
 
-    // 💻 Open Dedicated POS Tab (?pos=1)
     function openAdminDashboard() {
       let isSavedAdmin = localStorage.getItem('sc_admin_unlocked');
       if (!isSavedAdmin) {
-        let pin = prompt("🔒 Owner / Kitchen Dashboard PIN टाका (PIN: 1234):");
-        if (pin !== "1234") {
-          alert("चुकीचा PIN!");
-          window.location.href = window.location.pathname;
-          return;
-        }
+        let pin = prompt("🔒 Dashboard PIN टाका (PIN: 1234):");
+        if (pin !== "1234") { alert("चुकीचा PIN!"); window.location.href = window.location.pathname; return; }
         localStorage.setItem('sc_admin_unlocked', 'true');
       }
-      document.title = "☕ Sadguru Cafe — Kitchen & POS Dashboard";
+      document.title = "☕ Sadguru Cafe — POS Dashboard";
       document.getElementById('cafe-admin-dashboard').style.display = 'block';
       document.body.style.overflow = 'hidden';
       loadStaffList();
@@ -2142,7 +2568,6 @@
       }
     }
 
-    // 🛵 1-Click Assign Staff to Order from Dashboard
     function assignRiderOneClick(orderId, riderName, riderPhone) {
       stopOrderAlarm();
       let ord = cafeOrders.find(o => o.orderId === orderId);
@@ -2160,15 +2585,7 @@
 
       fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
         method: 'POST',
-        body: JSON.stringify({
-          orderId: orderId,
-          orderStatusText: "Out for Delivery",
-          name: riderName,
-          phone: riderPhone,
-          lat: CAFE_COORDS[0],
-          lng: CAFE_COORDS[1],
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        })
+        body: JSON.stringify({ orderId: orderId, orderStatusText: "Out for Delivery", name: riderName, phone: riderPhone, lat: CAFE_COORDS[0], lng: CAFE_COORDS[1], time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) })
       }).catch(() => {});
     }
 
@@ -2187,15 +2604,10 @@
         method: 'POST',
         body: JSON.stringify({ type: "STATUS_UPDATE", orderId: orderId, status: newStatus })
       }).catch(() => {});
-
-      fetch(`https://ntfy.sh/${LIVE_CHANNEL}`, {
-        method: 'POST',
-        body: JSON.stringify({ orderId: orderId, orderStatusText: newStatus })
-      }).catch(() => {});
     }
 
     function clearAllCompletedOrders() {
-      if (!confirm("पूर्ण झालेल्या (Delivered) ऑर्डर्स लिस्ट मधून काढायच्या का?")) return;
+      if (!confirm("पूर्ण झालेल्या ऑर्डर्स काढायच्या का?")) return;
       cafeOrders = cafeOrders.filter(o => o.status !== 'Delivered');
       localStorage.setItem('sc_cafe_orders_db', JSON.stringify(cafeOrders));
       renderDashboardOrders();
@@ -2215,7 +2627,7 @@
       document.getElementById('dash-total-sales').innerText = `₹${totalSales}`;
 
       if (cafeOrders.length === 0) {
-        container.innerHTML = '<p style="color: #888; grid-column: 1/-1; text-align: center; padding: 40px;">सध्या कोणतीही नवीन ऑर्डर नाही. कस्टमरने ऑर्डर देताच इथे बेल वाजेल...</p>';
+        container.innerHTML = '<p style="color: #888; grid-column: 1/-1; text-align: center; padding: 40px;">सध्या कोणतीही नवीन ऑर्डर नाही...</p>';
         return;
       }
 
@@ -2223,12 +2635,8 @@
         let badgeColor = ord.status === 'Pending' ? '#ff3b30' : (ord.status === 'Preparing' ? '#ff9f0a' : (ord.status === 'Out for Delivery' ? '#0a84ff' : '#25D366'));
         let isOnlinePay = (ord.paymentMode === 'ONLINE');
         let paymentBadgeHtml = isOnlinePay
-          ? `<div style="background: rgba(37,211,102,0.15); border: 1px solid #25D366; color: #25D366; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;">
-               💳 PAID ONLINE (Pay Now - UPI) ${ord.utr ? `• UTR: ${ord.utr}` : ''}
-             </div>`
-          : `<div style="background: rgba(255,159,10,0.15); border: 1px solid #ff9f0a; color: #ff9f0a; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;">
-               💵 PAY ON DELIVERY (डिलिव्हरीवर ₹${ord.grandTotal} घ्यायचे आहेत)
-             </div>`;
+          ? `<div style="background: rgba(37,211,102,0.15); border: 1px solid #25D366; color: #25D366; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;">💳 PAID ONLINE (UPI)</div>`
+          : `<div style="background: rgba(255,159,10,0.15); border: 1px solid #ff9f0a; color: #ff9f0a; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px;">💵 PAY ON DELIVERY (₹${ord.grandTotal})</div>`;
 
         let itemsHtml = (ord.items || []).map(i =>
           `<div style="display:flex; justify-content:space-between; padding: 4px 0; border-bottom: 1px dashed #333; font-size: 0.9rem;">
@@ -2262,36 +2670,29 @@
               <div style="margin-bottom: 3px;">👤 <b>${ord.customerName}</b></div>
               <div style="margin-bottom: 3px;">📞 <a href="tel:+91${ord.customerPhone}" style="color: #25D366; text-decoration: none; font-weight: 700;">+91 ${ord.customerPhone}</a></div>
               <div style="color: #ccc; word-break: break-word;">📍 ${ord.address}</div>
-              <div style="margin-top: 4px; color: #ff9f0a; font-weight: 600;">🛵 Zone: ${ord.deliveryZone || 'Local'} ${ord.distanceKm ? `(${ord.distanceKm} km)` : ''}</div>
-              ${ord.riderName ? `<div style="margin-top: 5px; color: #5ac8fa; font-weight: 700;">🛵 Assigned: ${ord.riderName} (${ord.riderPhone})</div>` : ''}
+              <div style="margin-top: 4px; color: #ff9f0a; font-weight: 600;">📦 Type: ${ord.orderMode} ${ord.distanceKm ? `(${ord.distanceKm} km)` : ''}</div>
+              ${ord.riderName ? `<div style="margin-top: 5px; color: #5ac8fa; font-weight: 700;">🛵 Assigned: ${ord.riderName}</div>` : ''}
             </div>
 
             <div style="margin-bottom: 10px;">${itemsHtml}</div>
 
             <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #aaa; margin-bottom: 4px;">
               <span>Delivery Charge:</span>
-              <span>+ ₹${ord.deliveryCharge !== undefined ? ord.deliveryCharge : 0}</span>
+              <span>+ ₹${ord.deliveryCharge}</span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.05rem; font-weight: 700; color: #25D366; margin-bottom: 12px;">
               <span>Grand Total:</span>
               <span>₹${ord.grandTotal}</span>
             </div>
 
-            <!-- 1-Click Staff Selection Row -->
             <div style="background: #121419; padding: 9px; border-radius: 8px; margin-bottom: 10px;">
-              <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 6px;">🛵 <b>1-Click Assign Delivery Partner:</b></div>
-              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                ${staffButtonsHtml}
-              </div>
+              <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 6px;">🛵 <b>Assign Delivery Partner:</b></div>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">${staffButtonsHtml}</div>
             </div>
 
             <div style="display: flex; gap: 8px;">
-              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Preparing')" style="flex: 1; background: #ff9f0a; color: #111; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                🍳 Accept & Prepare
-              </button>
-              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Delivered')" style="flex: 1; background: #25D366; color: #111; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">
-                ✅ Order Delivered
-              </button>
+              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Preparing')" style="flex: 1; background: #ff9f0a; color: #111; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">🍳 Accept</button>
+              <button onclick="updateOrderStatusFromDash('${ord.orderId}', 'Delivered')" style="flex: 1; background: #25D366; color: #111; border: none; padding: 9px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;">✅ Delivered</button>
             </div>
           </div>
         `;
@@ -2309,24 +2710,16 @@
         } catch(e){}
       }
 
-      refreshSavedCustomerCardUI();
+      let savedProf = localStorage.getItem('sc_cust_profile');
+      if (savedProf) {
+        try {
+          let p = JSON.parse(savedProf);
+          if (p.name) document.getElementById('customer-name').value = p.name;
+          if (p.phone) document.getElementById('customer-phone').value = p.phone;
+          if (p.address) document.getElementById('customer-address').value = p.address;
+        } catch(e){}
+      }
 
-      // Sync latest Cafe UPI ID
-      fetch(`https://ntfy.sh/${ORDER_CHANNEL}/json?poll=1&since=24h`)
-        .then(res => res.text())
-        .then(text => {
-          text.trim().split('\n').filter(Boolean).forEach(line => {
-            try {
-              let msg = JSON.parse(JSON.parse(line).message);
-              if (msg.type === "UPI_CONFIG" && msg.upiId) {
-                cafeUpiId = msg.upiId;
-                localStorage.setItem('sc_cafe_upi_id', msg.upiId);
-              }
-            } catch(e){}
-          });
-        }).catch(() => {});
-
-      // Hook into updateCartUI & toggleCartModal so delivery charges always stay in sync
       let origUpdateCart = window.updateCartUI;
       window.updateCartUI = function() {
         if (origUpdateCart) origUpdateCart();
@@ -2339,17 +2732,6 @@
         if (show) {
           refreshSavedCustomerCardUI();
           recalculateCheckoutTotals();
-        }
-      };
-
-      // Also hook top search-bar GPS detection into 10km distance evaluator
-      let origDetectTopGPS = window.detectUserGPS;
-      window.detectUserGPS = function() {
-        if (origDetectTopGPS) origDetectTopGPS();
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(pos) {
-            evaluateCustomerCoordinates(pos.coords.latitude, pos.coords.longitude);
-          });
         }
       };
 
@@ -2375,28 +2757,17 @@
           ztMap = L.map('zomato-map').setView(CAFE_COORDS, 15);
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(ztMap);
           let cafeIcon = L.divIcon({ html: '<div style="font-size:24px;">🏪</div>', className: '', iconSize: [30, 30], iconAnchor: [15, 15] });
-          L.marker(CAFE_COORDS, { icon: cafeIcon }).addTo(ztMap).bindPopup("<b>Sadguru Cafe</b><br>Shivpuri Road, Omerga");
-
-          let scooterIcon = L.divIcon({
-            html: '<div style="font-size:26px; background:#fff; border:2px solid #E23744; border-radius:50%; width:38px; height:38px; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.3);">🛵</div>',
-            className: '', iconSize: [38, 38], iconAnchor: [19, 19]
-          });
-          riderMarker = L.marker(CAFE_COORDS, { icon: scooterIcon }).addTo(ztMap).bindPopup("Delivery Partner 🛵");
-          routeLine = L.polyline([CAFE_COORDS, CAFE_COORDS], { color: '#E23744', weight: 4, dashArray: '8, 8' }).addTo(ztMap);
+          L.marker(CAFE_COORDS, { icon: cafeIcon }).addTo(ztMap).bindPopup("<b>Sadguru Cafe</b>");
         } else {
           ztMap.invalidateSize();
         }
-        fetchLatestRiderLocation();
-        if (pollTimer) clearInterval(pollTimer);
-        pollTimer = setInterval(fetchLatestRiderLocation, 4000);
       }, 200);
     }
 
     function closeZomatoTracker() {
       document.getElementById('zomato-track-modal').style.display = 'none';
-      if (pollTimer) clearInterval(pollTimer);
     }
-
+  </script>
     function fetchLatestRiderLocation() {
       fetch(`https://ntfy.sh/${LIVE_CHANNEL}/json?poll=1&since=45m`)
         .then(res => res.text())
