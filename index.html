@@ -1018,7 +1018,7 @@
     </div>
   </div>
 
-<!-- Professional Zomato-Style Cart & Checkout Modal -->
+  <!-- Professional Zomato-Style Cart & Checkout Modal -->
   <style>
     #cart-modal .pro-checkout-box {
       background: #f4f5f7;
@@ -1026,7 +1026,7 @@
       max-width: 440px;
       border-radius: 18px;
       padding: 0;
-      max-height: 88vh;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1085,7 +1085,6 @@
       color: #888;
       margin-bottom: 8px;
     }
-    /* Saved Customer Compact Card */
     .saved-cust-card {
       display: none;
       align-items: flex-start;
@@ -1114,7 +1113,6 @@
       cursor: pointer;
       white-space: nowrap;
     }
-    /* Clean Form Inputs */
     .chk-input-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1165,7 +1163,31 @@
       font-weight: 700;
       cursor: pointer;
     }
-    /* Payment Option Cards */
+    .zone-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .zone-option {
+      border: 1.5px solid #e0e0e0;
+      background: #fafafa;
+      padding: 9px 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #333;
+      transition: all 0.2s;
+    }
+    .zone-option.active {
+      border: 2px solid var(--maroon);
+      background: #fdf6e9;
+      color: var(--maroon);
+    }
     .chk-pay-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1219,6 +1241,12 @@
       box-shadow: 0 4px 12px rgba(37,211,102,0.3);
       text-align: center;
     }
+    .chk-submit-btn:disabled {
+      background: #ccc !important;
+      color: #666 !important;
+      box-shadow: none !important;
+      cursor: not-allowed !important;
+    }
   </style>
 
   <div class="modal-overlay" id="cart-modal">
@@ -1232,15 +1260,62 @@
       <!-- Scrollable Checkout Body -->
       <div class="chk-body">
         
-        <!-- 1. Ordered Items List -->
+        <!-- 1. Ordered Items & Bill Summary -->
         <div class="chk-card">
-          <div class="chk-section-label">🍲 Order Summary (तुमचे पदार्थ)</div>
+          <div class="chk-section-label">🍲 Order Summary</div>
           <div id="modal-cart-items"></div>
+          <div style="border-top: 1px dashed #ddd; margin-top: 8px; padding-top: 8px; font-size: 0.83rem; color: #444;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Food Items Total:</span>
+              <strong id="chk-food-subtotal">₹0</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; color: var(--maroon);">
+              <span id="chk-delivery-label">🛵 Delivery Charges (Local City):</span>
+              <strong id="chk-delivery-cost">+ ₹50</strong>
+            </div>
+          </div>
         </div>
 
-        <!-- 2. Smart Customer Info (Auto-Saved Card vs 1-Time Form) -->
+        <!-- 2. Delivery Area & 10KM Limit Card -->
         <div class="chk-card">
-          <div class="chk-section-label">📍 Delivery / Table Details</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div class="chk-section-label" style="margin: 0;">🛵 Delivery Area (Max 10 KM Allowed)</div>
+            <span style="font-size: 0.7rem; background: #fff0f1; color: #E23744; padding: 2px 7px; border-radius: 10px; font-weight: 700;">⚠️ Max 10 km</span>
+          </div>
+
+          <div class="zone-grid">
+            <label id="zone-local" class="zone-option active" onclick="setDeliveryZone('LOCAL', 50)">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="radio" name="del-zone" value="LOCAL" checked style="accent-color: var(--maroon);" />
+                <span>🏘️ Omerga City (लोकल शहर)</span>
+              </div>
+              <span style="color: var(--maroon);">+ ₹50</span>
+            </label>
+
+            <label id="zone-outskirts" class="zone-option" onclick="setDeliveryZone('OUTSKIRTS', 100)">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="radio" name="del-zone" value="OUTSKIRTS" style="accent-color: var(--maroon);" />
+                <span>🛣️ बाहेर गावात (10 km च्या आत)</span>
+              </div>
+              <span style="color: var(--maroon);">+ ₹100</span>
+            </label>
+
+            <label id="zone-dinein" class="zone-option" onclick="setDeliveryZone('DINEIN', 0)">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="radio" name="del-zone" value="DINEIN" style="accent-color: var(--maroon);" />
+                <span>🍽️ Dine-In / Self Pickup (कॅफेमध्ये)</span>
+              </div>
+              <span style="color: #25D366;">FREE (₹0)</span>
+            </label>
+          </div>
+
+          <!-- GPS Distance Status / 10KM Block Warning -->
+          <div id="gps-distance-banner" style="display: none; margin-top: 8px; padding: 8px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700;"></div>
+        </div>
+
+        <!-- 3. Smart Customer Info (Auto-Saved Card vs 1-Time Form) -->
+        <div class="chk-card">
+          <div class="chk-section-label">📍 Customer & Address Details</div>
 
           <!-- Compact View (Shown automatically once info is saved) -->
           <div id="cust-saved-view" class="saved-cust-card">
@@ -1259,15 +1334,15 @@
             </div>
             <div class="chk-addr-row">
               <input type="text" id="customer-address" class="chk-input" placeholder="घरचा पत्ता किंवा Table No. *" oninput="autoSaveCustDraft()" />
-              <button type="button" class="chk-gps-btn" onclick="detectUserGPSInModal()">📍 GPS</button>
+              <button type="button" class="chk-gps-btn" onclick="detectUserGPSInModal()">📍 Check GPS</button>
             </div>
             <button type="button" id="save-cust-btn" class="chk-save-profile-btn" onclick="saveAndCollapseCustomerForm()">
-              ✓ Save Delivery Details (पुढच्या वेळी टाईप करावे लागणार नाही)
+              ✓ Save Details (पुढच्या वेळी टाईप करावे लागणार नाही)
             </button>
           </div>
         </div>
 
-        <!-- 3. Payment Method Selection -->
+        <!-- 4. Payment Method Selection -->
         <div class="chk-card">
           <div class="chk-section-label">💳 Payment Method (पेमेंट पर्याय)</div>
           <div class="chk-pay-grid">
@@ -1310,74 +1385,6 @@
     </div>
   </div>
 
-  <script>
-    // Auto-Save & Smart Collapse for Customer Info
-    function autoSaveCustDraft() {
-      let name = document.getElementById('customer-name').value.trim();
-      let phone = document.getElementById('customer-phone').value.trim();
-      let address = document.getElementById('customer-address').value.trim();
-      if (name || phone || address) {
-        localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
-      }
-    }
-
-    function saveAndCollapseCustomerForm() {
-      let name = document.getElementById('customer-name').value.trim();
-      let phone = document.getElementById('customer-phone').value.trim();
-      let address = document.getElementById('customer-address').value.trim();
-      if (!name || phone.length < 10 || !address) {
-        alert("कृपया तुमचे नाव, १० अंकी मोबाईल नंबर आणि पत्ता पूर्ण भरा!");
-        return;
-      }
-      localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
-      refreshSavedCustomerCardUI();
-    }
-
-    function showCustomerEditForm(showForm) {
-      let savedView = document.getElementById('cust-saved-view');
-      let formBox = document.getElementById('cust-form-box');
-      if (showForm) {
-        savedView.style.display = 'none';
-        formBox.style.display = 'block';
-      } else {
-        savedView.style.display = 'flex';
-        formBox.style.display = 'none';
-      }
-    }
-
-    function refreshSavedCustomerCardUI() {
-      let savedProf = localStorage.getItem('sc_cust_profile');
-      if (!savedProf) {
-        showCustomerEditForm(true);
-        return;
-      }
-      try {
-        let p = JSON.parse(savedProf);
-        if (p.name) document.getElementById('customer-name').value = p.name;
-        if (p.phone) document.getElementById('customer-phone').value = p.phone;
-        if (p.address) document.getElementById('customer-address').value = p.address;
-
-        if (p.name && p.phone && p.address) {
-          document.getElementById('saved-cust-name-phone').innerText = `👤 ${p.name} • 📞 ${p.phone}`;
-          document.getElementById('saved-cust-addr').innerText = `📍 ${p.address}`;
-          showCustomerEditForm(false);
-        } else {
-          showCustomerEditForm(true);
-        }
-      } catch (e) {
-        showCustomerEditForm(true);
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", function() {
-      refreshSavedCustomerCardUI();
-      let prevToggle = window.toggleCartModal;
-      window.toggleCartModal = function(show) {
-        if (prevToggle) prevToggle(show);
-        if (show) refreshSavedCustomerCardUI();
-      };
-    });
-  </script>
   <!-- Clean Customer Footer (Triple-Click on Copyright Opens Owner Dashboard in New Tab) -->
   <footer>
     <h2 style="color: var(--gold); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 6px;">SADGURU CAFE</h2>
@@ -1521,11 +1528,17 @@
 
   <script>
     const CAFE_COORDS = [17.8374302, 76.6211413]; // Sadguru Cafe, Omerga
+    const MAX_DELIVERY_KM = 10.0; // Strictly 10 KM Limit
+    const LOCAL_CITY_KM = 3.5; // Up to 3.5 km = ₹50, 3.5 to 10 km = ₹100
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
     const ORDER_CHANNEL = "sadguru_cafe_omerga_orders_pos_918421848131";
 
     let cafeUpiId = localStorage.getItem('sc_cafe_upi_id') || "8421848131@ybl";
     let selectedPaymentMode = "COD";
+    let currentDeliveryZone = "LOCAL";
+    let currentDeliveryCharge = 50;
+    let detectedDistanceKm = null;
+    let isOutOf10KmRange = false;
 
     let ztMap = null, riderMarker = null, routeLine = null, pollTimer = null;
     let customerCoords = null;
@@ -1537,6 +1550,198 @@
     let alarmInterval = null, audioCtx = null, orderEventSource = null;
     let secretClickCount = 0, secretClickTimer = null;
 
+    // 📏 Haversine Formula to Calculate Distance in KM from Sadguru Cafe
+    function getDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    // 🛵 Set Delivery Zone & Recalculate Grand Total
+    function setDeliveryZone(zone, charge) {
+      currentDeliveryZone = zone;
+      currentDeliveryCharge = charge;
+
+      document.querySelectorAll('.zone-option').forEach(el => el.classList.remove('active'));
+      if (zone === 'LOCAL') {
+        document.getElementById('zone-local').classList.add('active');
+        document.querySelector('#zone-local input').checked = true;
+      } else if (zone === 'OUTSKIRTS') {
+        document.getElementById('zone-outskirts').classList.add('active');
+        document.querySelector('#zone-outskirts input').checked = true;
+      } else {
+        document.getElementById('zone-dinein').classList.add('active');
+        document.querySelector('#zone-dinein input').checked = true;
+      }
+
+      // If Dine-In is chosen, ignore 10km block; otherwise enforce if GPS was > 10km
+      let placeBtn = document.getElementById('place-order-btn');
+      if (zone !== 'DINEIN' && isOutOf10KmRange) {
+        placeBtn.disabled = true;
+        placeBtn.innerText = "❌ 10 KM च्या बाहेर डिलिव्हरी नाही";
+      } else {
+        placeBtn.disabled = false;
+        placeBtn.innerText = "✅ Confirm & Place Order";
+      }
+
+      recalculateCheckoutTotals();
+    }
+
+    function recalculateCheckoutTotals() {
+      let foodTotal = 0;
+      if (typeof cart !== 'undefined') {
+        cart.forEach(item => { foodTotal += (item.price * item.qty); });
+      }
+      let delCharge = (foodTotal > 0) ? currentDeliveryCharge : 0;
+      let grandTotal = foodTotal + delCharge;
+
+      let subEl = document.getElementById('chk-food-subtotal');
+      let delLbl = document.getElementById('chk-delivery-label');
+      let delCostEl = document.getElementById('chk-delivery-cost');
+      let modalTotalEl = document.getElementById('modal-total-price');
+
+      if (subEl) subEl.innerText = `₹${foodTotal}`;
+      if (delLbl) {
+        delLbl.innerText = currentDeliveryZone === 'LOCAL'
+          ? '🛵 Delivery (Omerga City):'
+          : (currentDeliveryZone === 'OUTSKIRTS' ? '🛣️ Delivery (बाहेर गावात - 10km):' : '🍽️ Dine-In / Self Pickup:');
+      }
+      if (delCostEl) delCostEl.innerText = delCharge === 0 ? 'FREE (₹0)' : `+ ₹${delCharge}`;
+      if (modalTotalEl) modalTotalEl.innerText = `₹${grandTotal}`;
+
+      if (selectedPaymentMode === 'ONLINE') {
+        refreshUpiPaymentDetails();
+      }
+    }
+
+    // 📍 Check Customer GPS Distance & Enforce 10KM Limit
+    function evaluateCustomerCoordinates(lat, lng) {
+      customerCoords = [lat, lng];
+      localStorage.setItem('sc_cust_coords', JSON.stringify(customerCoords));
+
+      let dist = getDistanceKm(CAFE_COORDS[0], CAFE_COORDS[1], lat, lng);
+      detectedDistanceKm = dist;
+
+      let banner = document.getElementById('gps-distance-banner');
+      let placeBtn = document.getElementById('place-order-btn');
+      if (!banner) return;
+      banner.style.display = 'block';
+
+      if (dist > MAX_DELIVERY_KM) {
+        isOutOf10KmRange = true;
+        banner.style.background = '#fff0f1';
+        banner.style.border = '1.5px solid #ff3b30';
+        banner.style.color = '#d00';
+        banner.innerText = `❌ सॉरी! तुमचे लोकेशन कॅफेपासून ${dist.toFixed(1)} km लांब आहे. आम्ही फक्त 10 km पर्यंतच डिलिव्हरी देतो.`;
+        if (currentDeliveryZone !== 'DINEIN' && placeBtn) {
+          placeBtn.disabled = true;
+          placeBtn.innerText = "❌ 10 KM च्या बाहेर डिलिव्हरी नाही";
+        }
+      } else {
+        isOutOf10KmRange = false;
+        if (placeBtn) {
+          placeBtn.disabled = false;
+          placeBtn.innerText = "✅ Confirm & Place Order";
+        }
+        if (dist <= LOCAL_CITY_KM) {
+          setDeliveryZone('LOCAL', 50);
+          banner.style.background = '#f0fff4';
+          banner.style.border = '1px solid #25D366';
+          banner.style.color = '#0b6b3a';
+          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (Omerga Local City — ₹50 Delivery)`;
+        } else {
+          setDeliveryZone('OUTSKIRTS', 100);
+          banner.style.background = '#fff9e6';
+          banner.style.border = '1px solid #ff9f0a';
+          banner.style.color = '#8a5300';
+          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (बाहेर गावात 10km आत — ₹100 Delivery)`;
+        }
+      }
+    }
+
+    function detectUserGPSInModal() {
+      let addrField = document.getElementById('customer-address');
+      if (addrField) addrField.value = "Detecting GPS...";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function(pos) {
+            let lat = pos.coords.latitude;
+            let lng = pos.coords.longitude;
+            if (addrField) addrField.value = `Live GPS Location: https://www.google.com/maps?q=${lat},${lng}`;
+            autoSaveCustDraft();
+            evaluateCustomerCoordinates(lat, lng);
+          },
+          function() {
+            alert("GPS चालू करता आले नाही. कृपया फोनचे Location ऑन करा किंवा पत्ता टाका.");
+            if (addrField) addrField.value = "";
+          },
+          { enableHighAccuracy: true }
+        );
+      }
+    }
+
+    // Auto-Save & Smart Collapse for Customer Info
+    function autoSaveCustDraft() {
+      let name = document.getElementById('customer-name').value.trim();
+      let phone = document.getElementById('customer-phone').value.trim();
+      let address = document.getElementById('customer-address').value.trim();
+      if (name || phone || address) {
+        localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
+      }
+    }
+
+    function saveAndCollapseCustomerForm() {
+      let name = document.getElementById('customer-name').value.trim();
+      let phone = document.getElementById('customer-phone').value.trim();
+      let address = document.getElementById('customer-address').value.trim();
+      if (!name || phone.length < 10 || !address) {
+        alert("कृपया तुमचे नाव, १० अंकी मोबाईल नंबर आणि पत्ता पूर्ण भरा!");
+        return;
+      }
+      localStorage.setItem('sc_cust_profile', JSON.stringify({ name, phone, address }));
+      refreshSavedCustomerCardUI();
+    }
+
+    function showCustomerEditForm(showForm) {
+      let savedView = document.getElementById('cust-saved-view');
+      let formBox = document.getElementById('cust-form-box');
+      if (showForm) {
+        savedView.style.display = 'none';
+        formBox.style.display = 'block';
+      } else {
+        savedView.style.display = 'flex';
+        formBox.style.display = 'none';
+      }
+    }
+
+    function refreshSavedCustomerCardUI() {
+      let savedProf = localStorage.getItem('sc_cust_profile');
+      if (!savedProf) {
+        showCustomerEditForm(true);
+        return;
+      }
+      try {
+        let p = JSON.parse(savedProf);
+        if (p.name) document.getElementById('customer-name').value = p.name;
+        if (p.phone) document.getElementById('customer-phone').value = p.phone;
+        if (p.address) document.getElementById('customer-address').value = p.address;
+
+        if (p.name && p.phone && p.address) {
+          document.getElementById('saved-cust-name-phone').innerText = `👤 ${p.name} • 📞 ${p.phone}`;
+          document.getElementById('saved-cust-addr').innerText = `📍 ${p.address}`;
+          showCustomerEditForm(false);
+        } else {
+          showCustomerEditForm(true);
+        }
+      } catch (e) {
+        showCustomerEditForm(true);
+      }
+    }
+
     // 💳 Switch Between "Pay on Delivery" and "Pay Now (UPI)"
     function selectPaymentMode(mode) {
       selectedPaymentMode = mode;
@@ -1547,23 +1752,27 @@
       if (mode === 'ONLINE') {
         nowLbl.style.border = '2px solid #25D366';
         nowLbl.style.background = '#f0fff4';
-        codLbl.style.border = '1.5px solid #ccc';
-        codLbl.style.background = '#fff';
+        codLbl.style.border = '1.5px solid #e0e0e0';
+        codLbl.style.background = '#fafafa';
         upiBox.style.display = 'block';
         refreshUpiPaymentDetails();
       } else {
         codLbl.style.border = '2px solid var(--maroon)';
         codLbl.style.background = '#fdf6e9';
-        nowLbl.style.border = '1.5px solid #ccc';
-        nowLbl.style.background = '#fff';
+        nowLbl.style.border = '1.5px solid #e0e0e0';
+        nowLbl.style.background = '#fafafa';
         upiBox.style.display = 'none';
       }
     }
 
     function refreshUpiPaymentDetails() {
-      let totalPrice = 0;
-      cart.forEach(item => { totalPrice += (item.price * item.qty); });
-      let upiUri = `upi://pay?pa=${encodeURIComponent(cafeUpiId)}&pn=${encodeURIComponent('Sadguru Cafe')}&am=${totalPrice}&cu=INR&tn=${encodeURIComponent('Sadguru Cafe Order')}`;
+      let foodTotal = 0;
+      if (typeof cart !== 'undefined') {
+        cart.forEach(item => { foodTotal += (item.price * item.qty); });
+      }
+      let grandTotal = foodTotal > 0 ? (foodTotal + currentDeliveryCharge) : 0;
+
+      let upiUri = `upi://pay?pa=${encodeURIComponent(cafeUpiId)}&pn=${encodeURIComponent('Sadguru Cafe')}&am=${grandTotal}&cu=INR&tn=${encodeURIComponent('Sadguru Cafe Order')}`;
       let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUri)}`;
 
       let qrImg = document.getElementById('upi-qr-img');
@@ -1571,7 +1780,7 @@
       let deepBtn = document.getElementById('upi-deeplink-btn');
 
       if (qrImg) qrImg.src = qrUrl;
-      if (amtTxt) amtTxt.innerText = `Amount to Pay: ₹${totalPrice}`;
+      if (amtTxt) amtTxt.innerText = `Amount to Pay (with Delivery): ₹${grandTotal}`;
       if (deepBtn) deepBtn.href = upiUri;
     }
 
@@ -1662,7 +1871,6 @@
       localStorage.setItem('sc_auto_kot', autoKot ? 'true' : 'false');
       localStorage.setItem('sc_cafe_upi_id', upiVal);
 
-      // Broadcast updated UPI ID so customer phones receive it automatically
       fetch(`https://ntfy.sh/${ORDER_CHANNEL}`, {
         method: 'POST',
         body: JSON.stringify({ type: "UPI_CONFIG", upiId: upiVal })
@@ -1682,7 +1890,7 @@
       }
     }
 
-    // 🖨️ Thermal KOT / Receipt Printer (with Payment Status)
+    // 🖨️ Thermal KOT / Receipt Printer (with Delivery Charge & Payment Status)
     function printThermalKOT(orderId) {
       let ord = cafeOrders.find(o => o.orderId === orderId);
       if (!ord) return;
@@ -1693,6 +1901,10 @@
       let payLabel = (ord.paymentMode === 'ONLINE')
         ? `PAID ONLINE (UPI ${ord.utr ? '- UTR:' + ord.utr : ''})`
         : `PAY ON DELIVERY (Collect ₹${ord.grandTotal})`;
+
+      let delivRow = ord.deliveryCharge
+        ? `<div style="text-align:right;font-size:12px;margin-top:4px;">Delivery (${ord.deliveryZone || ''}): +₹${ord.deliveryCharge}</div>`
+        : '';
 
       let printWin = window.open('', '_blank', 'width=360,height=600');
       printWin.document.write(`
@@ -1712,8 +1924,9 @@
             <thead><tr><th>Item</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Amt</th></tr></thead>
             <tbody>${itemsRows}</tbody>
           </table>
-          <div style="border-top:1px dashed #000;margin-top:8px;padding-top:6px;text-align:right;font-size:15px;font-weight:bold;">
-            TOTAL: ₹${ord.grandTotal}
+          ${delivRow}
+          <div style="border-top:1px dashed #000;margin-top:6px;padding-top:6px;text-align:right;font-size:15px;font-weight:bold;">
+            GRAND TOTAL: ₹${ord.grandTotal}
           </div>
           ${ord.riderName ? `<p style="font-size:12px;margin-top:6px;">Delivery By: <b>${ord.riderName} (${ord.riderPhone})</b></p>` : ''}
         </body></html>
@@ -1726,10 +1939,10 @@
         alert("सध्या कोणतीही ऑर्डर नाही!");
         return;
       }
-      let csv = "OrderID,Time,CustomerName,Phone,Address,PaymentMode,UTR,Items,TotalAmount,Status,DeliveryBoy\n";
+      let csv = "OrderID,Time,CustomerName,Phone,Address,Zone,DeliveryCharge,PaymentMode,UTR,Items,GrandTotal,Status,DeliveryBoy\n";
       cafeOrders.forEach(o => {
         let itemStr = (o.items || []).map(i => `${i.name}(x${i.qty})`).join(" | ");
-        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${o.paymentMode || 'COD'}","${o.utr || ''}","${itemStr}",${o.grandTotal},"${o.status}","${o.riderName || ''}"\n`;
+        csv += `"${o.orderId}","${o.time}","${o.customerName}","${o.customerPhone}","${o.address.replace(/"/g, '""')}","${o.deliveryZone || 'LOCAL'}",${o.deliveryCharge || 0},"${o.paymentMode || 'COD'}","${o.utr || ''}","${itemStr}",${o.grandTotal},"${o.status}","${o.riderName || ''}"\n`;
       });
       let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       let link = document.createElement("a");
@@ -1771,30 +1984,19 @@
 
     function testOrderAlarm() { playSingleChime(); }
 
-    function detectUserGPSInModal() {
-      let addrField = document.getElementById('customer-address');
-      if (addrField) addrField.value = "Detecting GPS...";
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function(pos) {
-            customerCoords = [pos.coords.latitude, pos.coords.longitude];
-            localStorage.setItem('sc_cust_coords', JSON.stringify(customerCoords));
-            if (addrField) addrField.value = `Live GPS Location: https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-          },
-          function() {
-            alert("GPS चालू करता आले नाही. कृपया पत्ता टाइप करा.");
-            if (addrField) addrField.value = "";
-          }
-        );
-      }
-    }
-
-    // 🛒 Customer Places Direct Website Order (with Payment Option)
+    // 🛒 Customer Places Direct Website Order (with 10KM Check & Delivery Charges)
     function placeDirectWebsiteOrder() {
       if (cart.length === 0) {
         alert('कृपया आधी मेनूमधील पदार्थ निवडा (Add करा)!');
         return;
       }
+
+      // Strictly block orders beyond 10 KM for delivery
+      if (currentDeliveryZone !== 'DINEIN' && isOutOf10KmRange) {
+        alert(`❌ सॉरी! तुमचे लोकेशन कॅफेपासून ${detectedDistanceKm ? detectedDistanceKm.toFixed(1) : '10+'} km लांब आहे. आम्ही फक्त 10 km च्या आतच डिलिव्हरी देतो!`);
+        return;
+      }
+
       let name = document.getElementById('customer-name').value.trim();
       let phone = document.getElementById('customer-phone').value.trim();
       let address = document.getElementById('customer-address').value.trim();
@@ -1804,8 +2006,9 @@
         let topLoc = document.getElementById('top-location-input');
         if (topLoc && topLoc.value.trim() && topLoc.value.trim() !== 'Omerga') address = topLoc.value.trim();
       }
-      if (!name || !phone || !address) {
-        alert('कृपया तुमचे नाव, मोबाईल नंबर आणि पत्ता / टेबल नंबर पूर्ण भरा!');
+      if (!name || phone.length < 10 || !address) {
+        showCustomerEditForm(true);
+        alert('कृपया तुमचे नाव, १० अंकी मोबाईल नंबर आणि पत्ता पूर्ण भरा!');
         return;
       }
 
@@ -1813,12 +2016,18 @@
       let btn = document.getElementById('place-order-btn');
       btn.disabled = true; btn.innerText = "⏳ Sending Order...";
 
-      let grandTotal = 0;
+      let foodTotal = 0;
       let itemsList = cart.map(item => {
         let sub = item.price * item.qty;
-        grandTotal += sub;
+        foodTotal += sub;
         return { name: item.name, qty: item.qty, price: item.price, total: sub };
       });
+
+      let deliveryCharge = currentDeliveryCharge;
+      let grandTotal = foodTotal + deliveryCharge;
+      let zoneText = currentDeliveryZone === 'LOCAL'
+        ? 'Omerga City (₹50)'
+        : (currentDeliveryZone === 'OUTSKIRTS' ? 'Outskirts <10km (₹100)' : 'Dine-In (₹0)');
 
       let orderId = "SC-" + Math.floor(1000 + Math.random() * 9000);
       let orderPayload = {
@@ -1827,10 +2036,14 @@
         customerName: name,
         customerPhone: phone,
         address: address,
+        deliveryZone: zoneText,
+        deliveryCharge: deliveryCharge,
+        distanceKm: detectedDistanceKm ? Number(detectedDistanceKm.toFixed(1)) : null,
         paymentMode: selectedPaymentMode,
         utr: utr,
         custCoords: customerCoords,
         items: itemsList,
+        foodTotal: foodTotal,
         grandTotal: grandTotal,
         status: "Pending",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -1849,7 +2062,7 @@
         let payText = (selectedPaymentMode === 'ONLINE') ? 'Paid Online (UPI)' : 'Pay on Delivery';
         document.getElementById('zt-order-badge').innerText = `● ORDER #${orderId} (${payText})`;
         document.getElementById('zt-status-title').innerText = `✅ तुमची ऑर्डर (#${orderId}) कॅफेला मिळाली आहे!`;
-        document.getElementById('zt-eta-sub').innerText = `एकूण बिल: ₹${grandTotal} (${payText}) • कॅफे ऑर्डर स्वीकारत आहे...`;
+        document.getElementById('zt-eta-sub').innerText = `एकूण बिल: ₹${grandTotal} (Delivery: ₹${deliveryCharge}) • ${payText}`;
         openZomatoTracker();
       })
       .catch(() => {
@@ -2049,19 +2262,24 @@
               <div style="margin-bottom: 3px;">👤 <b>${ord.customerName}</b></div>
               <div style="margin-bottom: 3px;">📞 <a href="tel:+91${ord.customerPhone}" style="color: #25D366; text-decoration: none; font-weight: 700;">+91 ${ord.customerPhone}</a></div>
               <div style="color: #ccc; word-break: break-word;">📍 ${ord.address}</div>
+              <div style="margin-top: 4px; color: #ff9f0a; font-weight: 600;">🛵 Zone: ${ord.deliveryZone || 'Local'} ${ord.distanceKm ? `(${ord.distanceKm} km)` : ''}</div>
               ${ord.riderName ? `<div style="margin-top: 5px; color: #5ac8fa; font-weight: 700;">🛵 Assigned: ${ord.riderName} (${ord.riderPhone})</div>` : ''}
             </div>
 
             <div style="margin-bottom: 10px;">${itemsHtml}</div>
 
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: #aaa; margin-bottom: 4px;">
+              <span>Delivery Charge:</span>
+              <span>+ ₹${ord.deliveryCharge !== undefined ? ord.deliveryCharge : 0}</span>
+            </div>
             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.05rem; font-weight: 700; color: #25D366; margin-bottom: 12px;">
-              <span>Total Bill:</span>
+              <span>Grand Total:</span>
               <span>₹${ord.grandTotal}</span>
             </div>
 
             <!-- 1-Click Staff Selection Row -->
             <div style="background: #121419; padding: 9px; border-radius: 8px; margin-bottom: 10px;">
-              <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 6px;">🛵 <b>1-Click Assign Delivery Partner:</b> (ज्याच्याकडे पार्सल दिले त्यावर क्लिक करा)</div>
+              <div style="font-size: 0.75rem; color: #aaa; margin-bottom: 6px;">🛵 <b>1-Click Assign Delivery Partner:</b></div>
               <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                 ${staffButtonsHtml}
               </div>
@@ -2082,19 +2300,18 @@
 
     window.addEventListener("load", function() {
       let savedCust = localStorage.getItem('sc_cust_coords');
-      if (savedCust) { try { customerCoords = JSON.parse(savedCust); } catch(e){} }
-
-      let savedProf = localStorage.getItem('sc_cust_profile');
-      if (savedProf) {
+      if (savedCust) {
         try {
-          let p = JSON.parse(savedProf);
-          if (p.name) document.getElementById('customer-name').value = p.name;
-          if (p.phone) document.getElementById('customer-phone').value = p.phone;
-          if (p.address) document.getElementById('customer-address').value = p.address;
+          customerCoords = JSON.parse(savedCust);
+          if (customerCoords && customerCoords.length === 2) {
+            evaluateCustomerCoordinates(customerCoords[0], customerCoords[1]);
+          }
         } catch(e){}
       }
 
-      // Sync latest Cafe UPI ID from server if owner updated it
+      refreshSavedCustomerCardUI();
+
+      // Sync latest Cafe UPI ID
       fetch(`https://ntfy.sh/${ORDER_CHANNEL}/json?poll=1&since=24h`)
         .then(res => res.text())
         .then(text => {
@@ -2109,12 +2326,30 @@
           });
         }).catch(() => {});
 
-      // Keep QR Code updated whenever Cart Modal opens
+      // Hook into updateCartUI & toggleCartModal so delivery charges always stay in sync
+      let origUpdateCart = window.updateCartUI;
+      window.updateCartUI = function() {
+        if (origUpdateCart) origUpdateCart();
+        recalculateCheckoutTotals();
+      };
+
       let origToggleModal = window.toggleCartModal;
       window.toggleCartModal = function(show) {
         if (origToggleModal) origToggleModal(show);
-        if (show && selectedPaymentMode === 'ONLINE') {
-          refreshUpiPaymentDetails();
+        if (show) {
+          refreshSavedCustomerCardUI();
+          recalculateCheckoutTotals();
+        }
+      };
+
+      // Also hook top search-bar GPS detection into 10km distance evaluator
+      let origDetectTopGPS = window.detectUserGPS;
+      window.detectUserGPS = function() {
+        if (origDetectTopGPS) origDetectTopGPS();
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(pos) {
+            evaluateCustomerCoordinates(pos.coords.latitude, pos.coords.longitude);
+          });
         }
       };
 
