@@ -1961,7 +1961,7 @@
     </div>
   </div>
 
-  <script>
+<script>
     const CAFE_COORDS = [17.8374302, 76.6211413]; // Sadguru Cafe, Omerga
     const MAX_DELIVERY_KM = 10.0; // Strictly 10 KM Limit
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
@@ -1970,7 +1970,7 @@
     let cafeUpiId = localStorage.getItem('sc_cafe_upi_id') || "8421848131@ybl";
     let selectedPaymentMode = "COD";
     let currentOrderMode = "DELIVERY"; // DELIVERY or DINEIN
-    let deliveryChargeAmount = 50;
+    let deliveryChargeAmount = 30; // Default base charge (0-5 km)
     let detectedDistanceKm = null;
     let isOutOf10KmRange = false;
 
@@ -2035,25 +2035,25 @@
         banner.style.background = '#fff0f1';
         banner.style.border = '1.5px solid #ff3b30';
         banner.style.color = '#d00';
-        banner.innerText = `❌ सॉरी! तुमचे अंतर ${dist.toFixed(1)} km आहे. आम्ही फक्त 10 km च्या आतच डिलिव्हरी देतो.`;
+        banner.innerText = `❌ sorry! तुमचे अंतर ${dist.toFixed(1)} km आहे. आम्ही फक्त 10 km च्या आतच डिलिव्हरी देतो.`;
         if (currentOrderMode !== 'DINEIN' && placeBtn) {
           placeBtn.disabled = true;
           placeBtn.innerText = "❌ 10 KM च्या बाहेर डिलिव्हरी नाही";
         }
       } else {
         isOutOf10KmRange = false;
-        if (dist <= 2.0) {
-          deliveryChargeAmount = 50;
+        if (dist <= 5.0) {
+          deliveryChargeAmount = 30;
           banner.style.background = '#f0fff4';
           banner.style.border = '1px solid #25D366';
           banner.style.color = '#0b6b3a';
-          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (0-2 km — Delivery Charge: ₹50)`;
+          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (0-5 km — Delivery Charge: ₹30)`;
         } else {
           deliveryChargeAmount = 100;
           banner.style.background = '#fff9e6';
           banner.style.border = '1px solid #ff9f0a';
           banner.style.color = '#8a5300';
-          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (2+ km — Delivery Charge: ₹100)`;
+          banner.innerText = `✅ अंतर: ${dist.toFixed(1)} km (5+ km — Delivery Charge: ₹100)`;
         }
         recalculateCheckoutTotals();
       }
@@ -2065,7 +2065,19 @@
         cart.forEach(item => { foodTotal += (item.price * item.qty); });
       }
 
-      let finalDelivery = (currentOrderMode === 'DELIVERY') ? deliveryChargeAmount : 0;
+      let finalDelivery = 0;
+      if (currentOrderMode === 'DELIVERY') {
+        let isWithin5Km = (detectedDistanceKm === null || detectedDistanceKm <= 5.0);
+        // Free delivery on ₹599+ ONLY if within 5 km
+        if (isWithin5Km && foodTotal >= 599) {
+          finalDelivery = 0;
+        } else {
+          finalDelivery = deliveryChargeAmount; // 30 for <=5km, 100 for >5km
+        }
+      } else {
+        finalDelivery = 0;
+      }
+
       let grandTotal = foodTotal + (foodTotal > 0 ? finalDelivery : 0);
 
       let subEl = document.getElementById('chk-food-subtotal');
@@ -2076,12 +2088,18 @@
 
       if (subEl) subEl.innerText = `₹${foodTotal}`;
       if (delLbl) {
+        let isWithin5Km = (detectedDistanceKm === null || detectedDistanceKm <= 5.0);
         delLbl.innerText = currentOrderMode === 'DELIVERY'
-          ? `🛵 Delivery Charges (${detectedDistanceKm ? detectedDistanceKm.toFixed(1) + ' km' : 'Standard'}):`
+          ? (isWithin5Km && foodTotal >= 599 ? '🛵 Delivery Charges (Free on ₹599+ for <=5km):' : `🛵 Delivery Charges (${detectedDistanceKm ? detectedDistanceKm.toFixed(1) + ' km' : 'Standard'}):`)
           : '🍽️ Dine-In / Takeaway:';
       }
       if (delCostEl) {
-        delCostEl.innerText = finalDelivery === 0 ? 'FREE (₹0)' : `+ ₹${finalDelivery}`;
+        let isWithin5Km = (detectedDistanceKm === null || detectedDistanceKm <= 5.0);
+        if (currentOrderMode === 'DELIVERY' && isWithin5Km && foodTotal >= 599) {
+          delCostEl.innerHTML = '<span style="color:#25D366; font-weight:800;">FREE (₹0) 🎉</span>';
+        } else {
+          delCostEl.innerText = finalDelivery === 0 ? 'FREE (₹0)' : `+ ₹${finalDelivery}`;
+        }
       }
       if (modalTotalEl) modalTotalEl.innerText = `₹${grandTotal}`;
 
@@ -2126,7 +2144,7 @@
             if (addrField) addrField.value = `Live GPS Location: https://www.google.com/maps?q=${lat},${lng}`;
             autoSaveCustDraft();
             evaluateCustomerCoordinates(lat, lng);
-            alert("📍 तुमचे GPS लोकेशन यशस्वीरीत्या तपाशले!");
+            alert("📍 तुमचे GPS लोकेशन यशस्वीरीत्या तपासले!");
           },
           function() {
             alert("GPS चालू करता आले नाही. कृपया पत्ता टाइप करा.");
@@ -2221,7 +2239,11 @@
       if (typeof cart !== 'undefined') {
         cart.forEach(item => { foodTotal += (item.price * item.qty); });
       }
-      let finalDel = (currentOrderMode === 'DELIVERY') ? deliveryChargeAmount : 0;
+      let isWithin5Km = (detectedDistanceKm === null || detectedDistanceKm <= 5.0);
+      let finalDel = 0;
+      if (currentOrderMode === 'DELIVERY') {
+        finalDel = (isWithin5Km && foodTotal >= 599) ? 0 : deliveryChargeAmount;
+      }
       let grandTotal = foodTotal > 0 ? (foodTotal + finalDel) : 0;
 
       let upiUri = `upi://pay?pa=${encodeURIComponent(cafeUpiId)}&pn=${encodeURIComponent('Sadguru Cafe')}&am=${grandTotal}&cu=INR&tn=${encodeURIComponent('Sadguru Cafe Order')}`;
@@ -2419,7 +2441,7 @@
 
     function testOrderAlarm() { playSingleChime(); }
 
-    // Place Direct Website Order (Checking Min ₹199 limit for Delivery)
+    // Place Direct Website Order (Checking Min ₹199 & Free Delivery on ₹599 for <=5km)
     function placeDirectWebsiteOrder() {
       if (cart.length === 0) { alert('कृपया आधी मेनूमधील पदार्थ निवडा!'); return; }
 
@@ -2428,7 +2450,7 @@
 
       if (currentOrderMode === 'DELIVERY') {
         if (isOutOf10KmRange) {
-          alert('❌ सॉरी! तुमचे अंतर 10 km पेक्षा जास्त आहे, डिलिव्हरी शक्य नाही.');
+          alert('❌ sorry! तुमचे अंतर 10 km पेक्षा जास्त आहे, डिलिव्हरी शक्य नाही.');
           return;
         }
         if (foodTotal < 199) {
@@ -2457,7 +2479,11 @@
         return { name: item.name, qty: item.qty, price: item.price, total: sub };
       });
 
-      let finalDelivery = (currentOrderMode === 'DELIVERY') ? deliveryChargeAmount : 0;
+      let isWithin5Km = (detectedDistanceKm === null || detectedDistanceKm <= 5.0);
+      let finalDelivery = 0;
+      if (currentOrderMode === 'DELIVERY') {
+        finalDelivery = (isWithin5Km && foodTotal >= 599) ? 0 : deliveryChargeAmount;
+      }
       let grandTotal = foodTotal + finalDelivery;
 
       let orderId = "SC-" + Math.floor(1000 + Math.random() * 9000);
