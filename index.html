@@ -2789,11 +2789,11 @@
         }
       }, 200);
     }
-
-    function closeZomatoTracker() {
+function closeZomatoTracker() {
       document.getElementById('zomato-track-modal').style.display = 'none';
+      if (pollTimer) clearInterval(pollTimer);
     }
-  </script>
+
     function fetchLatestRiderLocation() {
       fetch(`https://ntfy.sh/${LIVE_CHANNEL}/json?poll=1&since=45m`)
         .then(res => res.text())
