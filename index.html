@@ -1955,6 +1955,13 @@
   </div>
 
 <script>
+  function scrollCategory(amount) {
+      let nav = document.getElementById('cat-nav');
+      if (nav) {
+        nav.scrollBy({ left: amount, behavior: 'smooth' });
+      }
+    }
+  
     const CAFE_COORDS = [17.8374302, 76.6211413]; // Sadguru Cafe, Omerga
     const MAX_DELIVERY_KM = 10.0; // Strictly 10 KM Limit
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
