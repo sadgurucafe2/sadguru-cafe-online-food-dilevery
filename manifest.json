@@ -9,18 +9,18 @@
   "orientation": "portrait-primary",
   "background_color": "#101216",
   "theme_color": "#d4af37",
-  "icons": [
+ "icons": [
     {
       "src": "logo.png",
-      "sizes": "192x192",
+      "sizes": "2048x2048",
       "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "logo.png",
-      "sizes": "512x512",
+      "sizes": "2048x2048",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
