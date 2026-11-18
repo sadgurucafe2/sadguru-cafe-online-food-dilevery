@@ -962,7 +962,7 @@
       <div class="creative-box">
         <h3 style="color: var(--maroon); margin-bottom: 4px;">Track Live Delivery 🛵</h3>
         <p style="font-size: 0.85rem; color: var(--text-muted);">Track your order live on Map or call us!</p>
-        <button type="button" class="creative-btn map-btn-style" onclick="openZomatoTracker()">📍 Live Location</button>
+        <button type="button" class="creative-btn map-btn-style" onclick="trackOrder(localStorage.getItem('sc_last_order_id'))">📍 Live Location</button>
         <a href="tel:+918421848131" class="creative-btn" style="background: var(--maroon);">📞 Call Cafe</a>
       </div>
       <div class="creative-box">
@@ -1095,7 +1095,8 @@
       <div class="chk-body">
         <div id="zomato-live-map" style="width: 100%; height: 280px; border-radius: 12px; border: 1px solid #ddd;"></div>
         <div class="chk-card" style="text-align: center;">
-          <div style="font-weight: 700; color: var(--maroon); margin-bottom: 4px;">Sadguru Cafe — Omerga</div>
+<div id="trk-status" style="white-space: pre-line; font-weight: 700; color: var(--maroon); margin-bottom: 8px;">...</div>
+<div style="font-weight: 700; color: var(--maroon); margin-bottom: 4px;">Sadguru Cafe — Omerga</div>
           <div style="font-size: 0.82rem; color: #555;">ऑर्डर संदर्भात मदतीसाठी खालील नंबरवर कॉल करा:</div>
           <a href="tel:+918421848131" style="display: inline-block; margin-top: 8px; background: #25D366; color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">📞 Call +91 84218 48131</a>
         </div>
@@ -1183,8 +1184,40 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script>
     const CAFE_COORDS = [17.8374302, 76.6211413];
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAxjLKZmhLS1b7Wr5FD3MdSbqJESafTKWQ",
+  authDomain: "sadguru-cafe.firebaseapp.com",
+  databaseURL: "https://sadguru-cafe-default-rtdb.firebaseio.com",
+  projectId: "sadguru-cafe",
+  appId: "1:11148313830:web:6e29474fb0d81567012727"
+};
+let db = null, trackRef = null;
+try { firebase.initializeApp(FIREBASE_CONFIG); db = firebase.database(); } catch (e) { console.error(e); }
+
+const STAT = {
+  Pending:   ['✅ ऑर्डर कॅफेला मिळाली', 'कॅफे कन्फर्म करत आहे...'],
+  Accepted:  ['👨‍🍳 ऑर्डर कन्फर्म झाली', 'तुमचे जेवण तयार होत आहे (20–25 मिनिटे)'],
+  Ready:     ['🍽️ ऑर्डर तयार आहे', 'लवकरच पाठवत आहोत'],
+  Out:       ['🛵 ऑर्डर निघाली आहे', 'डिलिव्हरी पार्टनर तुमच्याकडे येत आहे'],
+  Delivered: ['🎉 ऑर्डर पोहोचली', 'धन्यवाद! पुन्हा भेट द्या 🙏'],
+  Cancelled: ['❌ ऑर्डर रद्द झाली', 'कृपया कॅफेला फोन करा']
+};
+function trackOrder(id) {
+  openZomatoTracker();
+  const box = document.getElementById('trk-status');
+  if (!id || !db) { if (box) box.innerText = 'अजून ऑर्डर दिलेली नाही.'; return; }
+  if (trackRef) trackRef.off();
+  trackRef = db.ref('orders/' + id);
+  trackRef.on('value', snap => {
+    const o = snap.val(); if (!o) return;
+    const t = STAT[o.status] || STAT.Pending;
+    box.innerText = t[0] + '\n' + t[1] + (o.status === 'Out' && o.riderName ? '\n🛵 ' + o.riderName + ' • ' + o.riderPhone : '');
+  });
+}
     const MAX_DELIVERY_KM = 10.0;
     const LIVE_CHANNEL = "sadguru_cafe_omerga_live_track_918421848131";
     const ORDER_CHANNEL = "sadguru_cafe_omerga_orders_pos_918421848131";
@@ -1647,7 +1680,7 @@
       const finalDelivery = (currentOrderMode === 'DELIVERY' && (!isWithin5Km || foodTotal < 599)) ? deliveryChargeAmount : 0;
       const grandTotal = foodTotal + finalDelivery;
 
-      const orderId = "SC-" + Math.floor(1000 + Math.random() * 9000);
+      const orderId = "SC-" + Array.from(crypto.getRandomValues(new Uint8Array(6)), b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
       const orderPayload = {
         type: "NEW_ORDER",
         orderId: orderId,
@@ -1668,17 +1701,19 @@
         timestamp: Date.now()
       };
 
-      fetch(`https://ntfy.sh/${ORDER_CHANNEL}`, {
-        method: 'POST',
-        body: JSON.stringify(orderPayload)
-      })
+      if (!db) {
+        alert('Firebase लोड झाले नाही. इंटरनेट तपासा.');
+        if (btn) { btn.disabled = false; btn.innerText = "✅ Confirm & Place Order"; }
+        return;
+      }
+      db.ref('orders/' + orderId).set(orderPayload)
       .then(() => {
         localStorage.setItem('sc_last_order_id', orderId);
         cart = [];
         updateCartUI();
         toggleCartModal(false);
         if (btn) { btn.disabled = false; btn.innerText = "✅ Confirm & Place Order"; }
-        alert(`✅ तुमची ऑर्डर #${orderId} यशस्वीरीत्या प्लेस झाली आहे!`);
+             trackOrder(orderId);
       })
       .catch(() => {
         if (btn) { btn.disabled = false; btn.innerText = "✅ Confirm & Place Order"; }
@@ -1709,7 +1744,8 @@
     }
 
     // 9. Owner POS Dashboard & Live Sync
-    function secretOwnerTrigger() {
+   function secretOwnerTrigger() { return; }
+function oldSecretOwnerTrigger() {
       secretClickCount++;
       if (secretClickTimer) clearTimeout(secretClickTimer);
       secretClickTimer = setTimeout(() => { secretClickCount = 0; }, 1200);
@@ -1953,7 +1989,7 @@
         } catch (e) {}
       }
 
-      if (window.location.search.includes('pos=1') || window.location.search.includes('admin=1')) {
+if (false) {
         openAdminDashboard();
       }
     });
