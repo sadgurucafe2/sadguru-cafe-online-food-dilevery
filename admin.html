@@ -120,7 +120,7 @@ try {
 }
 
 const $ = id => document.getElementById(id);
-`const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');`
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 
 let isOwner = false, orders = {}, staff = {}, known = null, alarm = null, ctx = null, ordersRef = null, staffRef = null;
 let deferredPrompt = null, wakeLock = null;
