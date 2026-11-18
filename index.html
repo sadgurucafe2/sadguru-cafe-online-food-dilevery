@@ -1637,6 +1637,19 @@ function trackOrder(id) {
     }
 
     // 7. Place Direct Order
+    const NTFY_TOPIC = "sadguru-cafe-9b1c483c6a38";
+function notifyOwner(id, total, mode) {
+  fetch('https://ntfy.sh/' + NTFY_TOPIC, {
+    method: 'POST',
+    headers: {
+      'Title': 'New Order ' + id,
+      'Priority': '5',
+      'Tags': 'bell,fork_and_knife',
+      'Click': location.href.replace(/[^/]*$/, '') + 'admin.html'
+    },
+    body: 'Rs ' + total + ' - ' + (mode === 'DELIVERY' ? 'Delivery' : 'Dine-In') + '. Open dashboard to accept.'
+  }).catch(() => {});
+}
     function placeDirectWebsiteOrder() {
       if (cart.length === 0) { alert('कृपया आधी मेनूमधील पदार्थ निवडा!'); return; }
 
@@ -1707,7 +1720,7 @@ function trackOrder(id) {
         return;
       }
       db.ref('orders/' + orderId).set(orderPayload)
-      .then(() => {
+      .then(() => {        notifyOwner(orderId, grandTotal, currentOrderMode);
         localStorage.setItem('sc_last_order_id', orderId);
         cart = [];
         updateCartUI();
