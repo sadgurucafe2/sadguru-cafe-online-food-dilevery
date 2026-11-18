@@ -2,36 +2,46 @@
 <html lang="mr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#101216">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sadguru POS">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="logo.png">
 <title>Sadguru Cafe — Owner POS</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,sans-serif}
-body{background:#101216;color:#fff;padding:16px}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#101216;color:#fff;padding:12px;padding-bottom:40px}
 .g{color:#d4af37}
-.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:#1a1d24;padding:14px 18px;border-radius:12px;border-left:5px solid #d4af37;margin-bottom:14px}
-button,select,input{font-size:.82rem}
-.b{background:#2b303c;color:#fff;border:1px solid #444;padding:8px 12px;border-radius:8px;font-weight:600;cursor:pointer}
-.b.go{background:#25D366;color:#111;border:0}.b.bl{background:#0a84ff;border:0}.b.or{background:#ff9f0a;color:#111;border:0}.b.rd{background:#3a1c1c;color:#ff8a8a;border-color:#522}
-input,select{padding:9px 12px;border-radius:6px;border:1px solid #444;background:#101216;color:#fff}
-#login{max-width:340px;margin:12vh auto;background:#1a1d24;padding:24px;border-radius:14px;display:flex;flex-direction:column;gap:10px;border:1px solid #d4af37}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:#1a1d24;padding:14px 16px;border-radius:12px;border-left:5px solid #d4af37;margin-bottom:14px}
+button,select,input{font-size:.86rem}
+.b{background:#2b303c;color:#fff;border:1px solid #444;padding:9px 13px;border-radius:8px;font-weight:600;cursor:pointer}
+.b:active{transform:scale(.97)}
+.b.go{background:#25D366;color:#111;border:0}.b.bl{background:#0a84ff;border:0}.b.or{background:#ff9f0a;color:#111;border:0}.b.rd{background:#3a1c1c;color:#ff8a8a;border-color:#522}.b.gd{background:#d4af37;color:#111;border:0}
+input,select{padding:10px 12px;border-radius:6px;border:1px solid #444;background:#101216;color:#fff}
+#login{max-width:340px;margin:10vh auto;background:#1a1d24;padding:24px;border-radius:14px;display:flex;flex-direction:column;gap:12px;border:1px solid #d4af37}
 #app{display:none;max-width:1280px;margin:0 auto}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:14px}
 .st{background:#1a1d24;padding:12px 14px;border-radius:10px;border-top:3px solid var(--c)}
-.st small{color:#aaa}.st div{font-size:1.6rem;font-weight:700;color:var(--c)}
+.st small{color:#aaa}.st div{font-size:1.5rem;font-weight:700;color:var(--c)}
 #staffbox{display:none;background:#1a1d24;border:1px solid #d4af37;border-radius:12px;padding:14px;margin-bottom:16px}
-.chip{background:#2b303c;padding:6px 12px;border-radius:20px;font-size:.82rem;display:inline-flex;gap:8px;margin:4px 6px 0 0}
+.chip{background:#2b303c;padding:6px 12px;border-radius:20px;font-size:.82rem;display:inline-flex;gap:8px;margin:6px 6px 0 0}
 .chip button{background:none;border:0;color:#ff6b6b;cursor:pointer}
-#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
-.o{background:#1a1d24;border-radius:12px;padding:14px;border-left:5px solid var(--c);font-size:.86rem}
+#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px}
+.o{background:#1a1d24;border-radius:12px;padding:14px;border-left:5px solid var(--c);font-size:.88rem;line-height:1.45}
 .o.new{animation:fl .7s infinite alternate}
 @keyframes fl{to{background:#3a2c10}}
-.o h3{display:flex;justify-content:space-between;margin-bottom:6px}
-.tag{font-size:.7rem;padding:2px 9px;border-radius:10px;background:var(--c);color:#111;font-weight:700}
+.o h3{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.tag{font-size:.7rem;padding:3px 9px;border-radius:10px;background:var(--c);color:#111;font-weight:700}
 .it{border-top:1px dashed #333;margin-top:8px;padding-top:6px}
-.it div{display:flex;justify-content:space-between}
-.act{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-a{color:#5ac8fa}
+.it div{display:flex;justify-content:space-between;margin:2px 0}
+.act{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.act .b,.act select{flex:1;min-width:110px}
+a{color:#5ac8fa;text-decoration:none}
+.install-btn{display:none}
 body.staff .own{display:none!important}
 </style>
 </head>
@@ -42,20 +52,22 @@ body.staff .own{display:none!important}
   <input id="em" type="email" placeholder="Owner email" required>
   <input id="pw" type="password" placeholder="Password" required>
   <button class="b go" type="submit">🔒 Login</button>
+  <button class="b gd install-btn" type="button" onclick="installApp()">📲 Install App</button>
   <div id="lerr" style="color:#ff6b6b;font-size:.8rem"></div>
 </form>
 
 <div id="app">
   <div class="top">
     <div>
-      <h2 class="g" style="font-size:1.25rem">☕ SADGURU CAFE — KITCHEN & OWNER POS</h2>
-      <div style="font-size:.8rem;color:#25D366">● Live sync active | नवीन ऑर्डरला अलार्म वाजेल</div>
+      <h2 class="g" style="font-size:1.15rem">☕ SADGURU CAFE — OWNER POS</h2>
+      <div id="statusline" style="font-size:.78rem;color:#25D366">● Live sync active | नवीन ऑर्डरला अलार्म वाजेल</div>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="b gd install-btn" onclick="installApp()">📲 Install App</button>
       <button class="b rd" id="stopbtn" style="display:none" onclick="stopAlarm()">🔕 Stop Alarm</button>
       <button class="b own" onclick="toggleStaff()">👥 Staff</button>
       <button class="b own" onclick="exportCSV()">📊 CSV</button>
-      <button class="b" onclick="chime()">🔔 Test</button>
+      <button class="b" onclick="testAlert()">🔔 Test</button>
       <button class="b rd own" onclick="clearDone()">🗑️ Clear Done</button>
       <button class="b" onclick="auth.signOut()">Logout</button>
     </div>
@@ -85,7 +97,6 @@ body.staff .own{display:none!important}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-// 👉 index.html madhla same config ithe paste kar
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAxjLKZmhLS1b7Wr5FD3MdSbqJESafTKWQ",
   authDomain: "sadguru-cafe.firebaseapp.com",
@@ -93,24 +104,60 @@ const FIREBASE_CONFIG = {
   projectId: "sadguru-cafe",
   appId: "1:11148313830:web:6e29474fb0d81567012727"
 };
+
 let auth, db;
 try {
-  if (location.protocol === 'file:') throw new Error('फाईल डबल-क्लिक करून उघडू नका. ती hosting (Netlify/Firebase Hosting) वर टाका आणि https लिंकने उघडा.');
+  if (location.protocol === 'file:') throw new Error('फाईल डबल-क्लिक करून उघडू नका. ती GitHub Pages / Hosting वर टाका आणि https लिंकने उघडा.');
   firebase.initializeApp(FIREBASE_CONFIG);
   auth = firebase.auth(); db = firebase.database();
 } catch (e) {
   window.addEventListener('DOMContentLoaded', () => { document.getElementById('lerr').innerText = '❌ ' + e.message; });
 }
+
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const esc = s => String(s ?? '').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"').replace(/'/g,''');
 
 let isOwner = false, orders = {}, staff = {}, known = null, alarm = null, ctx = null, ordersRef = null, staffRef = null;
+let deferredPrompt = null, wakeLock = null;
 const COL = {Pending:'#ff9f0a', Accepted:'#5ac8fa', Ready:'#bf5af2', Out:'#0a84ff', Delivered:'#25D366', Cancelled:'#ff453a'};
 const LBL = {Pending:'NEW', Accepted:'ACCEPTED', Ready:'READY', Out:'OUT FOR DELIVERY', Delivered:'DONE', Cancelled:'CANCELLED'};
 
+// ---------- PWA Install & Wake Lock ----------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.querySelectorAll('.install-btn').forEach(b => b.style.display = 'inline-block');
+});
+
+async function installApp() {
+  if (!deferredPrompt) return alert('ब्राउझरच्या वरच्या 3-dots मेनूमधून "Add to Home Screen / Install App" निवडा.');
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.querySelectorAll('.install-btn').forEach(b => b.style.display = 'none');
+}
+
+async function keepScreenAwake() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      $('statusline').innerText = '● Live sync active | स्क्रीन चालू राहील';
+    }
+  } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && auth && auth.currentUser) keepScreenAwake();
+});
+
+// ---------- Auth ----------
 function doLogin(e) {
   e.preventDefault(); $('lerr').innerText = '';
   if (!auth) return false;
+  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
   auth.signInWithEmailAndPassword($('em').value, $('pw').value)
     .catch(() => $('lerr').innerText = 'चुकीचा email किंवा password');
   return false;
@@ -121,6 +168,8 @@ if (auth) auth.onAuthStateChanged(u => {
   if (staffRef) staffRef.off();
   if (!u) { $('login').style.display = 'flex'; $('app').style.display = 'none'; return; }
   $('login').style.display = 'none'; $('app').style.display = 'block';
+  keepScreenAwake();
+  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
   known = null;
   db.ref('staffAuth').once('value').then(() => true, () => false).then(owner => {
     isOwner = owner;
@@ -138,12 +187,15 @@ function onOrders() {
   else {
     const fresh = ids.filter(i => !known.has(i) && orders[i].status === 'Pending');
     ids.forEach(i => known.add(i));
-    if (fresh.length) startAlarm();
+    if (fresh.length) {
+      startAlarm();
+      notifyNewOrder(orders[fresh[0]]);
+    }
   }
   render();
 }
 
-// ---------- Alarm ----------
+// ---------- Alarm & Mobile Alert ----------
 function chime() {
   try {
     ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
@@ -154,6 +206,22 @@ function chime() {
       g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.001, t + .45);
       o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + .45);
     });
+    if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
+  } catch (e) {}
+}
+function testAlert() {
+  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  chime();
+}
+function notifyNewOrder(o) {
+  try {
+    if ('Notification' in window && Notification.permission === 'granted' && o) {
+      new Notification('🔔 नवीन ऑर्डर — Sadguru Cafe', {
+        body: `#${o.orderId} | ${o.customerName} | ₹${o.grandTotal}`,
+        icon: 'logo.png',
+        vibrate: [300, 150, 300]
+      });
+    }
   } catch (e) {}
 }
 function startAlarm() { chime(); $('stopbtn').style.display = 'inline-block'; clearInterval(alarm); alarm = setInterval(chime, 2200); }
