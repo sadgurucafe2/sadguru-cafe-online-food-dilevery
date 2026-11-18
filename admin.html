@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Sadguru Cafe — Owner POS</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,sans-serif}
+body{background:#101216;color:#fff;padding:16px}
+.g{color:#d4af37}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:#1a1d24;padding:14px 18px;border-radius:12px;border-left:5px solid #d4af37;margin-bottom:14px}
+button,select,input{font-size:.82rem}
+.b{background:#2b303c;color:#fff;border:1px solid #444;padding:8px 12px;border-radius:8px;font-weight:600;cursor:pointer}
+.b.go{background:#25D366;color:#111;border:0}.b.bl{background:#0a84ff;border:0}.b.or{background:#ff9f0a;color:#111;border:0}.b.rd{background:#3a1c1c;color:#ff8a8a;border-color:#522}
+input,select{padding:9px 12px;border-radius:6px;border:1px solid #444;background:#101216;color:#fff}
+#login{max-width:340px;margin:12vh auto;background:#1a1d24;padding:24px;border-radius:14px;display:flex;flex-direction:column;gap:10px;border:1px solid #d4af37}
+#app{display:none;max-width:1280px;margin:0 auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.st{background:#1a1d24;padding:12px 14px;border-radius:10px;border-top:3px solid var(--c)}
+.st small{color:#aaa}.st div{font-size:1.6rem;font-weight:700;color:var(--c)}
+#staffbox{display:none;background:#1a1d24;border:1px solid #d4af37;border-radius:12px;padding:14px;margin-bottom:16px}
+.chip{background:#2b303c;padding:6px 12px;border-radius:20px;font-size:.82rem;display:inline-flex;gap:8px;margin:4px 6px 0 0}
+.chip button{background:none;border:0;color:#ff6b6b;cursor:pointer}
+#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.o{background:#1a1d24;border-radius:12px;padding:14px;border-left:5px solid var(--c);font-size:.86rem}
+.o.new{animation:fl .7s infinite alternate}
+@keyframes fl{to{background:#3a2c10}}
+.o h3{display:flex;justify-content:space-between;margin-bottom:6px}
+.tag{font-size:.7rem;padding:2px 9px;border-radius:10px;background:var(--c);color:#111;font-weight:700}
+.it{border-top:1px dashed #333;margin-top:8px;padding-top:6px}
+.it div{display:flex;justify-content:space-between}
+.act{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+a{color:#5ac8fa}
+</style>
+</head>
+<body>
+
+<form id="login" onsubmit="return doLogin(event)">
+  <h2 class="g">☕ Sadguru Cafe Owner</h2>
+  <input id="em" type="email" placeholder="Owner email" required>
+  <input id="pw" type="password" placeholder="Password" required>
+  <button class="b go" type="submit">🔒 Login</button>
+  <div id="lerr" style="color:#ff6b6b;font-size:.8rem"></div>
+</form>
+
+<div id="app">
+  <div class="top">
+    <div>
+      <h2 class="g" style="font-size:1.25rem">☕ SADGURU CAFE — KITCHEN & OWNER POS</h2>
+      <div style="font-size:.8rem;color:#25D366">● Live sync active | नवीन ऑर्डरला अलार्म वाजेल</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="b rd" id="stopbtn" style="display:none" onclick="stopAlarm()">🔕 Stop Alarm</button>
+      <button class="b" onclick="toggleStaff()">👥 Staff</button>
+      <button class="b" onclick="exportCSV()">📊 CSV</button>
+      <button class="b" onclick="chime()">🔔 Test</button>
+      <button class="b rd" onclick="clearDone()">🗑️ Clear Done</button>
+      <button class="b" onclick="auth.signOut()">Logout</button>
+    </div>
+  </div>
+
+  <div id="staffbox">
+    <h3 class="g" style="margin-bottom:10px">👥 Delivery Staff</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input id="sn" placeholder="नाव" style="flex:1;min-width:140px">
+      <input id="sp" placeholder="10 अंकी मोबाईल" maxlength="10" style="flex:1;min-width:140px">
+      <button class="b go" onclick="addStaff()">➕ Add</button>
+    </div>
+    <div id="chips"></div>
+  </div>
+
+  <div class="stats">
+    <div class="st" style="--c:#ff9f0a"><small>🔔 Pending</small><div id="s1">0</div></div>
+    <div class="st" style="--c:#0a84ff"><small>🛵 Out for Delivery</small><div id="s2">0</div></div>
+    <div class="st" style="--c:#25D366"><small>📦 Orders Today</small><div id="s3">0</div></div>
+    <div class="st" style="--c:#d4af37"><small>💰 Sales Today</small><div id="s4">₹0</div></div>
+  </div>
+  <div id="list"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+// 👉 index.html madhla same config ithe paste kar
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAxjLKZmhLS1b7Wr5FD3MdSbqJESafTKWQ",
+  authDomain: "sadguru-cafe.firebaseapp.com",
+  databaseURL: "https://sadguru-cafe-default-rtdb.firebaseio.com",
+  projectId: "sadguru-cafe",
+  appId: "1:11148313830:web:6e29474fb0d81567012727"
+};
+firebase.initializeApp(FIREBASE_CONFIG);
+const auth = firebase.auth(), db = firebase.database();
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+let orders = {}, staff = {}, known = null, alarm = null, ctx = null, ordersRef = null, staffRef = null;
+const COL = {Pending:'#ff9f0a', Accepted:'#5ac8fa', Ready:'#bf5af2', Out:'#0a84ff', Delivered:'#25D366', Cancelled:'#ff453a'};
+const LBL = {Pending:'NEW', Accepted:'ACCEPTED', Ready:'READY', Out:'OUT FOR DELIVERY', Delivered:'DONE', Cancelled:'CANCELLED'};
+
+function doLogin(e) {
+  e.preventDefault(); $('lerr').innerText = '';
+  auth.signInWithEmailAndPassword($('em').value, $('pw').value)
+    .catch(() => $('lerr').innerText = 'चुकीचा email किंवा password');
+  return false;
+}
+
+auth.onAuthStateChanged(u => {
+  if (ordersRef) ordersRef.off();
+  if (staffRef) staffRef.off();
+  if (!u) { $('login').style.display = 'flex'; $('app').style.display = 'none'; return; }
+  $('login').style.display = 'none'; $('app').style.display = 'block';
+  known = null;
+  ordersRef = db.ref('orders').orderByChild('timestamp').limitToLast(200);
+  ordersRef.on('value', s => { orders = s.val() || {}; onOrders(); }, err => alert('Permission error: Firebase rules मध्ये owner email बरोबर आहे का तपासा.'));
+  staffRef = db.ref('staff');
+  staffRef.on('value', s => { staff = s.val() || {}; renderStaff(); render(); });
+});
+
+function onOrders() {
+  const ids = Object.keys(orders);
+  if (known === null) known = new Set(ids);
+  else {
+    const fresh = ids.filter(i => !known.has(i) && orders[i].status === 'Pending');
+    ids.forEach(i => known.add(i));
+    if (fresh.length) startAlarm();
+  }
+  render();
+}
+
+// ---------- Alarm ----------
+function chime() {
+  try {
+    ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    [880, 1174, 1318, 1760].forEach((f, i) => {
+      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * .14;
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.001, t + .45);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + .45);
+    });
+  } catch (e) {}
+}
+function startAlarm() { chime(); $('stopbtn').style.display = 'inline-block'; clearInterval(alarm); alarm = setInterval(chime, 2200); }
+function stopAlarm() { clearInterval(alarm); alarm = null; $('stopbtn').style.display = 'none'; }
+
+// ---------- Render ----------
+function render() {
+  const list = Object.values(orders).sort((a, b) => b.timestamp - a.timestamp);
+  const midnight = new Date().setHours(0, 0, 0, 0);
+  const today = list.filter(o => o.timestamp >= midnight);
+  $('s1').innerText = list.filter(o => o.status === 'Pending').length;
+  $('s2').innerText = list.filter(o => o.status === 'Out').length;
+  $('s3').innerText = today.length;
+  $('s4').innerText = '₹' + today.filter(o => o.status !== 'Cancelled').reduce((s, o) => s + o.grandTotal, 0);
+  if (!list.some(o => o.status === 'Pending')) stopAlarm();
+
+  const opts = Object.entries(staff).map(([k, s]) => `<option value="${esc(k)}">${esc(s.name)}</option>`).join('');
+  $('list').innerHTML = list.map(o => {
+    const items = (o.items || []).map(i => `<div><span>${esc(i.name)} × ${i.qty}</span><b>₹${i.price * i.qty}</b></div>`).join('');
+    const del = o.orderMode === 'DELIVERY';
+    const id = esc(o.orderId);
+    let acts = '';
+    if (o.status === 'Pending') acts = `<button class="b go" data-a="Accepted" data-id="${id}">✅ Accept</button><button class="b rd" data-a="Cancelled" data-id="${id}">✖ Cancel</button>`;
+    else if (o.status === 'Accepted') acts = `<button class="b or" data-a="Ready" data-id="${id}">🍽️ Ready</button>`;
+    else if (o.status === 'Ready') acts = del
+      ? `<select id="rd-${id}"><option value="">Rider निवडा</option>${opts}</select><button class="b bl" data-a="Out" data-id="${id}">🛵 Out for Delivery</button>`
+      : `<button class="b go" data-a="Delivered" data-id="${id}">✔ Served / Picked up</button>`;
+    else if (o.status === 'Out') acts = `<button class="b go" data-a="Delivered" data-id="${id}">✔ Delivered</button>`;
+    return `<div class="o ${o.status === 'Pending' ? 'new' : ''}" style="--c:${COL[o.status] || '#888'}">
+      <h3><span>#${id}</span><span class="tag">${LBL[o.status] || esc(o.status)}</span></h3>
+      <div>🕒 ${new Date(o.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} • ${del ? '🛵 Delivery' : '🍽️ Dine-In'}${o.distanceKm > 0 ? ' • ' + o.distanceKm + ' km' : ''}</div>
+      <div>👤 <b>${esc(o.customerName)}</b> • <a href="tel:${esc(o.customerPhone)}">📞 ${esc(o.customerPhone)}</a></div>
+      <div>📍 ${esc(o.address)} ${/^https:\/\/www\.google\.com\/maps\?q=/.test(o.map || '') ? `<a target="_blank" rel="noopener" href="${esc(o.map)}">🗺️ Map</a>` : ''}</div>
+      <div class="it">${items}
+        <div style="color:#aaa"><span>Delivery</span><span>₹${o.deliveryCharge}</span></div>
+        <div class="g" style="font-size:1rem"><b>Total</b><b>₹${o.grandTotal}</b></div></div>
+      <div style="margin-top:6px">💳 ${o.paymentMode === 'UPI' ? 'UPI' + (o.utr ? ' (UTR ' + esc(o.utr) + ')' : ' — payment verify करा') : 'Cash / COD'}${o.riderName ? ' • 🛵 ' + esc(o.riderName) : ''}</div>
+      <div class="act">${acts}<button class="b" data-a="KOT" data-id="${id}">🖨️ KOT</button></div></div>`;
+  }).join('') || '<p style="color:#888;text-align:center;grid-column:1/-1;padding:40px">अजून ऑर्डर नाहीत.</p>';
+}
+
+$('list').addEventListener('click', e => {
+  const b = e.target.closest('button[data-a]'); if (!b) return;
+  const id = b.dataset.id, a = b.dataset.a, o = orders[id];
+  if (!o) return;
+  if (a === 'KOT') return printKOT(o);
+  const upd = {status: a};
+  if (a === 'Out') {
+    const k = document.getElementById('rd-' + id).value;
+    if (!k) return alert('आधी Rider निवडा!');
+    upd.riderName = staff[k].name; upd.riderPhone = staff[k].phone;
+  }
+  if (a === 'Cancelled' && !confirm('ऑर्डर रद्द करायची?')) return;
+  db.ref('orders/' + id).update(upd);
+  if (a === 'Accepted') printKOT(o, true);
+});
+
+// ---------- Staff ----------
+function toggleStaff() { const b = $('staffbox'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
+function addStaff() {
+  const n = $('sn').value.trim(), p = $('sp').value.trim();
+  if (!n || !/^\d{10}$/.test(p)) return alert('नाव आणि 10 अंकी नंबर टाका!');
+  db.ref('staff').push({name: n, phone: p}); $('sn').value = $('sp').value = '';
+}
+function renderStaff() {
+  $('chips').innerHTML = Object.entries(staff).map(([k, s]) =>
+    `<span class="chip">🛵 <b>${esc(s.name)}</b> (${esc(s.phone)}) <button data-k="${esc(k)}">✖</button></span>`).join('');
+}
+$('chips').addEventListener('click', e => { const k = e.target.dataset.k; if (k && confirm('Staff काढायचा?')) db.ref('staff/' + k).remove(); });
+
+// ---------- KOT / CSV / Clear ----------
+function printKOT(o, quiet) {
+  const w = window.open('', '_blank', 'width=320,height=600'); if (!w) return;
+  const rows = (o.items || []).map(i => `<tr><td>${esc(i.name)}</td><td>x${i.qty}</td></tr>`).join('');
+  w.document.write(`<body style="font:14px monospace;width:280px"><h3 style="text-align:center">SADGURU CAFE — KOT</h3>
+  <p>#${esc(o.orderId)}<br>${new Date(o.timestamp).toLocaleString()}<br>${o.orderMode === 'DELIVERY' ? 'DELIVERY' : 'DINE-IN'}</p><hr>
+  <table width="100%">${rows}</table><hr><p>${esc(o.customerName)} ${esc(o.customerPhone)}<br>${esc(o.address)}</p>
+  <p><b>Total ₹${o.grandTotal}</b> (${o.paymentMode})</p></body>`);
+  w.document.close(); w.focus(); w.print();
+}
+function exportCSV() {
+  const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const rows = [['Order','Time','Name','Phone','Address','Mode','Payment','Items','Delivery','Total','Status']];
+  Object.values(orders).sort((a, b) => a.timestamp - b.timestamp).forEach(o => rows.push([
+    o.orderId, new Date(o.timestamp).toLocaleString(), o.customerName, o.customerPhone, o.address, o.orderMode, o.paymentMode,
+    (o.items || []).map(i => i.name + ' x' + i.qty).join('; '), o.deliveryCharge, o.grandTotal, o.status]));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\ufeff' + rows.map(r => r.map(q).join(',')).join('\n')], {type: 'text/csv'}));
+  a.download = 'sadguru-orders.csv'; a.click();
+}
+function clearDone() {
+  const done = Object.keys(orders).filter(k => ['Delivered', 'Cancelled'].includes(orders[k].status));
+  if (!done.length) return alert('काहीच नाही.');
+  if (!confirm(done.length + ' पूर्ण/रद्द ऑर्डर कायमच्या delete करायच्या? (आधी CSV काढा)')) return;
+  done.forEach(k => db.ref('orders/' + k).remove());
+}
+</script>
+</body>
+</html>
