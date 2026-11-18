@@ -49,8 +49,8 @@ body.staff .own{display:none!important}
 
 <form id="login" onsubmit="return doLogin(event)">
   <h2 class="g">☕ Sadguru Cafe Owner</h2>
-  <input id="em" type="sadgurucafe26@gmail.com" placeholder="Owner email" required>
-  <input id="pw" type="123456" placeholder="Password" required>
+  <input id="em" type="email" placeholder="Owner email" required>
+  <input id="pw" type="password" placeholder="Password" required>
   <button class="b go" type="submit">🔒 Login</button>
   <button class="b gd install-btn" type="button" onclick="installApp()">📲 Install App</button>
   <div id="lerr" style="color:#ff6b6b;font-size:.8rem"></div>
@@ -107,11 +107,16 @@ const FIREBASE_CONFIG = {
 
 let auth, db;
 try {
-  if (location.protocol === 'file:') throw new Error('फाईल डबल-क्लिक करून उघडू नका. ती GitHub Pages / Hosting वर टाका आणि https लिंकने उघडा.');
+  if (location.protocol === 'file:') {
+    throw new Error('फाईल डबल-क्लिक करून उघडू नका. ती https लिंकने उघडा.');
+  }
   firebase.initializeApp(FIREBASE_CONFIG);
-  auth = firebase.auth(); db = firebase.database();
+  auth = firebase.auth();
+  db = firebase.database();
 } catch (e) {
-  window.addEventListener('DOMContentLoaded', () => { document.getElementById('lerr').innerText = '❌ ' + e.message; });
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('lerr').innerText = 'Error: ' + e.message;
+  });
 }
 
 const $ = id => document.getElementById(id);
@@ -122,23 +127,31 @@ let deferredPrompt = null, wakeLock = null;
 const COL = {Pending:'#ff9f0a', Accepted:'#5ac8fa', Ready:'#bf5af2', Out:'#0a84ff', Delivered:'#25D366', Cancelled:'#ff453a'};
 const LBL = {Pending:'NEW', Accepted:'ACCEPTED', Ready:'READY', Out:'OUT FOR DELIVERY', Delivered:'DONE', Cancelled:'CANCELLED'};
 
-// ---------- PWA Install & Wake Lock ----------
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
 }
 
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
-  document.querySelectorAll('.install-btn').forEach(b => b.style.display = 'inline-block');
+  document.querySelectorAll('.install-btn').forEach(b => {
+    b.style.display = 'inline-block';
+  });
 });
 
 async function installApp() {
-  if (!deferredPrompt) return alert('ब्राउझरच्या वरच्या 3-dots मेनूमधून "Add to Home Screen / Install App" निवडा.');
+  if (!deferredPrompt) {
+    alert('ब्राउझरच्या 3-dots मेनूमधून Install App किंवा Add to Home Screen निवडा.');
+    return;
+  }
   deferredPrompt.prompt();
   await deferredPrompt.userChoice;
   deferredPrompt = null;
-  document.querySelectorAll('.install-btn').forEach(b => b.style.display = 'none');
+  document.querySelectorAll('.install-btn').forEach(b => {
+    b.style.display = 'none';
+  });
 }
 
 async function keepScreenAwake() {
@@ -149,42 +162,68 @@ async function keepScreenAwake() {
     }
   } catch (e) {}
 }
+
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && auth && auth.currentUser) keepScreenAwake();
+  if (document.visibilityState === 'visible' && auth && auth.currentUser) {
+    keepScreenAwake();
+  }
 });
 
-// ---------- Auth ----------
 function doLogin(e) {
-  e.preventDefault(); $('lerr').innerText = '';
+  e.preventDefault();
+  $('lerr').innerText = '';
   if (!auth) return false;
-  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
   auth.signInWithEmailAndPassword($('em').value, $('pw').value)
-    .catch(() => $('lerr').innerText = 'चुकीचा email किंवा password');
+    .catch(() => {
+      $('lerr').innerText = 'चुकीचा email किंवा password';
+    });
   return false;
 }
 
-if (auth) auth.onAuthStateChanged(u => {
-  if (ordersRef) ordersRef.off();
-  if (staffRef) staffRef.off();
-  if (!u) { $('login').style.display = 'flex'; $('app').style.display = 'none'; return; }
-  $('login').style.display = 'none'; $('app').style.display = 'block';
-  keepScreenAwake();
-  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-  known = null;
-  db.ref('staffAuth').once('value').then(() => true, () => false).then(owner => {
-    isOwner = owner;
-    document.body.classList.toggle('staff', !owner);
-    ordersRef = db.ref('orders').orderByChild('timestamp').limitToLast(200);
-    ordersRef.on('value', s => { orders = s.val() || {}; onOrders(); }, () => alert('Permission error: या email ला access नाही. Owner ला सांगा.'));
-    staffRef = db.ref('staff');
-    staffRef.on('value', s => { staff = s.val() || {}; renderStaff(); render(); });
+if (auth) {
+  auth.onAuthStateChanged(u => {
+    if (ordersRef) ordersRef.off();
+    if (staffRef) staffRef.off();
+    if (!u) {
+      $('login').style.display = 'flex';
+      $('app').style.display = 'none';
+      return;
+    }
+    $('login').style.display = 'none';
+    $('app').style.display = 'block';
+    keepScreenAwake();
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+    known = null;
+    db.ref('staffAuth').once('value').then(() => true, () => false).then(owner => {
+      isOwner = owner;
+      document.body.classList.toggle('staff', !owner);
+      ordersRef = db.ref('orders').orderByChild('timestamp').limitToLast(200);
+      ordersRef.on('value', s => {
+        orders = s.val() || {};
+        onOrders();
+      }, () => {
+        alert('Permission error: या email ला access नाही. Owner ला सांगा.');
+      });
+      staffRef = db.ref('staff');
+      staffRef.on('value', s => {
+        staff = s.val() || {};
+        renderStaff();
+        render();
+      });
+    });
   });
-});
+}
 
 function onOrders() {
   const ids = Object.keys(orders);
-  if (known === null) known = new Set(ids);
-  else {
+  if (known === null) {
+    known = new Set(ids);
+  } else {
     const fresh = ids.filter(i => !known.has(i) && orders[i].status === 'Pending');
     ids.forEach(i => known.add(i));
     if (fresh.length) {
@@ -195,41 +234,62 @@ function onOrders() {
   render();
 }
 
-// ---------- Alarm & Mobile Alert ----------
 function chime() {
   try {
     ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
     if (ctx.state === 'suspended') ctx.resume();
     [880, 1174, 1318, 1760].forEach((f, i) => {
-      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * .14;
-      o.type = 'triangle'; o.frequency.value = f;
-      g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.001, t + .45);
-      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + .45);
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      const t = ctx.currentTime + i * 0.14;
+      o.type = 'triangle';
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.35, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start(t);
+      o.stop(t + 0.45);
     });
     if (navigator.vibrate) navigator.vibrate([300, 150, 300]);
   } catch (e) {}
 }
+
 function testAlert() {
-  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
   chime();
 }
+
 function notifyNewOrder(o) {
   try {
     if ('Notification' in window && Notification.permission === 'granted' && o) {
       new Notification('🔔 नवीन ऑर्डर — Sadguru Cafe', {
-        body: `#${o.orderId} | ${o.customerName} | ₹${o.grandTotal}`,
+        body: '#' + o.orderId + ' | ' + o.customerName + ' | ₹' + o.grandTotal,
         icon: 'logo.png',
         vibrate: [300, 150, 300]
       });
     }
   } catch (e) {}
 }
-function startAlarm() { chime(); $('stopbtn').style.display = 'inline-block'; clearInterval(alarm); alarm = setInterval(chime, 2200); }
-function stopAlarm() { clearInterval(alarm); alarm = null; $('stopbtn').style.display = 'none'; }
 
-// ---------- Render ----------
+function startAlarm() {
+  chime();
+  $('stopbtn').style.display = 'inline-block';
+  clearInterval(alarm);
+  alarm = setInterval(chime, 2200);
+}
+
+function stopAlarm() {
+  clearInterval(alarm);
+  alarm = null;
+  $('stopbtn').style.display = 'none';
+}
+
 function render() {
-  const list = Object.values(orders).sort((a, b) => b.timestamp - a.timestamp)
+  const list = Object.values(orders)
+    .sort((a, b) => b.timestamp - a.timestamp)
     .filter(o => isOwner || !['Delivered', 'Cancelled'].includes(o.status));
   const midnight = new Date().setHours(0, 0, 0, 0);
   const today = list.filter(o => o.timestamp >= midnight);
@@ -239,83 +299,141 @@ function render() {
   $('s4').innerText = '₹' + today.filter(o => o.status !== 'Cancelled').reduce((s, o) => s + o.grandTotal, 0);
   if (!list.some(o => o.status === 'Pending')) stopAlarm();
 
-  const opts = Object.entries(staff).map(([k, s]) => `<option value="${esc(k)}">${esc(s.name)}</option>`).join('');
+  const opts = Object.entries(staff)
+    .map(([k, s]) => `<option value="${esc(k)}">${esc(s.name)}</option>`)
+    .join('');
+
   $('list').innerHTML = list.map(o => {
-    const items = (o.items || []).map(i => `<div><span>${esc(i.name)} × ${i.qty}</span><b>₹${i.price * i.qty}</b></div>`).join('');
+    const items = (o.items || [])
+      .map(i => `<div><span>${esc(i.name)} × ${i.qty}</span><b>₹${i.price * i.qty}</b></div>`)
+      .join('');
     const del = o.orderMode === 'DELIVERY';
     const id = esc(o.orderId);
     let acts = '';
-    if (o.status === 'Pending') acts = `<button class="b go" data-a="Accepted" data-id="${id}">✅ Accept</button><button class="b rd" data-a="Cancelled" data-id="${id}">✖ Cancel</button>`;
-    else if (o.status === 'Accepted') acts = `<button class="b or" data-a="Ready" data-id="${id}">🍽️ Ready</button>`;
-    else if (o.status === 'Ready') acts = del
-      ? `<select id="rd-${id}"><option value="">Rider निवडा</option>${opts}</select><button class="b bl" data-a="Out" data-id="${id}">🛵 Out for Delivery</button>`
-      : `<button class="b go" data-a="Delivered" data-id="${id}">✔ Served / Picked up</button>`;
-    else if (o.status === 'Out') acts = `<button class="b go" data-a="Delivered" data-id="${id}">✔ Delivered</button>`;
+    if (o.status === 'Pending') {
+      acts = `<button class="b go" data-a="Accepted" data-id="${id}">✅ Accept</button><button class="b rd" data-a="Cancelled" data-id="${id}">✖ Cancel</button>`;
+    } else if (o.status === 'Accepted') {
+      acts = `<button class="b or" data-a="Ready" data-id="${id}">🍽️ Ready</button>`;
+    } else if (o.status === 'Ready') {
+      acts = del
+        ? `<select id="rd-${id}"><option value="">Rider निवडा</option>${opts}</select><button class="b bl" data-a="Out" data-id="${id}">🛵 Out for Delivery</button>`
+        : `<button class="b go" data-a="Delivered" data-id="${id}">✔ Served / Picked up</button>`;
+    } else if (o.status === 'Out') {
+      acts = `<button class="b go" data-a="Delivered" data-id="${id}">✔ Delivered</button>`;
+    }
+    const mapLink = /^https:\/\/www\.google\.com\/maps\?q=/.test(o.map || '')
+      ? `<a target="_blank" rel="noopener" href="${esc(o.map)}">🗺️ Map</a>`
+      : '';
+    const payText = o.paymentMode === 'UPI'
+      ? 'UPI' + (o.utr ? ' (UTR ' + esc(o.utr) + ')' : ' — payment verify करा')
+      : 'Cash / COD';
     return `<div class="o ${o.status === 'Pending' ? 'new' : ''}" style="--c:${COL[o.status] || '#888'}">
       <h3><span>#${id}</span><span class="tag">${LBL[o.status] || esc(o.status)}</span></h3>
       <div>🕒 ${new Date(o.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} • ${del ? '🛵 Delivery' : '🍽️ Dine-In'}${o.distanceKm > 0 ? ' • ' + o.distanceKm + ' km' : ''}</div>
       <div>👤 <b>${esc(o.customerName)}</b> • <a href="tel:${esc(o.customerPhone)}">📞 ${esc(o.customerPhone)}</a></div>
-      <div>📍 ${esc(o.address)} ${/^https:\/\/www\.google\.com\/maps\?q=/.test(o.map || '') ? `<a target="_blank" rel="noopener" href="${esc(o.map)}">🗺️ Map</a>` : ''}</div>
+      <div>📍 ${esc(o.address)} ${mapLink}</div>
       <div class="it">${items}
         <div style="color:#aaa"><span>Delivery</span><span>₹${o.deliveryCharge}</span></div>
         <div class="g" style="font-size:1rem"><b>Total</b><b>₹${o.grandTotal}</b></div></div>
-      <div style="margin-top:6px">💳 ${o.paymentMode === 'UPI' ? 'UPI' + (o.utr ? ' (UTR ' + esc(o.utr) + ')' : ' — payment verify करा') : 'Cash / COD'}${o.riderName ? ' • 🛵 ' + esc(o.riderName) : ''}</div>
+      <div style="margin-top:6px">💳 ${payText}${o.riderName ? ' • 🛵 ' + esc(o.riderName) : ''}</div>
       <div class="act">${acts}<button class="b" data-a="KOT" data-id="${id}">🖨️ KOT</button></div></div>`;
   }).join('') || '<p style="color:#888;text-align:center;grid-column:1/-1;padding:40px">अजून ऑर्डर नाहीत.</p>';
 }
 
 $('list').addEventListener('click', e => {
-  const b = e.target.closest('button[data-a]'); if (!b) return;
-  const id = b.dataset.id, a = b.dataset.a, o = orders[id];
+  const b = e.target.closest('button[data-a]');
+  if (!b) return;
+  const id = b.dataset.id;
+  const a = b.dataset.a;
+  const o = orders[id];
   if (!o) return;
   if (a === 'KOT') return printKOT(o);
   const upd = {status: a};
   if (a === 'Out') {
     const k = document.getElementById('rd-' + id).value;
     if (!k) return alert('आधी Rider निवडा!');
-    upd.riderName = staff[k].name; upd.riderPhone = staff[k].phone;
+    upd.riderName = staff[k].name;
+    upd.riderPhone = staff[k].phone;
   }
   if (a === 'Cancelled' && !confirm('ऑर्डर रद्द करायची?')) return;
-  const ups = {}; Object.keys(upd).forEach(k => ups['orders/' + id + '/' + k] = upd[k]); db.ref().update(ups);
+  const ups = {};
+  Object.keys(upd).forEach(k => {
+    ups['orders/' + id + '/' + k] = upd[k];
+  });
+  db.ref().update(ups);
   if (a === 'Accepted') printKOT(o, true);
 });
 
-// ---------- Staff ----------
-function toggleStaff() { const b = $('staffbox'); b.style.display = b.style.display === 'block' ? 'none' : 'block'; }
+function toggleStaff() {
+  const b = $('staffbox');
+  b.style.display = b.style.display === 'block' ? 'none' : 'block';
+}
+
 function addStaff() {
-  const n = $('sn').value.trim(), p = $('sp').value.trim(), em = $('se').value.trim().toLowerCase();
+  const n = $('sn').value.trim();
+  const p = $('sp').value.trim();
+  const em = $('se').value.trim().toLowerCase();
   if (!n || !/^\d{10}$/.test(p)) return alert('नाव आणि 10 अंकी नंबर टाका!');
   if (em && !/^\S+@\S+\.\S+$/.test(em)) return alert('Email बरोबर टाका!');
   db.ref('staff').push({name: n, phone: p, email: em});
   if (em) db.ref('staffAuth/' + em.replace(/\./g, ',')).set(true);
-  $('sn').value = $('sp').value = $('se').value = '';
+  $('sn').value = '';
+  $('sp').value = '';
+  $('se').value = '';
 }
+
 function renderStaff() {
   $('chips').innerHTML = Object.entries(staff).map(([k, s]) =>
-    `<span class="chip">🛵 <b>${esc(s.name)}</b> (${esc(s.phone)})${s.email ? ' • ' + esc(s.email) : ''} <button data-k="${esc(k)}">✖</button></span>`).join('');
+    `<span class="chip">🛵 <b>${esc(s.name)}</b> (${esc(s.phone)})${s.email ? ' • ' + esc(s.email) : ''} <button data-k="${esc(k)}">✖</button></span>`
+  ).join('');
 }
-$('chips').addEventListener('click', e => { const k = e.target.dataset.k; if (k && confirm('Staff काढायचा?')) { const em = staff[k] && staff[k].email; db.ref('staff/' + k).remove(); if (em) db.ref('staffAuth/' + em.replace(/\./g, ',')).remove(); } });
 
-// ---------- KOT / CSV / Clear ----------
+$('chips').addEventListener('click', e => {
+  const k = e.target.dataset.k;
+  if (k && confirm('Staff काढायचा?')) {
+    const em = staff[k] && staff[k].email;
+    db.ref('staff/' + k).remove();
+    if (em) db.ref('staffAuth/' + em.replace(/\./g, ',')).remove();
+  }
+});
+
 function printKOT(o, quiet) {
-  const w = window.open('', '_blank', 'width=320,height=600'); if (!w) return;
+  const w = window.open('', '_blank', 'width=320,height=600');
+  if (!w) return;
   const rows = (o.items || []).map(i => `<tr><td>${esc(i.name)}</td><td>x${i.qty}</td></tr>`).join('');
   w.document.write(`<body style="font:14px monospace;width:280px"><h3 style="text-align:center">SADGURU CAFE — KOT</h3>
   <p>#${esc(o.orderId)}<br>${new Date(o.timestamp).toLocaleString()}<br>${o.orderMode === 'DELIVERY' ? 'DELIVERY' : 'DINE-IN'}</p><hr>
   <table width="100%">${rows}</table><hr><p>${esc(o.customerName)} ${esc(o.customerPhone)}<br>${esc(o.address)}</p>
   <p><b>Total ₹${o.grandTotal}</b> (${o.paymentMode})</p></body>`);
-  w.document.close(); w.focus(); w.print();
+  w.document.close();
+  w.focus();
+  w.print();
 }
+
 function exportCSV() {
   const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
   const rows = [['Order','Time','Name','Phone','Address','Mode','Payment','Items','Delivery','Total','Status']];
-  Object.values(orders).sort((a, b) => a.timestamp - b.timestamp).forEach(o => rows.push([
-    o.orderId, new Date(o.timestamp).toLocaleString(), o.customerName, o.customerPhone, o.address, o.orderMode, o.paymentMode,
-    (o.items || []).map(i => i.name + ' x' + i.qty).join('; '), o.deliveryCharge, o.grandTotal, o.status]));
+  Object.values(orders).sort((a, b) => a.timestamp - b.timestamp).forEach(o => {
+    rows.push([
+      o.orderId,
+      new Date(o.timestamp).toLocaleString(),
+      o.customerName,
+      o.customerPhone,
+      o.address,
+      o.orderMode,
+      o.paymentMode,
+      (o.items || []).map(i => i.name + ' x' + i.qty).join('; '),
+      o.deliveryCharge,
+      o.grandTotal,
+      o.status
+    ]);
+  });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['\ufeff' + rows.map(r => r.map(q).join(',')).join('\n')], {type: 'text/csv'}));
-  a.download = 'sadguru-orders.csv'; a.click();
+  a.download = 'sadguru-orders.csv';
+  a.click();
 }
+
 function clearDone() {
   const done = Object.keys(orders).filter(k => ['Delivered', 'Cancelled'].includes(orders[k].status));
   if (!done.length) return alert('काहीच नाही.');
