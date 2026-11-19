@@ -20,6 +20,7 @@ body{background:#101216;color:#fff;padding:12px;padding-bottom:40px}
 button,select,input{font-size:.86rem}
 .b{background:#2b303c;color:#fff;border:1px solid #444;padding:9px 13px;border-radius:8px;font-weight:600;cursor:pointer}
 .b:active{transform:scale(.97)}
+.b:disabled{opacity:.6;cursor:wait}
 .b.go{background:#25D366;color:#111;border:0}.b.bl{background:#0a84ff;border:0}.b.or{background:#ff9f0a;color:#111;border:0}.b.rd{background:#3a1c1c;color:#ff8a8a;border-color:#522}.b.gd{background:#d4af37;color:#111;border:0}
 input,select{padding:10px 12px;border-radius:6px;border:1px solid #444;background:#101216;color:#fff}
 #login{max-width:340px;margin:10vh auto;background:#1a1d24;padding:24px;border-radius:14px;display:flex;flex-direction:column;gap:12px;border:1px solid #d4af37}
@@ -28,7 +29,7 @@ input,select{padding:10px 12px;border-radius:6px;border:1px solid #444;backgroun
 .st{background:#1a1d24;padding:12px 14px;border-radius:10px;border-top:3px solid var(--c)}
 .st small{color:#aaa}.st div{font-size:1.5rem;font-weight:700;color:var(--c)}
 #staffbox{display:none;background:#1a1d24;border:1px solid #d4af37;border-radius:12px;padding:14px;margin-bottom:16px}
-.chip{background:#2b303c;padding:6px 12px;border-radius:20px;font-size:.82rem;display:inline-flex;gap:8px;margin:6px 6px 0 0}
+.chip{background:#2b303c;padding:6px 12px;border-radius:20px;font-size:.82rem;display:inline-flex;gap:8px;margin:8px 6px 0 0}
 .chip button{background:none;border:0;color:#ff6b6b;cursor:pointer}
 #list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px}
 .o{background:#1a1d24;border-radius:12px;padding:14px;border-left:5px solid var(--c);font-size:.88rem;line-height:1.45}
@@ -48,8 +49,8 @@ body.staff .own{display:none!important}
 <body>
 
 <form id="login" onsubmit="return doLogin(event)">
-  <h2 class="g">☕ Sadguru Cafe Owner</h2>
-  <input id="em" type="email" placeholder="Owner email" required>
+  <h2 class="g">☕ Sadguru Cafe POS</h2>
+  <input id="em" type="text" placeholder="मोबाईल नंबर (Staff) किंवा Email (Owner)" required>
   <input id="pw" type="password" placeholder="Password" required>
   <button class="b go" type="submit">🔒 Login</button>
   <button class="b gd install-btn" type="button" onclick="installApp()">📲 Install App</button>
@@ -74,12 +75,12 @@ body.staff .own{display:none!important}
   </div>
 
   <div id="staffbox" class="own">
-    <h3 class="g" style="margin-bottom:10px">👥 Delivery Staff</h3>
+    <h3 class="g" style="margin-bottom:10px">👥 Delivery Staff (मोबाईल + पासवर्ड)</h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <input id="sn" placeholder="नाव" style="flex:1;min-width:140px">
-      <input id="sp" placeholder="10 अंकी मोबाईल" maxlength="10" style="flex:1;min-width:140px">
-      <input id="se" type="email" placeholder="Login email (ऑर्डर बघण्यासाठी)" style="flex:1;min-width:200px">
-      <button class="b go" onclick="addStaff()">➕ Add</button>
+      <input id="sn" placeholder="स्टाफचं नाव" style="flex:1;min-width:130px">
+      <input id="sp" placeholder="10 अंकी मोबाईल" maxlength="10" inputmode="numeric" style="flex:1;min-width:130px">
+      <input id="spw" type="password" placeholder="Password (किमान 6 अक्षरे)" minlength="6" style="flex:1;min-width:160px">
+      <button class="b go" id="addStaffBtn" onclick="addStaff()">➕ Add Staff</button>
     </div>
     <div id="chips"></div>
   </div>
@@ -120,7 +121,7 @@ try {
 }
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const esc = s => String(s ?? '').replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"').replace(/'/g,''');
 
 let isOwner = false, orders = {}, staff = {}, known = null, alarm = null, ctx = null, ordersRef = null, staffRef = null;
 let deferredPrompt = null, wakeLock = null;
@@ -176,9 +177,11 @@ function doLogin(e) {
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission();
   }
-  auth.signInWithEmailAndPassword($('em').value, $('pw').value)
+  const raw = $('em').value.trim().toLowerCase();
+  const email = /^\d{10}$/.test(raw) ? raw + '@sadgurucafe.app' : raw;
+  auth.signInWithEmailAndPassword(email, $('pw').value)
     .catch(() => {
-      $('lerr').innerText = 'चुकीचा email किंवा password';
+      $('lerr').innerText = 'चुकीचा मोबाईल नंबर/email किंवा password';
     });
   return false;
 }
@@ -207,7 +210,7 @@ if (auth) {
         orders = s.val() || {};
         onOrders();
       }, () => {
-        alert('Permission error: या email ला access नाही. Owner ला सांगा.');
+        alert('Permission error: या अकाउंटला access नाही. Owner ला सांगा.');
       });
       staffRef = db.ref('staff');
       staffRef.on('value', s => {
@@ -369,23 +372,52 @@ function toggleStaff() {
   b.style.display = b.style.display === 'block' ? 'none' : 'block';
 }
 
-function addStaff() {
+async function addStaff() {
   const n = $('sn').value.trim();
   const p = $('sp').value.trim();
-  const em = $('se').value.trim().toLowerCase();
-  if (!n || !/^\d{10}$/.test(p)) return alert('नाव आणि 10 अंकी नंबर टाका!');
-  if (em && !/^\S+@\S+\.\S+$/.test(em)) return alert('Email बरोबर टाका!');
-  db.ref('staff').push({name: n, phone: p, email: em});
-  if (em) db.ref('staffAuth/' + em.replace(/\./g, ',')).set(true);
-  $('sn').value = '';
-  $('sp').value = '';
-  $('se').value = '';
+  const pw = $('spw').value;
+  if (!n || !/^\d{10}$/.test(p)) return alert('स्टाफचं नाव आणि बरोबर 10 अंकी मोबाईल नंबर टाका!');
+  if (pw.length < 6) return alert('Password किमान 6 अक्षरांचा असावा!');
+
+  const btn = $('addStaffBtn');
+  btn.disabled = true;
+  btn.innerText = 'तयार होत आहे...';
+
+  const em = p + '@sadgurucafe.app';
+  let msg = '✅ ' + n + ' चा लॉगिन तयार झाला!\nमोबाईल: ' + p + '\nPassword: ' + pw;
+
+  try {
+    const secApp = firebase.apps.find(a => a.name === 'staffCreator')
+      || firebase.initializeApp(FIREBASE_CONFIG, 'staffCreator');
+    try {
+      await secApp.auth().createUserWithEmailAndPassword(em, pw);
+      await secApp.auth().signOut();
+    } catch (err) {
+      if (err.code === 'auth/email-already-in-use') {
+        msg = '✅ ' + n + ' पुन्हा अ‍ॅड झाला! (या नंबरचा जुना password चालू राहील.)';
+      } else {
+        throw err;
+      }
+    }
+    await db.ref('staff').push({name: n, phone: p, email: em});
+    await db.ref('staffAuth/' + em.replace(/\./g, ',')).set(true);
+    $('sn').value = '';
+    $('sp').value = '';
+    $('spw').value = '';
+    alert(msg);
+  } catch (e) {
+    alert('❌ Staff तयार करता आला नाही: ' + (e.message || e.code));
+  } finally {
+    btn.disabled = false;
+    btn.innerText = '➕ Add Staff';
+  }
 }
 
 function renderStaff() {
-  $('chips').innerHTML = Object.entries(staff).map(([k, s]) =>
-    `<span class="chip">🛵 <b>${esc(s.name)}</b> (${esc(s.phone)})${s.email ? ' • ' + esc(s.email) : ''} <button data-k="${esc(k)}">✖</button></span>`
-  ).join('');
+  $('chips').innerHTML = Object.entries(staff).map(([k, s]) => {
+    const showEm = s.email && !s.email.endsWith('@sadgurucafe.app') ? ' • ' + esc(s.email) : '';
+    return `<span class="chip">🛵 <b>${esc(s.name)}</b> (${esc(s.phone)})${showEm} <button data-k="${esc(k)}">✖</button></span>`;
+  }).join('');
 }
 
 $('chips').addEventListener('click', e => {
